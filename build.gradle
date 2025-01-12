@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.3.5'
     id 'io.spring.dependency-management' version '1.1.6'
+    id "gradle.dependency-submission" version "8.11" // 플러그인 설정
 }
 
 group = 'com.apollo'
