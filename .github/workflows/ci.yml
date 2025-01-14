@@ -48,7 +48,7 @@ jobs:
       # 7. Test Docker Container (Optional)
       - name: Test Docker Container
         run: |
-          docker exec -it springboot-container curl --fail http://localhost:8080 || exit 1
+          docker exec springboot-container curl --fail http://localhost:8080 || exit 1
 
       # 8. Clean Up
       - name: Clean Up Docker Container
