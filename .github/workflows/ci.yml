@@ -43,7 +43,7 @@ jobs:
       # 6. Docker Run
       - name: Run Docker Container
         run: |
-          docker run -d -p 8080:80 --name springboot-container scentra-api
+          docker run -d -p 8080:8080 --name springboot-container scentra-api
 
       # 7. Test Docker Container (Optional)
       - name: Test Docker Container
