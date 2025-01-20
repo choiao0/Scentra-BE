@@ -17,7 +17,7 @@ public class UserConverter {
 
     public static UserResponse.UserSignUpResultDTO toUserSignUpResult(User user) {
         return UserResponse.UserSignUpResultDTO.builder()
-                .userId(user.getUser_id())
+                .userId(user.getUserId())
                 .build();
     }
 }

@@ -1,7 +1,6 @@
 package com.apollo.scentraapi.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -13,8 +12,10 @@ import java.util.UUID;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class User {
+
     @Id
-    private UUID user_id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID userId;
     private String name;
     private String email;
     private String password;

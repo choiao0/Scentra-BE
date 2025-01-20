@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -19,8 +21,10 @@ public class UserService {
     @Transactional
     public User createUser(UserRequest.UserSignUpDTO request) {
 
-        userRepository.findByEmail(request.getEmail()) //이메일로 유저가 존재하는지 검사
-                .orElseThrow(() -> new UserHandler(ErrorStatus.USER_ALREADY_EXIST));
+        Optional<User> findUser = userRepository.findByEmail(request.getEmail()); //이메일로 유저가 존재하는지 검사
+
+        if (findUser.isPresent())
+            throw new UserHandler(ErrorStatus.USER_ALREADY_EXIST);
 
         User newUser = UserConverter.toUser(request);
 

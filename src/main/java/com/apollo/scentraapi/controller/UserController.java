@@ -6,6 +6,7 @@ import com.apollo.scentraapi.domain.User;
 import com.apollo.scentraapi.dto.request.UserRequest;
 import com.apollo.scentraapi.dto.response.UserResponse;
 import com.apollo.scentraapi.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +21,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping()
+    @Operation(summary = "회원가입")
     public ApiResponse<UserResponse.UserSignUpResultDTO> createUser(@RequestBody UserRequest.UserSignUpDTO request) {
 
         User user = userService.createUser(request);
