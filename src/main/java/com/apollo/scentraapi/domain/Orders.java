@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-public class Order {
+public class Orders {
     @Id
     private Long order_id;
     private UUID user_id;

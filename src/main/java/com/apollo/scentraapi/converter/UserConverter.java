@@ -1,0 +1,23 @@
+package com.apollo.scentraapi.converter;
+
+import com.apollo.scentraapi.domain.User;
+import com.apollo.scentraapi.dto.request.UserRequest;
+import com.apollo.scentraapi.dto.response.UserResponse;
+
+public class UserConverter {
+
+    public static User toUser(UserRequest.UserSignUpDTO request) {
+        return User.builder()
+                .name(request.getName())
+                .email(request.getEmail())
+                .password(request.getPassword())
+                .gender(request.getGender())
+                .build();
+    }
+
+    public static UserResponse.UserSignUpResultDTO toUserSignUpResult(User user) {
+        return UserResponse.UserSignUpResultDTO.builder()
+                .userId(user.getUserId())
+                .build();
+    }
+}
