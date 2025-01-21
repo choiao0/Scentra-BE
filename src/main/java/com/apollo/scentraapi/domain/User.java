@@ -15,11 +15,17 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="user_id")
     private UUID userId;
+
     private String name;
     private String email;
     private String password;
     private String gender;
+
+    @Column(name="created_at")
     private LocalDateTime created_at;
-    private LocalDateTime updated_at;
+
+    @Column(name="updated_at")
+    private LocalDateTime updatedAt;
 }

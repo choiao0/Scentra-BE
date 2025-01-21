@@ -1,13 +1,21 @@
 package com.apollo.scentraapi.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
 @Entity
 public class Brand {
     @Id
-    private Long brand_id;
-    private String brand_name;
-    private String brand_description;
-    private String brand_image;
+    @Column(name="brand_id")
+    private Long brandId;
+
+    @Column(name="brand_name")
+    private String brandName;
+
+    @Column(name="brand_description")
+    private String brandDescription;
+
+    @Column(name="brand_image")
+    private String brandImage;
 }

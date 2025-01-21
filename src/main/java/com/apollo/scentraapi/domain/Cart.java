@@ -1,5 +1,6 @@
 package com.apollo.scentraapi.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
@@ -9,9 +10,17 @@ import java.util.UUID;
 @Entity
 public class Cart {
     @Id
-    private Long cart_id;
-    private UUID user_id;
-    private Long product_id;
+    @Column(name="cart_id")
+    private Long cartId;
+
+    @Column(name="user_id")
+    private UUID userId;
+
+    @Column(name="product_id")
+    private Long productId;
+
     private Integer quantity;
-    private LocalDateTime updated_at;
+
+    @Column(name="updated_at")
+    private LocalDateTime updatedAt;
 }
