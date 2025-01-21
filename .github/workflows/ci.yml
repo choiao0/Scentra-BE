@@ -51,6 +51,11 @@ jobs:
           sleep 20 # 10초 대기 후 curl 테스트
           docker exec springboot-container curl --fail http://localhost:8080 || exit 1
 
+      # error: 실패 시 로그 출력
+      - name: Print container logs on failure
+        if: failure() # 빌드 실패 시 실행
+        run: docker logs springboot-container
+
       # 8. Clean Up
       - name: Clean Up Docker Container
         if: always()
