@@ -5,11 +5,13 @@ import com.apollo.scentraapi.apiPayload.exception.handler.ProductHandler;
 import com.apollo.scentraapi.converter.ProductConverter;
 import com.apollo.scentraapi.domain.Brand;
 import com.apollo.scentraapi.domain.Product;
+import com.apollo.scentraapi.dto.request.ProductRequest;
 import com.apollo.scentraapi.dto.response.ProductResponse;
 import com.apollo.scentraapi.repository.BrandRepository;
 import com.apollo.scentraapi.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +41,15 @@ public class ProductService {
             productList.add(product_dto);
         }
         return productList;
+    }
+
+    public Product uploadProduct(ProductRequest.ProductUploadDto productUploadDto) {
+        if (productUploadDto.getName() == null || productUploadDto.getName().isEmpty() ||
+                productUploadDto.getProduct_image() == null || productUploadDto.getProduct_image().isEmpty() || productUploadDto.getPrice() == null) {
+            throw new ProductHandler(ErrorStatus.PRODUCT_BAD_REQUEST);
+        }
+        Product new_product = ProductConverter.toProduct(productUploadDto);
+        return productRepository.save(new_product);
     }
 
 }

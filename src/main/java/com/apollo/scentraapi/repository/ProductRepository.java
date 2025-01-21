@@ -2,6 +2,7 @@ package com.apollo.scentraapi.repository;
 
 import com.apollo.scentraapi.domain.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.lang.NonNullApi;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

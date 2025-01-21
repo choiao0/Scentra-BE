@@ -1,15 +1,16 @@
 package com.apollo.scentraapi.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 
 @Entity
+@Builder
 @Getter
 public class Product {
     @Id
     @Column(name="product_id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long productId;
 
     @Column(name="brand_id")

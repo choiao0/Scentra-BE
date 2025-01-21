@@ -14,4 +14,10 @@ public class ProductResponse {
         String product_image;
         double price;
     }
+
+    @Builder
+    @Getter
+    public static class ProductDto {
+        Long product_id;
+    }
 }
