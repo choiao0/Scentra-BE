@@ -65,4 +65,17 @@ public class ProductService {
         return ProductConverter.toImageDTO(imageUrl);
     }
 
+    public ProductResponse.ImageDTO createCompositeImage(ProductRequest.CreateCompositeImgDTO request) {
+
+        String backgroundImageUrl = request.getBackgroundImageUrl();
+        String productImageUrl = request.getProductImageUrl();
+
+        /*
+            배경 및 상품 이미지 넘겨주고, 생성된 합성 이미지 수신
+         */
+
+        String imageUrl = "http://"+backgroundImageUrl+"/"+productImageUrl;
+
+        return ProductConverter.toImageDTO(imageUrl);
+    }
 }

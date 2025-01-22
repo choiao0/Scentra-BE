@@ -18,4 +18,12 @@ public class ProductRequest {
         @NotBlank
         String prompt;
     }
+
+    @Getter
+    public static class CreateCompositeImgDTO {
+        @NotBlank
+        String backgroundImageUrl;
+        @NotBlank
+        String productImageUrl;
+    }
 }

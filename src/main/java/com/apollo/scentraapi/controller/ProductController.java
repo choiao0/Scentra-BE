@@ -41,4 +41,11 @@ public class ProductController {
         ProductResponse.ImageDTO response = productService.createBackgroundImage(request);
         return ApiResponse.onSuccess(response);
     }
+    @PostMapping("composite-image")
+    @Operation(summary="합성 이미지 생성")
+    public ApiResponse<ProductResponse.ImageDTO> createCompositeImage(@RequestBody @Valid ProductRequest.CreateCompositeImgDTO request) {
+        ProductResponse.ImageDTO response = productService.createCompositeImage(request);
+        return ApiResponse.onSuccess(response);
+    }
+
 }
