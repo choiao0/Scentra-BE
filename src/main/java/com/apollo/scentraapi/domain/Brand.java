@@ -3,11 +3,15 @@ package com.apollo.scentraapi.domain;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import lombok.Getter;
+import lombok.*;
 
 @Entity
 @Getter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Brand {
+
     @Id
     @Column(name="brand_id")
     private Long brandId;

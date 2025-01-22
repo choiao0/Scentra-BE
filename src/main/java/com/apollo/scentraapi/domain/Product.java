@@ -1,13 +1,15 @@
 package com.apollo.scentraapi.domain;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 @Entity
 @Builder
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Product {
+
     @Id
     @Column(name="product_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
