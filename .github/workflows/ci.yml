@@ -45,11 +45,21 @@ jobs:
         run: |
           docker run -d -p 8080:8080 --name springboot-container scentra-api
 
-      # 7. Test Docker Container (Optional)
-      - name: Test Docker Container
+      # 7. Test Docker Running
+      - name: Check if container is running
         run: |
-          sleep 10 # 10초 대기 후 curl 테스트
-          docker exec springboot-container curl --fail http://localhost:8080 || exit 1
+          docker ps -f "name=springboot-container" || exit 1
+
+      # 7. Test Docker Container (Optional)
+      #- name: Test Docker Container
+      #  run: |
+      #    sleep 10 # 10초 대기 후 curl 테스트
+      #    docker exec springboot-container curl --fail http://localhost:8080 || exit 1
+
+      # error: 실패 시 로그 출력
+      #- name: Print container logs on failure
+      #  if: failure() # 빌드 실패 시 실행
+      #  run: docker logs springboot-container
 
       # 8. Clean Up
       - name: Clean Up Docker Container

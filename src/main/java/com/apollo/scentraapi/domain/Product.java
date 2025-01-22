@@ -1,16 +1,32 @@
 package com.apollo.scentraapi.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Getter;
 
 @Entity
+@Builder
+@Getter
 public class Product {
     @Id
-    private Long product_id;
-    private Long brand_id;
-    private String product_name;
-    private String product_image;
-    private String detail_image;
-    private String product_description;
+    @Column(name="product_id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long productId;
+
+    @Column(name="brand_id")
+    private Long brandId;
+
+    @Column(name="product_name")
+    private String productName;
+
+    @Column(name="product_image")
+    private String productImage;
+
+    @Column(name="detail_image")
+    private String detailImage;
+
+    @Column(name="product_description")
+    private String productDescription;
+
     private Double price;
 }

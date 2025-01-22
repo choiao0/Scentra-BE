@@ -1,5 +1,6 @@
 package com.apollo.scentraapi.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
@@ -8,7 +9,12 @@ import java.util.UUID;
 @Entity
 public class ProductLikes {
     @Id
-    private Long like_id;
-    private UUID user_id;
-    private Long product_id;
+    @Column(name="like_id")
+    private Long likeId;
+
+    @Column(name="user_id")
+    private UUID userId;
+
+    @Column(name="product_id")
+    private Long productId;
 }

@@ -18,7 +18,11 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // 멤버 관련 에러
     USER_NOT_FOUND(HttpStatus.BAD_REQUEST, "USER4001", "사용자가 없습니다."),
-    USER_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "USER4002", "이미 존재하는 유저입니다.")
+    USER_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "USER4002", "이미 존재하는 유저입니다."),
+
+    // 상품 관련 에러
+    PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "PRODUCT4001", "상품이 존재하지 않습니다."),
+    PRODUCT_BAD_REQUEST(HttpStatus.BAD_REQUEST, "PRODUCT4002", "상품 업로드에 대한 요청이 올바르지 않습니다.")
     ;
 
     private final HttpStatus httpStatus;
