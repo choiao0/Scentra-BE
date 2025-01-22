@@ -1,5 +1,6 @@
 package com.apollo.scentraapi.dto.request;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 
 public class ProductRequest {
@@ -10,5 +11,11 @@ public class ProductRequest {
         String detail_image;
         String description;
         Double price;
+    }
+
+    @Getter
+    public static class CreateBgImgDTO {
+        @NotBlank
+        String prompt;
     }
 }

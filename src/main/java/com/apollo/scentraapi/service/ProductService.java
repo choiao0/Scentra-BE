@@ -52,4 +52,17 @@ public class ProductService {
         return productRepository.save(new_product);
     }
 
+    public ProductResponse.ImageDTO createBackgroundImage(ProductRequest.CreateBgImgDTO request) {
+
+        String prompt = request.getPrompt();
+
+        /*
+            AI 서버로 프롬프트 넘겨주고, 생성된 배경 이미지 수신
+         */
+
+        String imageUrl = "http://"+prompt;
+
+        return ProductConverter.toImageDTO(imageUrl);
+    }
+
 }

@@ -7,6 +7,7 @@ import com.apollo.scentraapi.dto.request.ProductRequest;
 import com.apollo.scentraapi.dto.response.ProductResponse;
 import com.apollo.scentraapi.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +32,13 @@ public class ProductController {
     public ApiResponse<ProductResponse.ProductDto> uploadProduct(@RequestBody ProductRequest.ProductUploadDto request) {
         Product new_product = productService.uploadProduct(request);
         ProductResponse.ProductDto response = ProductConverter.toProductResponse(new_product);
+        return ApiResponse.onSuccess(response);
+    }
+
+    @PostMapping("background-image")
+    @Operation(summary="배경 이미지 생성")
+    public ApiResponse<ProductResponse.ImageDTO> createBackgroundImage(@RequestBody @Valid ProductRequest.CreateBgImgDTO request) {
+        ProductResponse.ImageDTO response = productService.createBackgroundImage(request);
         return ApiResponse.onSuccess(response);
     }
 }

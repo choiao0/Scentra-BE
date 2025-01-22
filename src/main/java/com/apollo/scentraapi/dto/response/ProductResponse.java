@@ -20,4 +20,11 @@ public class ProductResponse {
     public static class ProductDto {
         Long product_id;
     }
+
+    @Builder
+    @Getter
+    public static class ImageDTO {
+        String ImageUrl;
+    }
+
 }
