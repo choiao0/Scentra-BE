@@ -3,13 +3,19 @@ package com.apollo.scentraapi.domain;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import lombok.*;
 import org.w3c.dom.Text;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
+@Getter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Review {
+
     @Id
     @Column(name="review_id")
     private Long reviewId;

@@ -29,4 +29,10 @@ public class ProductConverter {
                 .product_id(product.getProductId())
                 .build();
     }
+
+    public static ProductResponse.ImageDTO toImageDTO(String url) {
+        return ProductResponse.ImageDTO.builder()
+                .ImageUrl(url)
+                .build();
+    }
 }

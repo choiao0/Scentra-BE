@@ -3,9 +3,15 @@ package com.apollo.scentraapi.domain;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import lombok.*;
 
 @Entity
+@Getter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class CategoryMapping {
+
     @Id
     @Column(name="category_mapping_id")
     private Long categoryMappingId;
