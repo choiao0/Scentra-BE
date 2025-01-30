@@ -1,5 +1,6 @@
 package com.apollo.scentraapi.domain;
 
+import com.apollo.scentraapi.domain.common.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -13,7 +14,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Orders {
+public class Orders extends BaseEntity {
 
     @Id
     @Column(name="order_id")
@@ -34,9 +35,4 @@ public class Orders {
     @Column(name="product_count")
     private Integer productCount;
 
-    @Column(name="created_at")
-    private LocalDateTime createdAt;
-
-    @Column(name="updated_at")
-    private LocalDateTime updatedAt;
 }

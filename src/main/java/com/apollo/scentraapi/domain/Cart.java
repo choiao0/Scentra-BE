@@ -1,5 +1,6 @@
 package com.apollo.scentraapi.domain;
 
+import com.apollo.scentraapi.domain.common.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -13,7 +14,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Cart {
+public class Cart extends BaseEntity {
 
     @Id
     @Column(name="cart_id")
@@ -27,6 +28,4 @@ public class Cart {
 
     private Integer quantity;
 
-    @Column(name="updated_at")
-    private LocalDateTime updatedAt;
 }

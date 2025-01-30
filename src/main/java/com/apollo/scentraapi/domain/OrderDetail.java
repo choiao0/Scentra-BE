@@ -1,5 +1,6 @@
 package com.apollo.scentraapi.domain;
 
+import com.apollo.scentraapi.domain.common.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -10,7 +11,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class OrderDetail {
+public class OrderDetail extends BaseEntity {
 
     @Id
     @Column(name="order_sub_id")
