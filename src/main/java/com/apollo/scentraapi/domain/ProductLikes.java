@@ -1,9 +1,7 @@
 package com.apollo.scentraapi.domain;
 
 import com.apollo.scentraapi.domain.common.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.UUID;
@@ -17,6 +15,7 @@ public class ProductLikes extends BaseEntity {
 
     @Id
     @Column(name="like_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long likeId;
 
     @Column(name="user_id")

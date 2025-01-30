@@ -1,9 +1,7 @@
 package com.apollo.scentraapi.domain;
 
 import com.apollo.scentraapi.domain.common.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -15,6 +13,7 @@ public class OrderDetail extends BaseEntity {
 
     @Id
     @Column(name="order_sub_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderSubId;
 
     @Column(name="product_id")

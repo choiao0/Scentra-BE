@@ -1,9 +1,7 @@
 package com.apollo.scentraapi.domain;
 
 import com.apollo.scentraapi.domain.common.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import org.w3c.dom.Text;
 
@@ -19,6 +17,7 @@ public class Review extends BaseEntity {
 
     @Id
     @Column(name="review_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reviewId;
 
     @Column(name="product_id")

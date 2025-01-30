@@ -1,9 +1,7 @@
 package com.apollo.scentraapi.domain;
 
 import com.apollo.scentraapi.domain.common.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -18,6 +16,7 @@ public class Seller extends BaseEntity {
 
     @Id
     @Column(name="admin_id")
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID adminId;
 
     @Column(name="user_id")
