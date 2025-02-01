@@ -16,11 +16,13 @@ public class OrderDetail extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderSubId;
 
-    @Column(name="product_id")
-    private Long productId;
-
-    @Column(name="order_id")
-    private Long orderId;
-
     private Integer quantity;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
+    private Orders orders;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    private Product product;
 }

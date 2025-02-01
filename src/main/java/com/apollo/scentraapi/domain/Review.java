@@ -20,14 +20,15 @@ public class Review extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reviewId;
 
-    @Column(name="product_id")
-    private Long productId;
-
-    @Column(name="user_id")
-    private UUID userId;
-
     private String title;
     private String content;
     private Integer rating;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    private Product product;
 }

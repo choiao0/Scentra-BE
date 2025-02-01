@@ -16,9 +16,11 @@ public class CategoryMapping extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long categoryMappingId;
 
-    @Column(name="product_id")
-    private Long productId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
-    @Column(name="category_id")
-    private Long categoryId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    private Product product;
 }
