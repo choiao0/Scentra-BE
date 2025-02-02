@@ -12,9 +12,8 @@ import lombok.*;
 public class OrderDetail extends BaseEntity {
 
     @Id
-    @Column(name="order_sub_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long orderSubId;
+    private Long id;
 
     private Integer quantity;
 

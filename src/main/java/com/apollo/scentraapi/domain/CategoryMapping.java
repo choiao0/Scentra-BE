@@ -12,9 +12,8 @@ import lombok.*;
 public class CategoryMapping extends BaseEntity {
 
     @Id
-    @Column(name="category_mapping_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long categoryMappingId;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")

@@ -12,9 +12,8 @@ import lombok.*;
 public class ProductLikes extends BaseEntity {
 
     @Id
-    @Column(name="like_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long likeId;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

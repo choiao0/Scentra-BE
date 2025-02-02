@@ -12,9 +12,8 @@ import lombok.*;
 public class Brand extends BaseEntity {
 
     @Id
-    @Column(name="brand_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long brandId;
+    private Long id;
 
     @Column(name="brand_name")
     private String brandName;

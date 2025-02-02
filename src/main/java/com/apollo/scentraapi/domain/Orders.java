@@ -14,9 +14,8 @@ import java.time.LocalDateTime;
 public class Orders extends BaseEntity {
 
     @Id
-    @Column(name="order_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long orderId;
+    private Long id;
 
     @Column(name="total_price")
     private Double totalPrice;

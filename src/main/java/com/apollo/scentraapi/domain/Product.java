@@ -15,9 +15,8 @@ import java.util.List;
 public class Product extends BaseEntity {
 
     @Id
-    @Column(name="product_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long productId;
+    private Long id;
 
     @Column(name="product_name")
     private String productName;

@@ -12,9 +12,8 @@ import lombok.*;
 public class Category extends BaseEntity {
 
     @Id
-    @Column(name="category_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long categoryId;
+    private Long id;
 
     @Column(name="category_name")
     private String categoryName;

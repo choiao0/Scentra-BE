@@ -17,8 +17,7 @@ public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name="user_id")
-    private UUID userId;
+    private UUID id;
 
     private String name;
     private String email;

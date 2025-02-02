@@ -14,9 +14,8 @@ import java.util.UUID;
 public class Seller extends BaseEntity {
 
     @Id
-    @Column(name="admin_id")
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID adminId;
+    private UUID id;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
