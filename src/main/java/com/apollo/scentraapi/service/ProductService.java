@@ -34,7 +34,7 @@ public class ProductService {
         }
 
         for (Product product : products) {
-            Long brand_id = product.getBrandId();
+            Long brand_id = product.getBrand().getBrandId();
             Optional<Brand> brand = brandRepository.findByBrandId(brand_id);
             String brand_name = brand.map(Brand::getBrandName).orElse(null); // 상품 브랜드 존재 하지 않을 시 null 처리
             ProductResponse.ProductListDto product_dto = ProductConverter.toProductListDto(product, brand_name);
