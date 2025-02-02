@@ -3,10 +3,6 @@ package com.apollo.scentraapi.domain;
 import com.apollo.scentraapi.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.w3c.dom.Text;
-
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
 @Getter

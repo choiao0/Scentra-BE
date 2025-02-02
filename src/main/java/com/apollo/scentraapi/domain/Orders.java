@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
 @Getter
@@ -19,9 +18,6 @@ public class Orders extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderId;
 
-    @Column(name="user_id")
-    private UUID userId;
-
     @Column(name="total_price")
     private Double totalPrice;
 
@@ -34,4 +30,7 @@ public class Orders extends BaseEntity {
     @Column(name="product_count")
     private Integer productCount;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 }

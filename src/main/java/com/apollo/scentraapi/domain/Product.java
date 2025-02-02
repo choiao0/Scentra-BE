@@ -4,6 +4,9 @@ import com.apollo.scentraapi.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Builder
 @Getter
@@ -15,9 +18,6 @@ public class Product extends BaseEntity {
     @Column(name="product_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long productId;
-
-    @Column(name="brand_id")
-    private Long brandId;
 
     @Column(name="product_name")
     private String productName;
@@ -32,4 +32,11 @@ public class Product extends BaseEntity {
     private String productDescription;
 
     private Double price;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "brand_id")
+    private Brand brand;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<CategoryMapping> categoryMappingList = new ArrayList<>();
 }

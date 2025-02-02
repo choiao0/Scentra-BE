@@ -4,7 +4,6 @@ import com.apollo.scentraapi.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -19,10 +18,12 @@ public class Seller extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID adminId;
 
-    @Column(name="user_id")
-    private UUID userId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    @Column(name="brand_id")
-    private Long brandId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "brand_id")
+    private Brand brand;
 
 }
