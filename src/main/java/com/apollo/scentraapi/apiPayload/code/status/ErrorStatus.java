@@ -22,7 +22,10 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // 상품 관련 에러
     PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "PRODUCT4001", "상품이 존재하지 않습니다."),
-    PRODUCT_BAD_REQUEST(HttpStatus.BAD_REQUEST, "PRODUCT4002", "상품 업로드에 대한 요청이 올바르지 않습니다.")
+    PRODUCT_BAD_REQUEST(HttpStatus.BAD_REQUEST, "PRODUCT4002", "상품 업로드에 대한 요청이 올바르지 않습니다."),
+
+    // 브랜드 관련 에러
+    BRAND_NOT_FOUND(HttpStatus.NOT_FOUND, "BRAND4001", "브랜드가 존재하지 않습니다.")
     ;
 
     private final HttpStatus httpStatus;

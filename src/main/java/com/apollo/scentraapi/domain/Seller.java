@@ -1,11 +1,9 @@
 package com.apollo.scentraapi.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import com.apollo.scentraapi.domain.common.BaseEntity;
+import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -13,21 +11,18 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Seller {
+public class Seller extends BaseEntity {
 
     @Id
-    @Column(name="admin_id")
-    private UUID adminId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
-    @Column(name="user_id")
-    private UUID userId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    @Column(name="brand_id")
-    private Long brandId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "brand_id")
+    private Brand brand;
 
-    @Column(name="created_at")
-    private LocalDateTime createdAt;
-
-    @Column(name="updated_at")
-    private LocalDateTime updatedAt;
 }

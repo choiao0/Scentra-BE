@@ -1,8 +1,7 @@
 package com.apollo.scentraapi.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import com.apollo.scentraapi.domain.common.BaseEntity;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -10,17 +9,19 @@ import lombok.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class OrderDetail {
+public class OrderDetail extends BaseEntity {
 
     @Id
-    @Column(name="order_sub_id")
-    private Long orderSubId;
-
-    @Column(name="product_id")
-    private Long productId;
-
-    @Column(name="order_id")
-    private Long orderId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private Integer quantity;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
+    private Orders orders;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    private Product product;
 }

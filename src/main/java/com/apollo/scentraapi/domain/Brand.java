@@ -1,8 +1,7 @@
 package com.apollo.scentraapi.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import com.apollo.scentraapi.domain.common.BaseEntity;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -10,11 +9,11 @@ import lombok.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Brand {
+public class Brand extends BaseEntity {
 
     @Id
-    @Column(name="brand_id")
-    private Long brandId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(name="brand_name")
     private String brandName;
