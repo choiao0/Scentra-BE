@@ -1,6 +1,7 @@
 package com.apollo.scentraapi.converter;
 
 import com.apollo.scentraapi.domain.User;
+import com.apollo.scentraapi.domain.enums.Gender;
 import com.apollo.scentraapi.dto.request.UserRequest;
 import com.apollo.scentraapi.dto.response.UserResponse;
 
@@ -11,7 +12,7 @@ public class UserConverter {
                 .name(request.getName())
                 .email(request.getEmail())
                 .password(request.getPassword())
-                .gender(request.getGender())
+                .gender(Gender.valueOf(request.getGender()))
                 .build();
     }
 
