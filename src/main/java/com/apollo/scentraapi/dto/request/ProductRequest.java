@@ -11,6 +11,7 @@ public class ProductRequest {
         String detail_image;
         String description;
         Double price;
+        Long brand_id;
     }
 
     @Getter

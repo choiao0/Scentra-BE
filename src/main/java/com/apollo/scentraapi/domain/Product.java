@@ -38,4 +38,8 @@ public class Product extends BaseEntity {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<CategoryMapping> categoryMappingList = new ArrayList<>();
+
+    public void setBrand(Brand brand){
+        this.brand = brand;
+    }
 }

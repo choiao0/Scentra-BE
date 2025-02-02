@@ -48,6 +48,9 @@ public class ProductService {
             throw new ProductHandler(ErrorStatus.PRODUCT_BAD_REQUEST);
         }
         Product new_product = ProductConverter.toProduct(productUploadDto);
+        Brand brand = brandRepository.findById(productUploadDto.getBrand_id())
+                .orElseThrow(() -> new ProductHandler(ErrorStatus.BRAND_NOT_FOUND));
+        new_product.setBrand(brand);
         return productRepository.save(new_product);
     }
 
