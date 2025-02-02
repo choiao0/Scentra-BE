@@ -1,6 +1,7 @@
 package com.apollo.scentraapi.domain;
 
 import com.apollo.scentraapi.domain.common.BaseEntity;
+import com.apollo.scentraapi.domain.enums.Gender;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.ArrayList;
@@ -22,7 +23,9 @@ public class User extends BaseEntity {
     private String name;
     private String email;
     private String password;
-    private String gender;
+
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<ProductLikes> productLikesList = new ArrayList<>();
