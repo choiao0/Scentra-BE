@@ -39,4 +39,17 @@ public class UserService {
                 .accessToken(accessToken)
                 .build();
     }
+
+    public UserResponse.UserSignUpResultDTO login(String email) {
+
+        User findUser = userRepository.findByEmail(email) // 이메일로 유저가 존재하는지 검사
+                .orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
+
+        String accessToken = jwtUtil.createAccessToken(email);
+
+        return UserResponse.UserSignUpResultDTO.builder()
+                .userId(findUser.getId())
+                .accessToken(accessToken)
+                .build();
+    }
 }
