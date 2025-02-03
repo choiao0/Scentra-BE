@@ -14,6 +14,15 @@ public class ProductRequest {
     }
 
     @Getter
+    public static class ProductUpdateRequestDTO {
+        String name;
+        String productImage;
+        String detailImage;
+        String description;
+        Double price;
+    }
+
+    @Getter
     public static class CreateBgImgDTO {
         @NotBlank
         String prompt;

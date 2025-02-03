@@ -9,6 +9,7 @@ import com.apollo.scentraapi.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,6 +34,21 @@ public class ProductController {
         Product new_product = productService.uploadProduct(request);
         ProductResponse.ProductDto response = ProductConverter.toProductResponse(new_product);
         return ApiResponse.onSuccess(response);
+    }
+
+    @PutMapping("/{id}")
+    @Operation(summary="상품 정보 수정")
+    public ResponseEntity<ApiResponse<ProductResponse.ProductUpdateResponseDTO>> updateProduct(
+            @PathVariable Long id, @RequestBody ProductRequest.ProductUpdateRequestDTO request) {
+
+        ProductResponse.ProductUpdateResponseDTO response = productService.updateProduct(id, request);
+        return ResponseEntity.ok(ApiResponse.onSuccess(response));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<ProductResponse.ProductDeleteResponseDTO>> deleteProduct(@PathVariable Long id) {
+        ProductResponse.ProductDeleteResponseDTO response = productService.deleteProduct(id);
+        return ResponseEntity.ok(ApiResponse.onSuccess(response));
     }
 
     @PostMapping("background-image")
