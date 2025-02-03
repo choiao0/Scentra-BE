@@ -35,10 +35,9 @@ public class JwtUtil {
     }
 
     // 토큰 생성
-    public String createAccessToken(Long userId, String userName) {
+    public String createAccessToken(String userEmail) {
         return Jwts.builder()
-                .claim("userId", userId)
-                .claim("userName", userName)
+                .claim("userEmail", userEmail)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRE_TIME))
                 .signWith(secretKey)
@@ -71,14 +70,11 @@ public class JwtUtil {
     }
 
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = userDetailService.loadUserByUsername(this.getUserName(token));
+        UserDetails userDetails = userDetailService.loadUserByUsername(this.getUserEmail(token));
         return new UsernamePasswordAuthenticationToken(userDetails, null, null);
     }
 
-    public Long getUserId(String token) {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("userId", Long.class);
-    }
-    public String getUserName(String token) {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("userName", String.class);
+    public String getUserEmail(String token) {
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("userEmail", String.class);
     }
 }
