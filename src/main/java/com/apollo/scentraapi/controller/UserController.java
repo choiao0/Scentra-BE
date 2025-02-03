@@ -41,9 +41,7 @@ public class UserController {
     @Operation(summary = "회원 정보 조회")
     public ApiResponse<UserResponse.UserInfoResultDTO> getUserInfo(@AuthenticationPrincipal User user) {
 
-        UserResponse.UserInfoResultDTO response = userService.getUserInfo(user);
-
-        return ApiResponse.onSuccess(response);
+        return ApiResponse.onSuccess(UserConverter.toUserInfoResult(user));
     }
 
     @PatchMapping()

@@ -34,10 +34,7 @@ public class UserService {
 
         String accessToken = jwtUtil.createAccessToken(savedUser.getEmail());
 
-        return UserResponse.UserSignUpResultDTO.builder()
-                .userId(savedUser.getId())
-                .accessToken(accessToken)
-                .build();
+        return UserConverter.toUserSignUpResult(savedUser, accessToken);
     }
 
     public UserResponse.UserSignUpResultDTO login(String email) {
@@ -47,20 +44,7 @@ public class UserService {
 
         String accessToken = jwtUtil.createAccessToken(email);
 
-        return UserResponse.UserSignUpResultDTO.builder()
-                .userId(findUser.getId())
-                .accessToken(accessToken)
-                .build();
-    }
-
-    public UserResponse.UserInfoResultDTO getUserInfo(User user) {
-        return UserResponse.UserInfoResultDTO.builder()
-                .userId(user.getId())
-                .name(user.getName())
-                .password(user.getPassword())
-                .email(user.getEmail())
-                .gender(user.getGender().toString())
-                .build();
+        return UserConverter.toUserSignUpResult(findUser, accessToken);
     }
 
     public User updateUser(User user, UserRequest.UserUpdateDTO request) {

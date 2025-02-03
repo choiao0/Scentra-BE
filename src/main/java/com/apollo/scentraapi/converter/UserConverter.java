@@ -16,9 +16,10 @@ public class UserConverter {
                 .build();
     }
 
-    public static UserResponse.UserSignUpResultDTO toUserSignUpResult(User user) {
+    public static UserResponse.UserSignUpResultDTO toUserSignUpResult(User user, String accessToken) {
         return UserResponse.UserSignUpResultDTO.builder()
                 .userId(user.getId())
+                .accessToken(accessToken)
                 .build();
     }
 
