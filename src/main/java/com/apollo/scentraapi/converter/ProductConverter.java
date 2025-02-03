@@ -8,7 +8,7 @@ public class ProductConverter {
 
     public static ProductResponse.ProductListDto toProductListDto(Product product, String brand_name) {
         return ProductResponse.ProductListDto.builder()
-                .product_id(product.getProductId())
+                .product_id(product.getId())
                 .brand_name(brand_name)
                 .product_name(product.getProductName())
                 .product_image(product.getProductImage())
@@ -26,7 +26,7 @@ public class ProductConverter {
     }
     public static ProductResponse.ProductDto toProductResponse(Product product) {
         return ProductResponse.ProductDto.builder()
-                .product_id(product.getProductId())
+                .product_id(product.getId())
                 .build();
     }
 

@@ -21,7 +21,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping()
-    @Operation(summary = "회원가입")
+    @Operation(summary = "회원가입", description = "성별은 MALE or FEMALE로 입력해주세요.")
     public ApiResponse<UserResponse.UserSignUpResultDTO> createUser(@RequestBody UserRequest.UserSignUpDTO request) {
 
         User user = userService.createUser(request);
