@@ -14,4 +14,16 @@ public class UserResponse {
         UUID userId;
         String accessToken;
     }
+
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
+    @Getter
+    public static class UserInfoResultDTO {
+        UUID userId;
+        String name;
+        String password;
+        String email;
+        String gender;
+    }
 }

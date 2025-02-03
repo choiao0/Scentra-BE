@@ -1,12 +1,14 @@
 package com.apollo.scentraapi.controller;
 
 import com.apollo.scentraapi.apiPayload.ApiResponse;
+import com.apollo.scentraapi.domain.User;
 import com.apollo.scentraapi.dto.request.UserRequest;
 import com.apollo.scentraapi.dto.response.UserResponse;
 import com.apollo.scentraapi.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -30,6 +32,15 @@ public class UserController {
     public ApiResponse<UserResponse.UserSignUpResultDTO> login(@RequestParam String email) {
 
         UserResponse.UserSignUpResultDTO response = userService.login(email);
+
+        return ApiResponse.onSuccess(response);
+    }
+
+    @GetMapping()
+    @Operation(summary = "회원 정보 조회")
+    public ApiResponse<UserResponse.UserInfoResultDTO> getUserInfo(@AuthenticationPrincipal User user) {
+
+        UserResponse.UserInfoResultDTO response = userService.getUserInfo(user);
 
         return ApiResponse.onSuccess(response);
     }

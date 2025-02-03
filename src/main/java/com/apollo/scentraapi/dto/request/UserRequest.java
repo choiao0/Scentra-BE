@@ -9,9 +9,9 @@ public class UserRequest {
     public static class UserSignUpDTO {
 
         String name;
+        String password;
         @NotNull
         String email;
-        String password;
         String gender;
     }
 

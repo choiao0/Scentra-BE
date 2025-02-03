@@ -52,4 +52,14 @@ public class UserService {
                 .accessToken(accessToken)
                 .build();
     }
+
+    public UserResponse.UserInfoResultDTO getUserInfo(User user) {
+        return UserResponse.UserInfoResultDTO.builder()
+                .userId(user.getId())
+                .name(user.getName())
+                .password(user.getPassword())
+                .email(user.getEmail())
+                .gender(user.getGender().toString())
+                .build();
+    }
 }
