@@ -2,6 +2,7 @@ package com.apollo.scentraapi.domain;
 
 import com.apollo.scentraapi.domain.common.BaseEntity;
 import com.apollo.scentraapi.domain.enums.Gender;
+import com.apollo.scentraapi.dto.request.UserRequest;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,8 +26,8 @@ public class User extends BaseEntity implements UserDetails {
 
     @Column(nullable = false)
     private String name;
-    private String email;
     private String password;
+    private String email;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
@@ -50,6 +51,13 @@ public class User extends BaseEntity implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
+    }
+
+    public void update(UserRequest.UserUpdateDTO request) {
+        if (request.getName() != null) this.name = request.getName();
+        if (request.getPassword() != null) this.password = request.getPassword();
+        if (request.getEmail() != null) this.email = request.getEmail();
+        if (request.getGender() != null) this.gender = Gender.valueOf(request.getGender());
     }
 
 }

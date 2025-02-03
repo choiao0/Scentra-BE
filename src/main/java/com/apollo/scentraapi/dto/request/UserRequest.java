@@ -15,4 +15,12 @@ public class UserRequest {
         String gender;
     }
 
+    @Getter
+    public static class UserUpdateDTO {
+
+        String name;
+        String password;
+        String email;
+        String gender;
+    }
 }

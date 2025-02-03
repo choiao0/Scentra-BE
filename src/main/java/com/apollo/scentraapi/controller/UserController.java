@@ -1,6 +1,7 @@
 package com.apollo.scentraapi.controller;
 
 import com.apollo.scentraapi.apiPayload.ApiResponse;
+import com.apollo.scentraapi.converter.UserConverter;
 import com.apollo.scentraapi.domain.User;
 import com.apollo.scentraapi.dto.request.UserRequest;
 import com.apollo.scentraapi.dto.response.UserResponse;
@@ -43,5 +44,15 @@ public class UserController {
         UserResponse.UserInfoResultDTO response = userService.getUserInfo(user);
 
         return ApiResponse.onSuccess(response);
+    }
+
+    @PatchMapping()
+    @Operation(summary = "회원 정보 수정", description = "수정하지 않을 정보는 null로 입력하세요.")
+    public ApiResponse<UserResponse.UserInfoResultDTO> updateUser(@AuthenticationPrincipal User user,
+                                                                  @RequestBody UserRequest.UserUpdateDTO request) {
+
+        User updatedUser = userService.updateUser(user, request);
+
+        return ApiResponse.onSuccess(UserConverter.toUserInfoResult(updatedUser));
     }
 }

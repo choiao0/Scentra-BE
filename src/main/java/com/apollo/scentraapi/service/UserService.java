@@ -62,4 +62,11 @@ public class UserService {
                 .gender(user.getGender().toString())
                 .build();
     }
+
+    public User updateUser(User user, UserRequest.UserUpdateDTO request) {
+
+        user.update(request);
+
+        return userRepository.save(user);
+    }
 }

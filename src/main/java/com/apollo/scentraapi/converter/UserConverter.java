@@ -21,4 +21,14 @@ public class UserConverter {
                 .userId(user.getId())
                 .build();
     }
+
+    public static UserResponse.UserInfoResultDTO toUserInfoResult(User user) {
+        return UserResponse.UserInfoResultDTO.builder()
+                .userId(user.getId())
+                .name(user.getName())
+                .password(user.getPassword())
+                .email(user.getEmail())
+                .gender(String.valueOf(user.getGender()))
+                .build();
+    }
 }
