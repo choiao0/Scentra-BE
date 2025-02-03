@@ -53,4 +53,13 @@ public class UserController {
 
         return ApiResponse.onSuccess(UserConverter.toUserInfoResult(updatedUser));
     }
+
+    @DeleteMapping()
+    @Operation(summary = "회원 탈퇴")
+    public ApiResponse<UserResponse.UserDeleteResultDTO> deleteUser(@AuthenticationPrincipal User user) {
+
+        User deletedUser = userService.deleteUser(user);
+
+        return ApiResponse.onSuccess(UserConverter.toUserDeleteResult(deletedUser));
+    }
 }

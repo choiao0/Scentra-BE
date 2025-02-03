@@ -32,4 +32,10 @@ public class UserConverter {
                 .gender(String.valueOf(user.getGender()))
                 .build();
     }
+
+    public static UserResponse.UserDeleteResultDTO toUserDeleteResult(User user) {
+        return UserResponse.UserDeleteResultDTO.builder()
+                .userId(user.getId())
+                .build();
+    }
 }

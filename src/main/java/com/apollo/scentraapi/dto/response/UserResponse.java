@@ -26,4 +26,12 @@ public class UserResponse {
         String email;
         String gender;
     }
+
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
+    @Getter
+    public static class UserDeleteResultDTO {
+        UUID userId;
+    }
 }
