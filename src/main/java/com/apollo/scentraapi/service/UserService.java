@@ -64,13 +64,8 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User deleteUser(User user) {
+    public void deleteUser(User user) {
 
-        User findUser = userRepository.findByEmail(user.getEmail())
-                .orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
-
-        userRepository.delete(findUser);
-
-        return findUser;
+        userRepository.delete(user);
     }
 }

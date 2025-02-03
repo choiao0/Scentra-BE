@@ -1,7 +1,5 @@
 package com.apollo.scentraapi.service;
 
-import com.apollo.scentraapi.apiPayload.code.status.ErrorStatus;
-import com.apollo.scentraapi.apiPayload.exception.handler.UserHandler;
 import com.apollo.scentraapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +17,6 @@ public class UserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String userEmail) throws UsernameNotFoundException {
         return userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
+                .orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 유저의 토큰입니다."));
     }
 }

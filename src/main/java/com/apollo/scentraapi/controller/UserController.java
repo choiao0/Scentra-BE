@@ -58,8 +58,8 @@ public class UserController {
     @Operation(summary = "회원 탈퇴")
     public ApiResponse<UserResponse.UserDeleteResultDTO> deleteUser(@AuthenticationPrincipal User user) {
 
-        User deletedUser = userService.deleteUser(user);
+        userService.deleteUser(user);
 
-        return ApiResponse.onSuccess(UserConverter.toUserDeleteResult(deletedUser));
+        return ApiResponse.onSuccess(UserConverter.toUserDeleteResult(user));
     }
 }
