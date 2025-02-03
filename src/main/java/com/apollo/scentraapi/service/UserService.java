@@ -65,7 +65,17 @@ public class UserService {
 
     public User updateUser(User user, UserRequest.UserUpdateDTO request) {
 
-        user.update(request);
+        // 이메일 중복 검사
+        if (request.getEmail() != null) {
+            Optional<User> findUser = userRepository.findByEmail(request.getEmail());
+
+            if (findUser.isPresent())
+                throw new UserHandler(ErrorStatus.USER_ALREADY_EXIST);
+        }
+
+        user.update(request.getName(), request.getPassword(), request.getEmail(), request.getGender());
+
+        // TODO: 이메일 변경시 자동 로그아웃 구현
 
         return userRepository.save(user);
     }

@@ -47,7 +47,7 @@ public class UserController {
     }
 
     @PatchMapping()
-    @Operation(summary = "회원 정보 수정", description = "수정하지 않을 정보는 null로 입력하세요.")
+    @Operation(summary = "회원 정보 수정", description = "수정하지 않을 정보는 null로 입력하세요. <br> 이메일을 수정했다면 다시 로그인해주세요.")
     public ApiResponse<UserResponse.UserInfoResultDTO> updateUser(@AuthenticationPrincipal User user,
                                                                   @RequestBody UserRequest.UserUpdateDTO request) {
 
