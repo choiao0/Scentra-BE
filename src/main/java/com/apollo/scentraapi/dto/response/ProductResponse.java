@@ -32,6 +32,11 @@ public class ProductResponse {
     @Getter
     public static class ProductUpdateResponseDTO {
         String name;
+        String productImage;
+        String detailImage;
+        String description;
+        Double price;
+        Long brandId;
         LocalDateTime createdAt;
         LocalDateTime updatedAt;
     }
@@ -40,6 +45,7 @@ public class ProductResponse {
     @Getter
     public static class ProductDeleteResponseDTO {
         String name;
+        Long brandId;
         LocalDateTime createdAt;
         LocalDateTime updatedAt;
     }

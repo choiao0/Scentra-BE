@@ -46,6 +46,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary="상품 삭제")
     public ResponseEntity<ApiResponse<ProductResponse.ProductDeleteResponseDTO>> deleteProduct(@PathVariable Long id) {
         ProductResponse.ProductDeleteResponseDTO response = productService.deleteProduct(id);
         return ResponseEntity.ok(ApiResponse.onSuccess(response));
