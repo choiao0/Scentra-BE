@@ -7,11 +7,10 @@ import com.apollo.scentraapi.dto.request.UserRequest;
 import com.apollo.scentraapi.dto.response.UserResponse;
 import com.apollo.scentraapi.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/users")
@@ -20,13 +19,47 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping()
-    @Operation(summary = "회원가입", description = "성별은 MALE or FEMALE로 입력해주세요.")
-    public ApiResponse<UserResponse.UserSignUpResultDTO> createUser(@RequestBody UserRequest.UserSignUpDTO request) {
+    @PostMapping("/sign-up")
+    @Operation(summary = "회원가입", description = "**유저 이메일**은 필수입니다. 중복되지 않도록 입력해주세요. <br> **성별**은 MALE or FEMALE로 입력해주세요.")
+    public ApiResponse<UserResponse.UserSignUpResultDTO> createUser(@Valid @RequestBody UserRequest.UserSignUpDTO request) {
 
-        User user = userService.createUser(request);
-        UserResponse.UserSignUpResultDTO response = UserConverter.toUserSignUpResult(user);
+        UserResponse.UserSignUpResultDTO response = userService.createUser(request);
 
         return ApiResponse.onSuccess(response);
+    }
+
+    @PostMapping("/login")
+    @Operation(summary = "로그인", description = "로그인할 유저의 이메일을 입력해주세요.")
+    public ApiResponse<UserResponse.UserSignUpResultDTO> login(@RequestParam String email) {
+
+        UserResponse.UserSignUpResultDTO response = userService.login(email);
+
+        return ApiResponse.onSuccess(response);
+    }
+
+    @GetMapping()
+    @Operation(summary = "회원 정보 조회")
+    public ApiResponse<UserResponse.UserInfoResultDTO> getUserInfo(@AuthenticationPrincipal User user) {
+
+        return ApiResponse.onSuccess(UserConverter.toUserInfoResult(user));
+    }
+
+    @PatchMapping()
+    @Operation(summary = "회원 정보 수정", description = "수정하지 않을 정보는 null로 입력하세요. <br> 이메일을 수정했다면 다시 로그인해주세요.")
+    public ApiResponse<UserResponse.UserInfoResultDTO> updateUser(@AuthenticationPrincipal User user,
+                                                                  @RequestBody UserRequest.UserUpdateDTO request) {
+
+        User updatedUser = userService.updateUser(user, request);
+
+        return ApiResponse.onSuccess(UserConverter.toUserInfoResult(updatedUser));
+    }
+
+    @DeleteMapping()
+    @Operation(summary = "회원 탈퇴")
+    public ApiResponse<UserResponse.UserDeleteResultDTO> deleteUser(@AuthenticationPrincipal User user) {
+
+        userService.deleteUser(user);
+
+        return ApiResponse.onSuccess(UserConverter.toUserDeleteResult(user));
     }
 }
