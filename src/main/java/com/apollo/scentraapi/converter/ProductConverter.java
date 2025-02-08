@@ -26,7 +26,7 @@ public class ProductConverter {
     }
     public static ProductResponse.ProductDto toProductResponse(Product product) {
         return ProductResponse.ProductDto.builder()
-                .product_id(product.getId())
+                .productId(product.getId())
                 .build();
     }
 

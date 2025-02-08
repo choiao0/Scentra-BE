@@ -37,13 +37,14 @@ public class ProductService {
                 .orElseThrow(ProductNotFoundException::new);
 
         return ProductResponse.ProductDto.builder()
-                .product_id(product.getId())
+                .productId(product.getId())
                 .name(product.getProductName())
                 .productImage(product.getProductImage())
                 .detailImage(product.getDetailImage())
                 .description(product.getProductDescription())
                 .price(product.getPrice())
                 .brandId(product.getBrand() != null ? product.getBrand().getId() : null)
+                .brandName(product.getBrand() != null ? product.getBrand().getBrandName() : null)
                 .createdAt(product.getCreatedAt())
                 .updatedAt(product.getUpdatedAt())
                 .build();
@@ -125,8 +126,10 @@ public class ProductService {
 
         // 3. 삭제된 상품 정보 반환
         return ProductResponse.ProductDeleteResponseDTO.builder()
+                .productId(product.getId())
                 .name(product.getProductName())
                 .brandId(product.getBrand() != null ? product.getBrand().getId() : null)
+                .brandName(product.getBrand() != null ? product.getBrand().getBrandName() : null)
                 .createdAt(product.getCreatedAt())
                 .updatedAt(product.getUpdatedAt())
                 .build();
