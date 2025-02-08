@@ -72,4 +72,12 @@ public class ProductController {
                 getProductsByCategory(category_id);
         return ApiResponse.onSuccess(response);
     }
+
+    @GetMapping("/search")
+    @Operation(summary = "검색어 기반 상품 조회", description = "검색어가 상품 이름 또는 브랜드 이름에 포함된 상품을 조회합니다.")
+    public ResponseEntity<List<ProductResponse.ProductListDto>> searchProducts(
+            @RequestParam String keyword) {
+        List<ProductResponse.ProductListDto> response = productService.searchProducts(keyword);
+        return ResponseEntity.ok(response);
+    }
 }
