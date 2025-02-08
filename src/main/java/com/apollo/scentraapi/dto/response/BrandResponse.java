@@ -23,4 +23,14 @@ public class BrandResponse {
         String brandName;
         String brandImage;
     }
+
+    @Builder
+    @Getter
+    public static class BrandUpdateResponseDTO {
+        String brandName;
+        String brandDescription;
+        String brandImage;
+        LocalDateTime createdAt;
+        LocalDateTime updatedAt;
+    }
 }

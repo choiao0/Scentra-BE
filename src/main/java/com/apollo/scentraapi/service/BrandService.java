@@ -8,6 +8,7 @@ import com.apollo.scentraapi.converter.BrandConverter;
 import com.apollo.scentraapi.converter.ProductConverter;
 import com.apollo.scentraapi.domain.Product;
 import com.apollo.scentraapi.dto.request.BrandRequest;
+import com.apollo.scentraapi.dto.request.ProductRequest;
 import com.apollo.scentraapi.dto.response.BrandResponse;
 import com.apollo.scentraapi.dto.response.ProductResponse;
 import com.apollo.scentraapi.repository.BrandRepository;
@@ -64,5 +65,28 @@ public class BrandService {
         Brand new_brand = BrandConverter.toBrand(brandUploadRequestDto);
 
         return brandRepository.save(new_brand);
+    }
+
+    @Transactional
+    public BrandResponse.BrandUpdateResponseDTO updateBrand(Long id, BrandRequest.BrandUpdateRequestDTO request) {
+        // 1. 브랜드 조회
+        Brand brand = brandRepository.findById(id)
+                .orElseThrow(BrandNotFoundException::new);
+
+        // 2. 브랜드 정보 업데이트
+        brand.update(
+                request.getBrandName(),
+                request.getBrandImage(),
+                request.getBrandDescription()
+        );
+
+        // 3. 응답 DTO 반환
+        return BrandResponse.BrandUpdateResponseDTO.builder()
+                .brandName(brand.getBrandName())
+                .brandImage(brand.getBrandImage())
+                .brandDescription(brand.getBrandDescription())
+                .createdAt(brand.getCreatedAt())
+                .updatedAt(brand.getUpdatedAt())
+                .build();
     }
 }

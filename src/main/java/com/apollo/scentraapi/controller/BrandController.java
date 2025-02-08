@@ -46,4 +46,12 @@ public class BrandController {
         return ResponseEntity.ok(ApiResponse.onSuccess(response));
     }
 
+    @PutMapping("/{id}")
+    @Operation(summary="브랜드 정보 수정")
+    public ResponseEntity<ApiResponse<BrandResponse.BrandUpdateResponseDTO>> updateBrand(
+            @PathVariable Long id, @RequestBody BrandRequest.BrandUpdateRequestDTO request) {
+        BrandResponse.BrandUpdateResponseDTO response = brandService.updateBrand(id, request);
+        return ResponseEntity.ok(ApiResponse.onSuccess(response));
+    }
+
 }

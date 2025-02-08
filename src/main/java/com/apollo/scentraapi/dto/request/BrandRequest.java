@@ -11,4 +11,11 @@ public class BrandRequest {
         String brandDescription;
         String brandImage;
     }
+
+    @Getter
+    public static class BrandUpdateRequestDTO {
+        String brandName;
+        String brandDescription;
+        String brandImage;
+    }
 }
