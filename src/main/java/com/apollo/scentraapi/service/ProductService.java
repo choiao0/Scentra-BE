@@ -5,9 +5,11 @@ import com.apollo.scentraapi.apiPayload.exception.handler.ProductHandler;
 import com.apollo.scentraapi.converter.ProductConverter;
 import com.apollo.scentraapi.domain.Brand;
 import com.apollo.scentraapi.domain.Product;
+import com.apollo.scentraapi.domain.CategoryMapping;
 import com.apollo.scentraapi.dto.request.ProductRequest;
 import com.apollo.scentraapi.dto.response.ProductResponse;
 import com.apollo.scentraapi.repository.BrandRepository;
+import com.apollo.scentraapi.repository.CategoryMappingRepository;
 import com.apollo.scentraapi.repository.ProductRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,14 +23,15 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ProductService {
 
     private final ProductRepository productRepository;
-
     private final BrandRepository brandRepository;
+    private final CategoryMappingRepository categoryMappingRepository;
 
     public List<ProductResponse.ProductListDto> getAllProducts() {
         List<Product> products = productRepository.findAll();
@@ -139,4 +142,28 @@ public class ProductService {
 
         return ProductConverter.toImageDTO(imageUrl);
     }
+
+    @Transactional(readOnly = true)
+    public List<ProductResponse.ProductListDto> getProductsByCategory(Long category_id) {
+        List<CategoryMapping> mappings = categoryMappingRepository.findByCategoryId(category_id);
+
+        if (mappings.isEmpty()) {
+            throw new ProductHandler(ErrorStatus.PRODUCT_NOT_FOUND); // 예외 처리 추가
+        }
+        return mappings.stream()
+                .map(mapping -> {
+                    Product product = mapping.getProduct();
+                    String brandName = (product.getBrand() != null) ? product.getBrand().getBrandName() : "Unknown Brand"; // 브랜드 정보 포함
+
+                    return ProductResponse.ProductListDto.builder()
+                            .product_id(product.getId())
+                            .product_name(product.getProductName())
+                            .product_image(product.getProductImage())
+                            .price(product.getPrice())
+                            .brand_name(brandName) // 브랜드 정보 추가
+                            .build();
+                })
+                .collect(Collectors.toList());
+    }
+
 }
