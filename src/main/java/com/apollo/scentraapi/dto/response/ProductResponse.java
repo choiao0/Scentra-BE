@@ -20,17 +20,6 @@ public class ProductResponse {
     @Getter
     public static class ProductDto {
         Long product_id;
-    }
-
-    @Builder
-    @Getter
-    public static class ImageDTO {
-        String ImageUrl;
-    }
-
-    @Builder
-    @Getter
-    public static class ProductGetResponseDTO {
         String name;
         String productImage;
         String detailImage;
@@ -39,6 +28,12 @@ public class ProductResponse {
         Long brandId;
         LocalDateTime createdAt;
         LocalDateTime updatedAt;
+    }
+
+    @Builder
+    @Getter
+    public static class ImageDTO {
+        String ImageUrl;
     }
 
     @Builder

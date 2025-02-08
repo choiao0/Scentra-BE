@@ -31,12 +31,13 @@ public class ProductService {
     private final BrandRepository brandRepository;
 
     @Transactional
-    public ProductResponse.ProductGetResponseDTO getProduct(Long id) {
+    public ProductResponse.ProductDto getProduct(Long id) {
         // 1. 상품 조회 (없으면 예외 발생)
         Product product = productRepository.findById(id)
                 .orElseThrow(ProductNotFoundException::new);
 
-        return ProductResponse.ProductGetResponseDTO.builder()
+        return ProductResponse.ProductDto.builder()
+                .product_id(product.getId())
                 .name(product.getProductName())
                 .productImage(product.getProductImage())
                 .detailImage(product.getDetailImage())
