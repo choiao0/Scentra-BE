@@ -65,4 +65,11 @@ public class ProductController {
         return ApiResponse.onSuccess(response);
     }
 
+    @GetMapping("/category/{category_id}")
+    @Operation(summary="태그 ID로 제품 목록 조회")
+    public ApiResponse<List<ProductResponse.ProductListDto>> getProductsByCategory(@PathVariable Long category_id) {
+        List<ProductResponse.ProductListDto> response = productService.
+                getProductsByCategory(category_id);
+        return ApiResponse.onSuccess(response);
+    }
 }
