@@ -169,7 +169,7 @@ public class ProductService {
         // 2. 검색 실행
         List<Product> filteredProducts = productRepository.findAll().stream()
                 .filter(product -> product.getProductName().toLowerCase().contains(keyword.toLowerCase()) ||
-                        (product.getBrand() != null && product.getBrand().getId().toString().contains(keyword))) // ✅ null 체크 추가
+                        (product.getBrand() != null && product.getBrand().getBrandName().toLowerCase().contains(keyword.toLowerCase()))) // ✅ null 체크 추가
                 .toList();
 
 
