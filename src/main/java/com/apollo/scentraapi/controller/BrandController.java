@@ -31,12 +31,19 @@ public class BrandController {
         return ResponseEntity.ok(ApiResponse.onSuccess(response));
     }
 
+    @GetMapping
+    @Operation(summary="브랜드 목록 조회")
+    public ResponseEntity<ApiResponse<List<BrandResponse.BrandListDto>>> getAllBrands() {
+        List<BrandResponse.BrandListDto> response = brandService.getAllBrands();
+        return ResponseEntity.ok(ApiResponse.onSuccess(response));
+    }
+
     @PostMapping
     @Operation(summary="브랜드 생성(업로드)")
-    public ApiResponse<BrandResponse.BrandDto> uploadProduct(@RequestBody BrandRequest.BrandUploadRequestDTO request) {
+    public ResponseEntity<ApiResponse<BrandResponse.BrandDto>> uploadProduct(@RequestBody BrandRequest.BrandUploadRequestDTO request) {
         Brand new_brand = brandService.uploadBrand(request);
         BrandResponse.BrandDto response = BrandConverter.toBrandResponse(new_brand);
-        return ApiResponse.onSuccess(response);
+        return ResponseEntity.ok(ApiResponse.onSuccess(response));
     }
 
 }

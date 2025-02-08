@@ -15,4 +15,12 @@ public class BrandResponse {
         String brandDescription;
         String brandImage;
     }
+
+    @Builder
+    @Getter
+    public static class BrandListDto {
+        Long id;
+        String brandName;
+        String brandImage;
+    }
 }

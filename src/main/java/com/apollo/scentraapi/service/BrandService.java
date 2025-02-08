@@ -3,7 +3,9 @@ package com.apollo.scentraapi.service;
 import com.apollo.scentraapi.apiPayload.code.status.ErrorStatus;
 import com.apollo.scentraapi.apiPayload.exception.ProductNotFoundException;
 import com.apollo.scentraapi.apiPayload.exception.handler.BrandHandler;
+import com.apollo.scentraapi.apiPayload.exception.handler.ProductHandler;
 import com.apollo.scentraapi.converter.BrandConverter;
+import com.apollo.scentraapi.converter.ProductConverter;
 import com.apollo.scentraapi.domain.Product;
 import com.apollo.scentraapi.dto.request.BrandRequest;
 import com.apollo.scentraapi.dto.response.BrandResponse;
@@ -14,6 +16,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.apollo.scentraapi.apiPayload.exception.BrandNotFoundException;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +39,21 @@ public class BrandService {
                 .brandImage(brand.getBrandImage())
                 .brandDescription(brand.getBrandDescription())
                 .build();
+    }
+
+    public List<BrandResponse.BrandListDto> getAllBrands() {
+        List<Brand> brands = brandRepository.findAll();
+        List<BrandResponse.BrandListDto> brandList = new ArrayList<>();
+
+        if (brands.isEmpty()) {
+            throw new ProductHandler(ErrorStatus.BRAND_NOT_FOUND);
+        }
+
+        for (Brand brand : brands) {
+            BrandResponse.BrandListDto brand_dto = BrandConverter.toBrandListDto(brand);
+            brandList.add(brand_dto);
+        }
+        return brandList;
     }
 
     public Brand uploadBrand(BrandRequest.BrandUploadRequestDTO brandUploadRequestDto) {

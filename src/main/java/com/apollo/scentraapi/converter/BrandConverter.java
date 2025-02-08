@@ -20,4 +20,11 @@ public class BrandConverter {
                 .id(brand.getId())
                 .build();
     }
+    public static BrandResponse.BrandListDto toBrandListDto(Brand brand) {
+        return BrandResponse.BrandListDto.builder()
+                .id(brand.getId())
+                .brandName(brand.getBrandName())
+                .brandImage(brand.getBrandImage())
+                .build();
+    }
 }
