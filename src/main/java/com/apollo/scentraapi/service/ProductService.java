@@ -30,6 +30,24 @@ public class ProductService {
 
     private final BrandRepository brandRepository;
 
+    @Transactional
+    public ProductResponse.ProductGetResponseDTO getProduct(Long id) {
+        // 1. 상품 조회 (없으면 예외 발생)
+        Product product = productRepository.findById(id)
+                .orElseThrow(ProductNotFoundException::new);
+
+        return ProductResponse.ProductGetResponseDTO.builder()
+                .name(product.getProductName())
+                .productImage(product.getProductImage())
+                .detailImage(product.getDetailImage())
+                .description(product.getProductDescription())
+                .price(product.getPrice())
+                .brandId(product.getBrand() != null ? product.getBrand().getId() : null)
+                .createdAt(product.getCreatedAt())
+                .updatedAt(product.getUpdatedAt())
+                .build();
+    }
+
     public List<ProductResponse.ProductListDto> getAllProducts() {
         List<Product> products = productRepository.findAll();
         List<ProductResponse.ProductListDto> productList = new ArrayList<>();

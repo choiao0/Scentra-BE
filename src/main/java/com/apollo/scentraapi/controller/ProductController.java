@@ -21,6 +21,13 @@ public class ProductController {
 
     private final ProductService productService;
 
+    @GetMapping("/{id}")
+    @Operation(summary="상품 조회")
+    public ResponseEntity<ApiResponse<ProductResponse.ProductGetResponseDTO>> getProduct(@PathVariable Long id) {
+        ProductResponse.ProductGetResponseDTO response = productService.getProduct(id);
+        return ResponseEntity.ok(ApiResponse.onSuccess(response));
+    }
+
     @GetMapping
     @Operation(summary="상품 목록 조회")
     public ApiResponse<List<ProductResponse.ProductListDto>> getAllProducts() {

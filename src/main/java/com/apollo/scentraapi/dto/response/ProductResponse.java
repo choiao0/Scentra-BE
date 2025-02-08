@@ -30,6 +30,19 @@ public class ProductResponse {
 
     @Builder
     @Getter
+    public static class ProductGetResponseDTO {
+        String name;
+        String productImage;
+        String detailImage;
+        String description;
+        Double price;
+        Long brandId;
+        LocalDateTime createdAt;
+        LocalDateTime updatedAt;
+    }
+
+    @Builder
+    @Getter
     public static class ProductUpdateResponseDTO {
         String name;
         String productImage;
