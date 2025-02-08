@@ -155,15 +155,37 @@ public class ProductService {
                     Product product = mapping.getProduct();
                     String brandName = (product.getBrand() != null) ? product.getBrand().getBrandName() : "Unknown Brand"; // 브랜드 정보 포함
 
-                    return ProductResponse.ProductListDto.builder()
-                            .product_id(product.getId())
-                            .product_name(product.getProductName())
-                            .product_image(product.getProductImage())
-                            .price(product.getPrice())
-                            .brand_name(brandName) // 브랜드 정보 추가
-                            .build();
+                    return ProductConverter.toProductListDto(product, brandName);
                 })
                 .collect(Collectors.toList());
     }
 
+    public List<ProductResponse.ProductListDto> searchProducts(String keyword) {
+        // 1. 검색어가 null 또는 빈 문자열일 경우 예외 처리
+        if (keyword == null || keyword.trim().isEmpty()) {
+            throw new ProductHandler(ErrorStatus.INVALID_SEARCH_KEYWORD);
+        }
+
+        // 2. 검색 실행
+        List<Product> filteredProducts = productRepository.findAll().stream()
+                .filter(product -> product.getProductName().toLowerCase().contains(keyword.toLowerCase()) ||
+                        (product.getBrand() != null && product.getBrand().getId().toString().contains(keyword))) // ✅ null 체크 추가
+                .toList();
+
+
+        // 3. 검색 결과 없을 경우 예외 처리
+        if (filteredProducts.isEmpty()) {
+            throw new ProductHandler(ErrorStatus.PRODUCT_NOT_FOUND);
+        }
+
+        return filteredProducts.stream()
+                .map(product -> {
+                    String brand_name = Optional.ofNullable(product.getBrand()) // ✅ Optional 활용
+                            .map(Brand::getBrandName)
+                            .orElse("Unknown Brand"); // 브랜드 정보가 없으면 "Unknown Brand" 설정
+
+                    return ProductConverter.toProductListDto(product, brand_name); // ✅ brand_name을 명시적으로 전달
+                })
+                .collect(Collectors.toList());
+    }
 }
