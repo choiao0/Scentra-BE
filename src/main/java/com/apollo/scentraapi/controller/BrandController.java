@@ -54,4 +54,11 @@ public class BrandController {
         return ResponseEntity.ok(ApiResponse.onSuccess(response));
     }
 
+    @DeleteMapping("/{id}")
+    @Operation(summary="브랜드 삭제")
+    public ResponseEntity<ApiResponse<BrandResponse.BrandDeleteResponseDTO>> deleteBrand(@PathVariable Long id) {
+        BrandResponse.BrandDeleteResponseDTO response = brandService.deleteBrand(id);
+        return ResponseEntity.ok(ApiResponse.onSuccess(response));
+    }
+
 }

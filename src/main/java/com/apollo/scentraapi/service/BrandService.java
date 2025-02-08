@@ -89,4 +89,22 @@ public class BrandService {
                 .updatedAt(brand.getUpdatedAt())
                 .build();
     }
+
+    @Transactional
+    public BrandResponse.BrandDeleteResponseDTO deleteBrand(Long id) {
+        // 1. 브랜드 조회
+        Brand brand = brandRepository.findById(id)
+                .orElseThrow(BrandNotFoundException::new);
+
+        // 2. 브랜드 삭제 수행
+        brandRepository.delete(brand);
+
+        // 3. 삭제된 브랜드 정보 반환
+        return BrandResponse.BrandDeleteResponseDTO.builder()
+                .id(brand.getId())
+                .brandName(brand.getBrandName())
+                .createdAt(brand.getCreatedAt())
+                .updatedAt(brand.getUpdatedAt())
+                .build();
+    }
 }

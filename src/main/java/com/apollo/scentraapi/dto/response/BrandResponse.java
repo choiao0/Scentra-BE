@@ -33,4 +33,13 @@ public class BrandResponse {
         LocalDateTime createdAt;
         LocalDateTime updatedAt;
     }
+
+    @Builder
+    @Getter
+    public static class BrandDeleteResponseDTO {
+        Long id;
+        String brandName;
+        LocalDateTime createdAt;
+        LocalDateTime updatedAt;
+    }
 }
