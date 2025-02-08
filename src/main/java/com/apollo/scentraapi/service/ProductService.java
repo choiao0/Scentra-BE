@@ -9,9 +9,15 @@ import com.apollo.scentraapi.dto.request.ProductRequest;
 import com.apollo.scentraapi.dto.response.ProductResponse;
 import com.apollo.scentraapi.repository.BrandRepository;
 import com.apollo.scentraapi.repository.ProductRepository;
+import jakarta.annotation.PostConstruct;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import com.apollo.scentraapi.apiPayload.exception.ProductNotFoundException;
+import com.apollo.scentraapi.apiPayload.exception.BrandNotFoundException;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -52,6 +58,59 @@ public class ProductService {
                 .orElseThrow(() -> new ProductHandler(ErrorStatus.BRAND_NOT_FOUND));
         new_product.setBrand(brand);
         return productRepository.save(new_product);
+    }
+
+    @Transactional
+    public ProductResponse.ProductUpdateResponseDTO updateProduct(Long id, ProductRequest.ProductUpdateRequestDTO request) {
+        // 1. 상품 조회
+        Product product = productRepository.findById(id)
+                .orElseThrow(ProductNotFoundException::new);
+
+        // 2. 브랜드 변경이 있을 경우, 브랜드 찾기
+        if (request.getBrandId() != null) {
+            Brand brand = brandRepository.findById(request.getBrandId())
+                    .orElseThrow(BrandNotFoundException::new);
+            product.setBrand(brand);  // ✅ 브랜드 정보 업데이트
+        }
+
+        // 3. 상품 정보 업데이트
+        product.update(
+                request.getName(),
+                request.getProductImage(),
+                request.getDetailImage(),
+                request.getDescription(),
+                request.getPrice()
+        );
+
+        // 4. 응답 DTO 반환
+        return ProductResponse.ProductUpdateResponseDTO.builder()
+                .name(product.getProductName())
+                .productImage(product.getProductImage())
+                .detailImage(product.getDetailImage())
+                .description(product.getProductDescription())
+                .price(product.getPrice())
+                .brandId(product.getBrand() != null ? product.getBrand().getId() : null)
+                .createdAt(product.getCreatedAt())
+                .updatedAt(product.getUpdatedAt())
+                .build();
+    }
+
+    @Transactional
+    public ProductResponse.ProductDeleteResponseDTO deleteProduct(Long id) {
+        // 1. 상품 조회 (없으면 예외 발생)
+        Product product = productRepository.findById(id)
+                .orElseThrow(ProductNotFoundException::new);
+
+        // 2. 삭제 수행
+        productRepository.delete(product);
+
+        // 3. 삭제된 상품 정보 반환
+        return ProductResponse.ProductDeleteResponseDTO.builder()
+                .name(product.getProductName())
+                .brandId(product.getBrand() != null ? product.getBrand().getId() : null)
+                .createdAt(product.getCreatedAt())
+                .updatedAt(product.getUpdatedAt())
+                .build();
     }
 
     public ProductResponse.ImageDTO createBackgroundImage(ProductRequest.CreateBgImgDTO request) {

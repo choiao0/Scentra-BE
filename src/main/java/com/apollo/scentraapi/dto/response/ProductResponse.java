@@ -2,6 +2,7 @@ package com.apollo.scentraapi.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;
+import java.time.LocalDateTime;
 
 public class ProductResponse {
 
@@ -25,6 +26,28 @@ public class ProductResponse {
     @Getter
     public static class ImageDTO {
         String ImageUrl;
+    }
+
+    @Builder
+    @Getter
+    public static class ProductUpdateResponseDTO {
+        String name;
+        String productImage;
+        String detailImage;
+        String description;
+        Double price;
+        Long brandId;
+        LocalDateTime createdAt;
+        LocalDateTime updatedAt;
+    }
+
+    @Builder
+    @Getter
+    public static class ProductDeleteResponseDTO {
+        String name;
+        Long brandId;
+        LocalDateTime createdAt;
+        LocalDateTime updatedAt;
     }
 
 }
