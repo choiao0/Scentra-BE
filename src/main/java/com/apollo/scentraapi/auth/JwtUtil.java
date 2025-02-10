@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -23,8 +24,6 @@ import java.util.Date;
 @Slf4j
 @Component
 public class JwtUtil {
-
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 60 * 60 * 2 * 1000L; // access 2시간
 
     private SecretKey secretKey;
     private final UserDetailService userDetailService;
@@ -39,7 +38,6 @@ public class JwtUtil {
         return Jwts.builder()
                 .claim("userEmail", userEmail)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRE_TIME))
                 .signWith(secretKey)
                 .compact();
     }
@@ -69,7 +67,7 @@ public class JwtUtil {
         }
     }
 
-    public Authentication getAuthentication(String token) {
+    public Authentication getAuthentication(String token) throws UsernameNotFoundException {
         UserDetails userDetails = userDetailService.loadUserByUsername(this.getUserEmail(token));
         return new UsernamePasswordAuthenticationToken(userDetails, null, null);
     }
