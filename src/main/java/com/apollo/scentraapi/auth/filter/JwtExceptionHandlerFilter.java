@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -22,7 +23,7 @@ public class JwtExceptionHandlerFilter extends OncePerRequestFilter {
 
         try {
             filterChain.doFilter(request, response);
-        } catch (JwtExceptionHandler ex) {
+        } catch (JwtExceptionHandler | UsernameNotFoundException ex) {
             setErrorResponse(HttpStatus.UNAUTHORIZED, request, response, ex);
         }
     }
@@ -30,7 +31,7 @@ public class JwtExceptionHandlerFilter extends OncePerRequestFilter {
     public void setErrorResponse(HttpStatus status, HttpServletRequest req,
                                  HttpServletResponse res, Throwable ex) throws IOException {
         ApiResponse<Object> apiResponse =
-                ApiResponse.onFailure(HttpStatus.UNAUTHORIZED.name(), "COMMON401", ex.getMessage());
+                ApiResponse.onFailure("COMMON401", HttpStatus.UNAUTHORIZED.name(), ex.getMessage());
         String responseBody = new ObjectMapper().writeValueAsString(apiResponse);
         res.setStatus(status.value());
         res.setContentType("application/json");

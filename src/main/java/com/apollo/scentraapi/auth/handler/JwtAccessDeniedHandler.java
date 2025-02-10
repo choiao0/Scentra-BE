@@ -25,7 +25,7 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
 
         log.error("No Authorities", accessDeniedException);
         ApiResponse<Object> apiResponse =
-                ApiResponse.onFailure(HttpStatus.FORBIDDEN.name(), "COMMON403", "금지된 요청입니다.");
+                ApiResponse.onFailure("COMMON403", HttpStatus.FORBIDDEN.name(), "접근 권한이 필요합니다.");
         String responseBody = new ObjectMapper().writeValueAsString(apiResponse);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(HttpStatus.FORBIDDEN.value());
