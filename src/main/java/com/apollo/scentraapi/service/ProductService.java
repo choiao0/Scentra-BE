@@ -184,4 +184,15 @@ public class ProductService {
                 .productId(newLike.getProduct().getId())
                 .build();
     }
+
+    public ProductResponse.ProductLikeDTO removeLike(User user, Long productId) {
+        Optional<ProductLikes> optionalProductLike = productLikeRepository.findByProductId(productId);
+        ProductLikes productLike = optionalProductLike.orElseThrow(() -> new ProductHandler(ErrorStatus.PRODUCT_NOT_FOUND));
+
+        productLikeRepository.delete(productLike);
+        return ProductResponse.ProductLikeDTO.builder()
+                .productLikeId(productLike.getId())
+                .productId(productLike.getProduct().getId())
+                .build();
+    }
 }
