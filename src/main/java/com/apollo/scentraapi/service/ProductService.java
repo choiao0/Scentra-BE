@@ -5,9 +5,12 @@ import com.apollo.scentraapi.apiPayload.exception.handler.ProductHandler;
 import com.apollo.scentraapi.converter.ProductConverter;
 import com.apollo.scentraapi.domain.Brand;
 import com.apollo.scentraapi.domain.Product;
+import com.apollo.scentraapi.domain.ProductLikes;
+import com.apollo.scentraapi.domain.User;
 import com.apollo.scentraapi.dto.request.ProductRequest;
 import com.apollo.scentraapi.dto.response.ProductResponse;
 import com.apollo.scentraapi.repository.BrandRepository;
+import com.apollo.scentraapi.repository.ProductLikesRepository;
 import com.apollo.scentraapi.repository.ProductRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +32,8 @@ public class ProductService {
     private final ProductRepository productRepository;
 
     private final BrandRepository brandRepository;
+
+    private final ProductLikesRepository productLikeRepository;
 
     @Transactional
     public ProductResponse.ProductDto getProduct(Long id) {
@@ -160,5 +165,23 @@ public class ProductService {
         String imageUrl = "http://"+backgroundImageUrl+"/"+productImageUrl;
 
         return ProductConverter.toImageDTO(imageUrl);
+    }
+
+    public ProductResponse.ProductLikeDTO addLike(User user, Long productId) {
+        Optional<Product> optionalProduct = productRepository.findById(productId);
+
+        Product product = optionalProduct.orElseThrow(() -> new ProductHandler(ErrorStatus.PRODUCT_NOT_FOUND));
+
+        ProductLikes newLike = ProductLikes.builder()
+                                .user(user)
+                                .product(product)
+                                .build();
+
+        productLikeRepository.save(newLike);
+
+        return ProductResponse.ProductLikeDTO.builder()
+                .productLikeId(newLike.getId())
+                .productId(newLike.getProduct().getId())
+                .build();
     }
 }

@@ -61,4 +61,10 @@ public class ProductResponse {
         LocalDateTime updatedAt;
     }
 
+    @Builder
+    @Getter
+    public static class ProductLikeDTO {
+        Long productLikeId;
+        Long productId;
+    }
 }

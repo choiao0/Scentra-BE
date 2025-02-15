@@ -3,6 +3,7 @@ package com.apollo.scentraapi.controller;
 import com.apollo.scentraapi.apiPayload.ApiResponse;
 import com.apollo.scentraapi.converter.ProductConverter;
 import com.apollo.scentraapi.domain.Product;
+import com.apollo.scentraapi.domain.User;
 import com.apollo.scentraapi.dto.request.ProductRequest;
 import com.apollo.scentraapi.dto.response.ProductResponse;
 import com.apollo.scentraapi.service.ProductService;
@@ -10,7 +11,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 
@@ -72,4 +75,10 @@ public class ProductController {
         return ApiResponse.onSuccess(response);
     }
 
+    @PostMapping("/{id}/like")
+    @Operation(summary="상품 좋아요 추가")
+    public ApiResponse<?> addLike(@AuthenticationPrincipal User user, @PathVariable Long id) {
+        ProductResponse.ProductLikeDTO response = productService.addLike(user, id);
+        return ApiResponse.onSuccess(response);
+    }
 }
