@@ -186,7 +186,7 @@ public class ProductService {
     }
 
     public ProductResponse.ProductLikeDTO removeLike(User user, Long productId) {
-        Optional<ProductLikes> optionalProductLike = productLikeRepository.findByProductId(productId);
+        Optional<ProductLikes> optionalProductLike = productLikeRepository.findByUserIdAndProductId(user.getId(), productId);
         ProductLikes productLike = optionalProductLike.orElseThrow(() -> new ProductHandler(ErrorStatus.PRODUCT_NOT_FOUND));
 
         productLikeRepository.delete(productLike);

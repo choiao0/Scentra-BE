@@ -7,9 +7,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public interface ProductLikesRepository extends JpaRepository<ProductLikes, Long> {
     List<ProductLikes> findAllByUser(User user);
-    Optional<ProductLikes> findByProductId(Long productId);
+    Optional<ProductLikes> findByUserIdAndProductId(UUID userId, Long productId);
 }
