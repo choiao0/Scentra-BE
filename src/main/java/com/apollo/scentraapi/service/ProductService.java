@@ -5,9 +5,11 @@ import com.apollo.scentraapi.apiPayload.exception.handler.ProductHandler;
 import com.apollo.scentraapi.converter.ProductConverter;
 import com.apollo.scentraapi.domain.Brand;
 import com.apollo.scentraapi.domain.Product;
+import com.apollo.scentraapi.domain.CategoryMapping;
 import com.apollo.scentraapi.dto.request.ProductRequest;
 import com.apollo.scentraapi.dto.response.ProductResponse;
 import com.apollo.scentraapi.repository.BrandRepository;
+import com.apollo.scentraapi.repository.CategoryMappingRepository;
 import com.apollo.scentraapi.repository.ProductRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,14 +23,15 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ProductService {
 
     private final ProductRepository productRepository;
-
     private final BrandRepository brandRepository;
+    private final CategoryMappingRepository categoryMappingRepository;
 
     @Transactional
     public ProductResponse.ProductDto getProduct(Long id) {
@@ -160,5 +163,51 @@ public class ProductService {
         String imageUrl = "http://"+backgroundImageUrl+"/"+productImageUrl;
 
         return ProductConverter.toImageDTO(imageUrl);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProductResponse.ProductListDto> getProductsByCategory(Long category_id) {
+        List<CategoryMapping> mappings = categoryMappingRepository.findByCategoryId(category_id);
+
+        if (mappings.isEmpty()) {
+            throw new ProductHandler(ErrorStatus.PRODUCT_NOT_FOUND); // 예외 처리 추가
+        }
+        return mappings.stream()
+                .map(mapping -> {
+                    Product product = mapping.getProduct();
+                    String brandName = (product.getBrand() != null) ? product.getBrand().getBrandName() : "Unknown Brand"; // 브랜드 정보 포함
+
+                    return ProductConverter.toProductListDto(product, brandName);
+                })
+                .collect(Collectors.toList());
+    }
+
+    public List<ProductResponse.ProductListDto> searchProducts(String keyword) {
+        // 1. 검색어가 null 또는 빈 문자열일 경우 예외 처리
+        if (keyword == null || keyword.trim().isEmpty()) {
+            throw new ProductHandler(ErrorStatus.INVALID_SEARCH_KEYWORD);
+        }
+
+        // 2. 검색 실행
+        List<Product> filteredProducts = productRepository.findAll().stream()
+                .filter(product -> product.getProductName().toLowerCase().contains(keyword.toLowerCase()) ||
+                        (product.getBrand() != null && product.getBrand().getBrandName().toLowerCase().contains(keyword.toLowerCase()))) // ✅ null 체크 추가
+                .toList();
+
+
+        // 3. 검색 결과 없을 경우 예외 처리
+        if (filteredProducts.isEmpty()) {
+            throw new ProductHandler(ErrorStatus.PRODUCT_NOT_FOUND);
+        }
+
+        return filteredProducts.stream()
+                .map(product -> {
+                    String brand_name = Optional.ofNullable(product.getBrand()) // ✅ Optional 활용
+                            .map(Brand::getBrandName)
+                            .orElse("Unknown Brand"); // 브랜드 정보가 없으면 "Unknown Brand" 설정
+
+                    return ProductConverter.toProductListDto(product, brand_name); // ✅ brand_name을 명시적으로 전달
+                })
+                .collect(Collectors.toList());
     }
 }
