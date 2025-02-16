@@ -87,6 +87,7 @@ public class ProductController {
     public ApiResponse<ProductResponse.ProductLikeDTO> removeLike(@AuthenticationPrincipal User user, @PathVariable("product-id") Long id) {
         ProductResponse.ProductLikeDTO response = productService.removeLike(user, id);
         return ApiResponse.onSuccess(response);
+    }
 
     @GetMapping("/category/{category_id}")
     @Operation(summary="태그 ID로 제품 목록 조회")
@@ -98,10 +99,8 @@ public class ProductController {
 
     @GetMapping("/search")
     @Operation(summary = "검색어 기반 상품 조회", description = "검색어가 상품 이름 또는 브랜드 이름에 포함된 상품을 조회합니다.")
-    public ResponseEntity<List<ProductResponse.ProductListDto>> searchProducts(
-            @RequestParam String keyword) {
+    public ResponseEntity<List<ProductResponse.ProductListDto>> searchProducts (@RequestParam String keyword) {
         List<ProductResponse.ProductListDto> response = productService.searchProducts(keyword);
         return ResponseEntity.ok(response);
-
     }
 }
