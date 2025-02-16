@@ -74,16 +74,16 @@ public class ProductController {
         return ApiResponse.onSuccess(response);
     }
 
-    @PostMapping("/{id}/like")
+    @PostMapping("/likes/{product-id}")
     @Operation(summary="상품 좋아요 추가")
-    public ApiResponse<ProductResponse.ProductLikeDTO> addLike(@AuthenticationPrincipal User user, @PathVariable Long id) {
+    public ApiResponse<ProductResponse.ProductLikeDTO> addLike(@AuthenticationPrincipal User user, @PathVariable("product-id")Long id) {
         ProductResponse.ProductLikeDTO response = productService.addLike(user, id);
         return ApiResponse.onSuccess(response);
     }
 
-    @DeleteMapping("/{id}/like")
+    @DeleteMapping("/likes/{product-id}")
     @Operation(summary="상품 좋아요 삭제")
-    public ApiResponse<ProductResponse.ProductLikeDTO> removeLike(@AuthenticationPrincipal User user, @PathVariable Long id) {
+    public ApiResponse<ProductResponse.ProductLikeDTO> removeLike(@AuthenticationPrincipal User user, @PathVariable("product-id") Long id) {
         ProductResponse.ProductLikeDTO response = productService.removeLike(user, id);
         return ApiResponse.onSuccess(response);
     }

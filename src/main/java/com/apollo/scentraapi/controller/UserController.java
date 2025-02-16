@@ -67,7 +67,7 @@ public class UserController {
         return ApiResponse.onSuccess(UserConverter.toUserDeleteResult(user));
     }
 
-    @GetMapping("/likes/product")
+    @GetMapping("/likes/products")
     @Operation(summary="상품 좋아요 목록 조회")
     public ApiResponse<List<ProductResponse.ProductListDto>> getLikesProducts(@AuthenticationPrincipal User user) {
         List<ProductResponse.ProductListDto> response = userService.getLikesProducts(user);
