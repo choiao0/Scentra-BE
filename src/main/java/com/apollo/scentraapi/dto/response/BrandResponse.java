@@ -42,4 +42,11 @@ public class BrandResponse {
         LocalDateTime createdAt;
         LocalDateTime updatedAt;
     }
+
+    @Builder
+    @Getter
+    public static class BrandLikeDTO {
+        Long brandLikeId;
+        Long brandId;
+    }
 }

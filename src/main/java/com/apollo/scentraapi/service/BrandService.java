@@ -6,13 +6,13 @@ import com.apollo.scentraapi.apiPayload.exception.handler.BrandHandler;
 import com.apollo.scentraapi.apiPayload.exception.handler.ProductHandler;
 import com.apollo.scentraapi.converter.BrandConverter;
 import com.apollo.scentraapi.converter.ProductConverter;
-import com.apollo.scentraapi.domain.Product;
+import com.apollo.scentraapi.domain.*;
 import com.apollo.scentraapi.dto.request.BrandRequest;
 import com.apollo.scentraapi.dto.request.ProductRequest;
 import com.apollo.scentraapi.dto.response.BrandResponse;
 import com.apollo.scentraapi.dto.response.ProductResponse;
+import com.apollo.scentraapi.repository.BrandLikesRepository;
 import com.apollo.scentraapi.repository.BrandRepository;
-import com.apollo.scentraapi.domain.Brand;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +27,7 @@ import java.util.Optional;
 public class BrandService {
 
     private final BrandRepository brandRepository;
+    private final BrandLikesRepository brandLikesRepository;
 
     @Transactional
     public BrandResponse.BrandDto getBrand(Long id) {
@@ -105,6 +106,35 @@ public class BrandService {
                 .brandName(brand.getBrandName())
                 .createdAt(brand.getCreatedAt())
                 .updatedAt(brand.getUpdatedAt())
+                .build();
+    }
+
+    public BrandResponse.BrandLikeDTO addLike(User user, Long brandId) {
+        Optional<Brand> optionalBrand = brandRepository.findById(brandId);
+
+        Brand brand = optionalBrand.orElseThrow(() -> new BrandHandler(ErrorStatus.BRAND_NOT_FOUND));
+
+        BrandLikes newLike = BrandLikes.builder()
+                .user(user)
+                .brand(brand)
+                .build();
+
+        brandLikesRepository.save(newLike);
+
+        return BrandResponse.BrandLikeDTO.builder()
+                .brandLikeId(newLike.getId())
+                .brandId(newLike.getBrand().getId())
+                .build();
+    }
+
+    public BrandResponse.BrandLikeDTO removeLike(User user, Long brandId) {
+        Optional<BrandLikes> optionalBrandLike = brandLikesRepository.findByUserIdAndBrandId(user.getId(), brandId);
+        BrandLikes brandLike = optionalBrandLike.orElseThrow(() -> new BrandHandler(ErrorStatus.BRAND_NOT_FOUND));
+
+        brandLikesRepository.delete(brandLike);
+        return BrandResponse.BrandLikeDTO.builder()
+                .brandLikeId(brandLike.getId())
+                .brandId(brandLike.getBrand().getId())
                 .build();
     }
 }

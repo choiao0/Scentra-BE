@@ -1,18 +1,19 @@
 package com.apollo.scentraapi.service;
 
 import com.apollo.scentraapi.apiPayload.code.status.ErrorStatus;
+import com.apollo.scentraapi.apiPayload.exception.handler.BrandHandler;
 import com.apollo.scentraapi.apiPayload.exception.handler.ProductHandler;
 import com.apollo.scentraapi.apiPayload.exception.handler.UserHandler;
 import com.apollo.scentraapi.auth.JwtUtil;
+import com.apollo.scentraapi.converter.BrandConverter;
 import com.apollo.scentraapi.converter.ProductConverter;
 import com.apollo.scentraapi.converter.UserConverter;
-import com.apollo.scentraapi.domain.Brand;
-import com.apollo.scentraapi.domain.Product;
-import com.apollo.scentraapi.domain.ProductLikes;
-import com.apollo.scentraapi.domain.User;
+import com.apollo.scentraapi.domain.*;
 import com.apollo.scentraapi.dto.request.UserRequest;
+import com.apollo.scentraapi.dto.response.BrandResponse;
 import com.apollo.scentraapi.dto.response.ProductResponse;
 import com.apollo.scentraapi.dto.response.UserResponse;
+import com.apollo.scentraapi.repository.BrandLikesRepository;
 import com.apollo.scentraapi.repository.BrandRepository;
 import com.apollo.scentraapi.repository.ProductLikesRepository;
 import com.apollo.scentraapi.repository.UserRepository;
@@ -32,6 +33,7 @@ public class UserService {
     private final JwtUtil jwtUtil;
     private final ProductLikesRepository productLikesRepository;
     private final BrandRepository brandRepository;
+    private final BrandLikesRepository brandLikesRepository;
 
     @Transactional
     public UserResponse.UserSignUpResultDTO createUser(UserRequest.UserSignUpDTO request) {
@@ -97,5 +99,21 @@ public class UserService {
             productList.add(product_dto);
         }
         return productList;
+    }
+
+    public List<BrandResponse.BrandListDto> getLikesBrand(User user) {
+        List<BrandLikes> likes = brandLikesRepository.findAllByUser(user);
+        List<BrandResponse.BrandListDto> brandList = new ArrayList<>();
+
+        if (likes.isEmpty()) {
+            throw new BrandHandler(ErrorStatus.BRAND_NOT_FOUND);
+        }
+
+        for (BrandLikes like : likes) {
+            Brand brand = like.getBrand();
+            BrandResponse.BrandListDto brand_dto = BrandConverter.toBrandListDto(brand);
+            brandList.add(brand_dto);
+        }
+        return brandList;
     }
 }
