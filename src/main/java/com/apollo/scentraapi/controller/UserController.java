@@ -4,6 +4,8 @@ import com.apollo.scentraapi.apiPayload.ApiResponse;
 import com.apollo.scentraapi.converter.UserConverter;
 import com.apollo.scentraapi.domain.User;
 import com.apollo.scentraapi.dto.request.UserRequest;
+import com.apollo.scentraapi.dto.response.BrandResponse;
+import com.apollo.scentraapi.dto.response.ProductResponse;
 import com.apollo.scentraapi.dto.response.UserResponse;
 import com.apollo.scentraapi.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,6 +13,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/users")
@@ -61,5 +65,19 @@ public class UserController {
         userService.deleteUser(user);
 
         return ApiResponse.onSuccess(UserConverter.toUserDeleteResult(user));
+    }
+
+    @GetMapping("/likes/products")
+    @Operation(summary="상품 좋아요 목록 조회")
+    public ApiResponse<List<ProductResponse.ProductListDto>> getLikesProducts(@AuthenticationPrincipal User user) {
+        List<ProductResponse.ProductListDto> response = userService.getLikesProducts(user);
+        return ApiResponse.onSuccess(response);
+    }
+
+    @GetMapping("/likes/brands")
+    @Operation(summary="브랜드 좋아요 목록 조회")
+    public ApiResponse<List<BrandResponse.BrandListDto>> getLikesBrands(@AuthenticationPrincipal User user) {
+        List<BrandResponse.BrandListDto> response = userService.getLikesBrand(user);
+        return ApiResponse.onSuccess(response);
     }
 }

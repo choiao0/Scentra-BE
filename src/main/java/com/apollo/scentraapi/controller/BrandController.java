@@ -5,6 +5,7 @@ import com.apollo.scentraapi.converter.BrandConverter;
 import com.apollo.scentraapi.converter.ProductConverter;
 import com.apollo.scentraapi.domain.Brand;
 import com.apollo.scentraapi.domain.Product;
+import com.apollo.scentraapi.domain.User;
 import com.apollo.scentraapi.dto.request.BrandRequest;
 import com.apollo.scentraapi.dto.request.ProductRequest;
 import com.apollo.scentraapi.dto.response.BrandResponse;
@@ -14,6 +15,7 @@ import com.apollo.scentraapi.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -59,6 +61,20 @@ public class BrandController {
     public ResponseEntity<ApiResponse<BrandResponse.BrandDeleteResponseDTO>> deleteBrand(@PathVariable Long id) {
         BrandResponse.BrandDeleteResponseDTO response = brandService.deleteBrand(id);
         return ResponseEntity.ok(ApiResponse.onSuccess(response));
+    }
+
+    @PostMapping("/likes/{brand-id}")
+    @Operation(summary="브랜드 좋아요 추가")
+    public ApiResponse<BrandResponse.BrandLikeDTO> addLike(@AuthenticationPrincipal User user, @PathVariable("brand-id") Long id) {
+        BrandResponse.BrandLikeDTO response = brandService.addLike(user, id);
+        return ApiResponse.onSuccess(response);
+    }
+
+    @DeleteMapping("/likes/{brand-id}")
+    @Operation(summary="브랜드 좋아요 삭제")
+    public ApiResponse<BrandResponse.BrandLikeDTO> removeLike(@AuthenticationPrincipal User user, @PathVariable("brand-id") Long id) {
+        BrandResponse.BrandLikeDTO response = brandService.removeLike(user, id);
+        return ApiResponse.onSuccess(response);
     }
 
 }

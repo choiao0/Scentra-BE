@@ -3,6 +3,7 @@ package com.apollo.scentraapi.controller;
 import com.apollo.scentraapi.apiPayload.ApiResponse;
 import com.apollo.scentraapi.converter.ProductConverter;
 import com.apollo.scentraapi.domain.Product;
+import com.apollo.scentraapi.domain.User;
 import com.apollo.scentraapi.dto.request.ProductRequest;
 import com.apollo.scentraapi.dto.response.ProductResponse;
 import com.apollo.scentraapi.service.ProductService;
@@ -10,6 +11,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -72,6 +74,21 @@ public class ProductController {
         return ApiResponse.onSuccess(response);
     }
 
+
+    @PostMapping("/likes/{product-id}")
+    @Operation(summary="상품 좋아요 추가")
+    public ApiResponse<ProductResponse.ProductLikeDTO> addLike(@AuthenticationPrincipal User user, @PathVariable("product-id")Long id) {
+        ProductResponse.ProductLikeDTO response = productService.addLike(user, id);
+        return ApiResponse.onSuccess(response);
+    }
+
+    @DeleteMapping("/likes/{product-id}")
+    @Operation(summary="상품 좋아요 삭제")
+    public ApiResponse<ProductResponse.ProductLikeDTO> removeLike(@AuthenticationPrincipal User user, @PathVariable("product-id") Long id) {
+        ProductResponse.ProductLikeDTO response = productService.removeLike(user, id);
+        return ApiResponse.onSuccess(response);
+    }
+
     @GetMapping("/category/{category_id}")
     @Operation(summary="태그 ID로 제품 목록 조회")
     public ApiResponse<List<ProductResponse.ProductListDto>> getProductsByCategory(@PathVariable Long category_id) {
@@ -82,8 +99,7 @@ public class ProductController {
 
     @GetMapping("/search")
     @Operation(summary = "검색어 기반 상품 조회", description = "검색어가 상품 이름 또는 브랜드 이름에 포함된 상품을 조회합니다.")
-    public ResponseEntity<List<ProductResponse.ProductListDto>> searchProducts(
-            @RequestParam String keyword) {
+    public ResponseEntity<List<ProductResponse.ProductListDto>> searchProducts (@RequestParam String keyword) {
         List<ProductResponse.ProductListDto> response = productService.searchProducts(keyword);
         return ResponseEntity.ok(response);
     }

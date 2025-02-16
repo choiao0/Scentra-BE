@@ -1,17 +1,28 @@
 package com.apollo.scentraapi.service;
 
 import com.apollo.scentraapi.apiPayload.code.status.ErrorStatus;
+import com.apollo.scentraapi.apiPayload.exception.handler.BrandHandler;
+import com.apollo.scentraapi.apiPayload.exception.handler.ProductHandler;
 import com.apollo.scentraapi.apiPayload.exception.handler.UserHandler;
 import com.apollo.scentraapi.auth.JwtUtil;
+import com.apollo.scentraapi.converter.BrandConverter;
+import com.apollo.scentraapi.converter.ProductConverter;
 import com.apollo.scentraapi.converter.UserConverter;
-import com.apollo.scentraapi.domain.User;
+import com.apollo.scentraapi.domain.*;
 import com.apollo.scentraapi.dto.request.UserRequest;
+import com.apollo.scentraapi.dto.response.BrandResponse;
+import com.apollo.scentraapi.dto.response.ProductResponse;
 import com.apollo.scentraapi.dto.response.UserResponse;
+import com.apollo.scentraapi.repository.BrandLikesRepository;
+import com.apollo.scentraapi.repository.BrandRepository;
+import com.apollo.scentraapi.repository.ProductLikesRepository;
 import com.apollo.scentraapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,6 +31,9 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
+    private final ProductLikesRepository productLikesRepository;
+    private final BrandRepository brandRepository;
+    private final BrandLikesRepository brandLikesRepository;
 
     @Transactional
     public UserResponse.UserSignUpResultDTO createUser(UserRequest.UserSignUpDTO request) {
@@ -67,5 +81,39 @@ public class UserService {
     public void deleteUser(User user) {
 
         userRepository.delete(user);
+    }
+
+    public List<ProductResponse.ProductListDto> getLikesProducts(User user) {
+        List<ProductLikes> likes = productLikesRepository.findAllByUser(user);
+        List<ProductResponse.ProductListDto> productList = new ArrayList<>();
+
+        if (likes.isEmpty()) {
+            throw new ProductHandler(ErrorStatus.PRODUCT_NOT_FOUND);
+        }
+
+        for (ProductLikes like : likes) {
+            Product product = like.getProduct();
+            Optional<Brand> brand = brandRepository.findById(product.getBrand().getId());
+            String brand_name = brand.map(Brand::getBrandName).orElse(null); // 상품 브랜드 존재 하지 않을 시 null 처리
+            ProductResponse.ProductListDto product_dto = ProductConverter.toProductListDto(product, brand_name);
+            productList.add(product_dto);
+        }
+        return productList;
+    }
+
+    public List<BrandResponse.BrandListDto> getLikesBrand(User user) {
+        List<BrandLikes> likes = brandLikesRepository.findAllByUser(user);
+        List<BrandResponse.BrandListDto> brandList = new ArrayList<>();
+
+        if (likes.isEmpty()) {
+            throw new BrandHandler(ErrorStatus.BRAND_NOT_FOUND);
+        }
+
+        for (BrandLikes like : likes) {
+            Brand brand = like.getBrand();
+            BrandResponse.BrandListDto brand_dto = BrandConverter.toBrandListDto(brand);
+            brandList.add(brand_dto);
+        }
+        return brandList;
     }
 }
