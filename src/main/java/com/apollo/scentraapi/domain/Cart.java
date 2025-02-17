@@ -1,5 +1,8 @@
 package com.apollo.scentraapi.domain;
 
+import com.apollo.scentraapi.apiPayload.code.status.ErrorStatus;
+import com.apollo.scentraapi.apiPayload.exception.handler.CartHandler;
+import com.apollo.scentraapi.apiPayload.exception.handler.ProductHandler;
 import com.apollo.scentraapi.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -7,6 +10,7 @@ import lombok.*;
 @Entity
 @Getter
 @Builder
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Cart extends BaseEntity {
@@ -25,4 +29,10 @@ public class Cart extends BaseEntity {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    public void updateQuantity(int newQuantity) {
+        if(newQuantity < 0) {
+            throw new CartHandler(ErrorStatus.INVALID_QUANTITY);
+        }
+        this.quantity = newQuantity;
+    }
 }
