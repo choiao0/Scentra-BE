@@ -137,4 +137,14 @@ public class BrandService {
                 .brandId(brandLike.getBrand().getId())
                 .build();
     }
+
+    public BrandResponse.BrandLikeDTO isLike(User user, Long brandId) {
+        Optional<BrandLikes> optionalBrandLike = brandLikesRepository.findByUserIdAndBrandId(user.getId(), brandId);
+        BrandLikes brandLike = optionalBrandLike.orElseThrow(() -> new BrandHandler(ErrorStatus.BRAND_NOT_FOUND));
+
+        return BrandResponse.BrandLikeDTO.builder()
+                .brandLikeId(brandLike.getId())
+                .brandId(brandLike.getBrand().getId())
+                .build();
+    }
 }

@@ -106,8 +106,8 @@ public class ProductController {
 
     @GetMapping("/likes/{product-id}")
     @Operation(summary = "상품 좋아요 여부 확인")
-    public ResponseEntity<ProductResponse.ProductLikeDTO> isLike(@AuthenticationPrincipal User user, @PathVariable("product-id") Long id) {
+    public ApiResponse<ProductResponse.ProductLikeDTO> isLike(@AuthenticationPrincipal User user, @PathVariable("product-id") Long id) {
         ProductResponse.ProductLikeDTO response = productService.isLike(user, id);
-        return ResponseEntity.ok(response);
+        return ApiResponse.onSuccess(response);
     }
 }
