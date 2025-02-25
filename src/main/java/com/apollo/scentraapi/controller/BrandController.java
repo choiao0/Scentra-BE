@@ -77,4 +77,11 @@ public class BrandController {
         return ApiResponse.onSuccess(response);
     }
 
+    @GetMapping("/likes/{brand-id}")
+    @Operation(summary = "브랜드 좋아요 여부 확인")
+    public ApiResponse<BrandResponse.BrandLikeDTO> isLike(@AuthenticationPrincipal User user, @PathVariable("brand-id") Long id) {
+        BrandResponse.BrandLikeDTO response = brandService.isLike(user, id);
+        return ApiResponse.onSuccess(response);
+    }
+
 }

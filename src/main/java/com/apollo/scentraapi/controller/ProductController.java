@@ -103,4 +103,11 @@ public class ProductController {
         List<ProductResponse.ProductListDto> response = productService.searchProducts(keyword);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/likes/{product-id}")
+    @Operation(summary = "상품 좋아요 여부 확인")
+    public ApiResponse<ProductResponse.ProductLikeDTO> isLike(@AuthenticationPrincipal User user, @PathVariable("product-id") Long id) {
+        ProductResponse.ProductLikeDTO response = productService.isLike(user, id);
+        return ApiResponse.onSuccess(response);
+    }
 }

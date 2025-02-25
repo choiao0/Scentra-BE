@@ -247,4 +247,13 @@ public class ProductService {
                 .collect(Collectors.toList());
 
     }
+
+    public ProductResponse.ProductLikeDTO isLike(User user, Long productId) {
+        Optional<ProductLikes> optionalProductLike = productLikeRepository.findByUserIdAndProductId(user.getId(), productId);
+        ProductLikes productLike = optionalProductLike.orElseThrow(() -> new ProductHandler(ErrorStatus.PRODUCT_NOT_FOUND));
+        return ProductResponse.ProductLikeDTO.builder()
+                .productLikeId(productLike.getId())
+                .productId(productLike.getProduct().getId())
+                .build();
+    }
 }
