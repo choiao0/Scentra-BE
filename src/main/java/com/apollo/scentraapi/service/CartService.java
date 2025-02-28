@@ -54,16 +54,16 @@ public class CartService {
                 .orElseThrow(() -> new ProductHandler(ErrorStatus.PRODUCT_NOT_FOUND));
 
         // ✅ 장바구니에서 해당 유저의 같은 상품 조회
+        // ✅ 장바구니에서 해당 유저의 같은 상품 조회
         Cart cartItem = cartRepository.findByUserIdAndProductId(userId, product.getId())
-                .orElse(Cart.builder()
-                        .user(User.builder().id(userId).build()) // ✅ User 객체로 변환
+                .orElseGet(() -> Cart.builder()
+                        .user(User.builder().id(userId).build()) // ✅ User 객체 변환
                         .product(product)
-                        .quantity(request.getQuantity()) //.quantity(0) // 새로 추가하는 경우 초기값 0
+                        .quantity(0) // 새로 추가하는 경우 초기값을 0으로 설정
                         .build());
 
         // ✅ 기존 상품이면 수량 업데이트, 없으면 새 상품 추가
         cartItem.setQuantity(cartItem.getQuantity() + request.getQuantity());
-
         Cart savedCart = cartRepository.save(cartItem);
 
         return CartConverter.toCartUpdateDto(savedCart);  // ✅ 컨버터에서 변환
