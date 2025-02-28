@@ -54,7 +54,6 @@ public class CartService {
                 .orElseThrow(() -> new ProductHandler(ErrorStatus.PRODUCT_NOT_FOUND));
 
         // ✅ 장바구니에서 해당 유저의 같은 상품 조회
-        // ✅ 장바구니에서 해당 유저의 같은 상품 조회
         Cart cartItem = cartRepository.findByUserIdAndProductId(userId, product.getId())
                 .orElseGet(() -> Cart.builder()
                         .user(User.builder().id(userId).build()) // ✅ User 객체 변환
