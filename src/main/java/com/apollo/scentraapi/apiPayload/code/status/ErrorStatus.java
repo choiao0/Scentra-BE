@@ -37,6 +37,9 @@ public enum ErrorStatus implements BaseErrorCode {
     BRAND_NOT_FOUND(HttpStatus.NOT_FOUND, "BRAND4001", "브랜드가 존재하지 않습니다."),
     BRAND_BAD_REQUEST(HttpStatus.BAD_REQUEST, "BRAND4002", "브랜드 생성에 대한 요청이 올바르지 않습니다."),
 
+    // 카테고리 관련 에러
+    CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "CATEGORY4001", "카테고리가 존재하지 않습니다."),
+
     // 장바구니 에러
     CART_NOT_FOUND(HttpStatus.NOT_FOUND, "CART404", "장바구니가 비어있습니다."),
     PRODUCT_NOT_FOUND_ON_CART(HttpStatus.NOT_FOUND, "CART404", "상품을 찾을 수 없습니다."),
