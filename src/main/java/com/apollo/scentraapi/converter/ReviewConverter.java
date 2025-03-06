@@ -21,6 +21,7 @@ public class ReviewConverter {
 
     public static ReviewResponse.ReviewResultDTO toReviewResultDTO(Review review) {
         return ReviewResponse.ReviewResultDTO.builder()
+                .reviewId(review.getId())
                 .username(review.getUser().getUsername())
                 .content(review.getContent())
                 .rating(review.getRating())

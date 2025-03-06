@@ -12,6 +12,7 @@ public class ReviewResponse {
     @AllArgsConstructor
     @Getter
     public static class ReviewResultDTO {
+        Long reviewId;
         String username;
         String content;
         Integer rating;
