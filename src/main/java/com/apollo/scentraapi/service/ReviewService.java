@@ -65,11 +65,6 @@ public class ReviewService {
 
         findUser.getReviewList().remove(findReview);
         reviewRepository.delete(findReview);
-
-        // 확인용 메서드
-        findUser.getReviewList().stream()
-                .map(Review::getId)  // Review 객체에서 ID만 추출
-                .forEach(System.out::println);
     }
 
     public List<Review> getReviewList(Long productId) {
