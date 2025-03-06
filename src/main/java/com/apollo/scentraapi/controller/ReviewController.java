@@ -23,10 +23,10 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
-    @PostMapping("/{product-id}")
+    @PostMapping()
     @Operation(summary = "리뷰 생성")
     public ApiResponse<ReviewResponse.ReviewResultDTO> createReview(@AuthenticationPrincipal User user,
-                                                                    @PathVariable("product-id") Long productId,
+                                                                    @RequestParam Long productId,
                                                                     @Valid @RequestBody ReviewRequest.ReviewCreateDTO request) {
 
         Review createdReview = reviewService.createReview(user, productId, request);
