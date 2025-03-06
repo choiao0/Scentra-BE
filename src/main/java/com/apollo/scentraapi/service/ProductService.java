@@ -82,6 +82,7 @@ public class ProductService {
         Brand brand = brandRepository.findById(productUploadDto.getBrand_id())
                 .orElseThrow(() -> new ProductHandler(ErrorStatus.BRAND_NOT_FOUND));
         new_product.setBrand(brand);
+        new_product = productRepository.save(new_product);
 
         for (String c : productUploadDto.getCategory()) {
             Category category = categoryRepository.findByCategoryName(c)
@@ -89,7 +90,8 @@ public class ProductService {
             CategoryMapping mapping = CategoryConverter.toCategoryMapping(category, new_product);
             categoryMappingRepository.save(mapping);
         }
-        return productRepository.save(new_product);
+
+        return new_product;
     }
 
     @Transactional
