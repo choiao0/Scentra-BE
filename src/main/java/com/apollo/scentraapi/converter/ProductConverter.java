@@ -4,6 +4,8 @@ import com.apollo.scentraapi.domain.Product;
 import com.apollo.scentraapi.dto.request.ProductRequest;
 import com.apollo.scentraapi.dto.response.ProductResponse;
 
+import java.time.LocalDateTime;
+
 public class ProductConverter {
 
     public static ProductResponse.ProductListDto toProductListDto(Product product, String brand_name) {
@@ -27,6 +29,15 @@ public class ProductConverter {
     public static ProductResponse.ProductDto toProductResponse(Product product) {
         return ProductResponse.ProductDto.builder()
                 .productId(product.getId())
+                .name(product.getProductName())
+                .productImage(product.getProductImage())
+                .detailImage(product.getDetailImage())
+                .description(product.getProductDescription())
+                .price(product.getPrice())
+                .brandId(product.getBrand().getId())
+                .brandName(product.getBrand().getBrandName())
+                .createdAt(product.getCreatedAt())
+                .updatedAt(product.getUpdatedAt())
                 .build();
     }
 

@@ -40,7 +40,7 @@ public class CategoryController {
     @DeleteMapping("/{category-id}")
     @Operation(summary = "카테고리 삭제")
     public ApiResponse<CategoryResponse.CategoryDto> deleteCategory(@PathVariable("category-id") Long id) {
-        CategoryResponse.CategoryDto response = categoryService.delteCategoryById(id);
+        CategoryResponse.CategoryDto response = categoryService.deleteCategoryById(id);
         return ApiResponse.onSuccess(response);
     }
 }

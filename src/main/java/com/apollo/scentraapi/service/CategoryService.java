@@ -40,7 +40,7 @@ public class CategoryService {
         return CategoryConverter.toCategoryNameResponse(category);
     }
 
-    public CategoryResponse.CategoryDto delteCategoryById(Long category_id) {
+    public CategoryResponse.CategoryDto deleteCategoryById(Long category_id) {
         Category category = categoryRepository.findById(category_id)
                 .orElseThrow(()-> new ProductHandler(ErrorStatus.CATEGORY_NOT_FOUND));
         categoryRepository.delete(category);
