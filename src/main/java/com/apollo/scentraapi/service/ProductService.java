@@ -2,21 +2,15 @@ package com.apollo.scentraapi.service;
 
 import com.apollo.scentraapi.apiPayload.code.status.ErrorStatus;
 import com.apollo.scentraapi.apiPayload.exception.handler.ProductHandler;
+import com.apollo.scentraapi.converter.CategoryConverter;
 import com.apollo.scentraapi.converter.ProductConverter;
-import com.apollo.scentraapi.domain.Brand;
-import com.apollo.scentraapi.domain.Product;
-import com.apollo.scentraapi.domain.ProductLikes;
-import com.apollo.scentraapi.domain.User;
+import com.apollo.scentraapi.domain.*;
+import com.apollo.scentraapi.dto.request.ProductRequest;
+import com.apollo.scentraapi.dto.response.ProductResponse;
+import com.apollo.scentraapi.repository.*;
 import com.apollo.scentraapi.dto.request.ProductRequest;
 import com.apollo.scentraapi.dto.response.ProductResponse;
 import com.apollo.scentraapi.repository.BrandRepository;
-import com.apollo.scentraapi.repository.ProductLikesRepository;
-import com.apollo.scentraapi.domain.CategoryMapping;
-import com.apollo.scentraapi.dto.request.ProductRequest;
-import com.apollo.scentraapi.dto.response.ProductResponse;
-import com.apollo.scentraapi.repository.BrandRepository;
-import com.apollo.scentraapi.repository.CategoryMappingRepository;
-import com.apollo.scentraapi.repository.ProductRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +32,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final BrandRepository brandRepository;
     private final CategoryMappingRepository categoryMappingRepository;
-
+    private final CategoryRepository categoryRepository;
     private final ProductLikesRepository productLikeRepository;
 
     @Transactional
@@ -88,7 +82,16 @@ public class ProductService {
         Brand brand = brandRepository.findById(productUploadDto.getBrand_id())
                 .orElseThrow(() -> new ProductHandler(ErrorStatus.BRAND_NOT_FOUND));
         new_product.setBrand(brand);
-        return productRepository.save(new_product);
+        new_product = productRepository.save(new_product);
+
+        for (String c : productUploadDto.getCategory()) {
+            Category category = categoryRepository.findByCategoryName(c)
+                    .orElseThrow(() -> new ProductHandler(ErrorStatus.CATEGORY_NOT_FOUND));
+            CategoryMapping mapping = CategoryConverter.toCategoryMapping(category, new_product);
+            categoryMappingRepository.save(mapping);
+        }
+
+        return new_product;
     }
 
     @Transactional

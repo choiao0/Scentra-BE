@@ -45,9 +45,6 @@ public class Product extends BaseEntity {
         this.brand = brand;
     }
 
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-
     // 상품 정보 업데이트 메서드
     public void update(String name, String productImage,
                               String detailImage, String description, Double price) {
@@ -56,8 +53,6 @@ public class Product extends BaseEntity {
         if (detailImage != null) this.detailImage = detailImage;
         if (description != null) this.productDescription = description;
         if (price != null) this.price = price;
-
-        this.updatedAt = LocalDateTime.now();
     }
 
 }
