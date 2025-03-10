@@ -5,6 +5,8 @@ import com.apollo.scentraapi.domain.enums.Gender;
 import com.apollo.scentraapi.dto.request.UserRequest;
 import com.apollo.scentraapi.dto.response.UserResponse;
 
+import java.util.ArrayList;
+
 public class UserConverter {
 
     public static User toUser(UserRequest.UserSignUpDTO request) {
@@ -13,6 +15,9 @@ public class UserConverter {
                 .email(request.getEmail())
                 .password(request.getPassword())
                 .gender(Gender.valueOf(request.getGender()))
+                .productLikesList(new ArrayList<>())
+                .reviewList(new ArrayList<>())
+                .cartList(new ArrayList<>())
                 .build();
     }
 
