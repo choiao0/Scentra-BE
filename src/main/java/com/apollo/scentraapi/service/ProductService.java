@@ -9,18 +9,11 @@ import com.apollo.scentraapi.domain.*;
 import com.apollo.scentraapi.dto.request.ProductRequest;
 import com.apollo.scentraapi.dto.response.ProductResponse;
 import com.apollo.scentraapi.repository.*;
-import com.apollo.scentraapi.dto.request.ProductRequest;
-import com.apollo.scentraapi.dto.response.ProductResponse;
 import com.apollo.scentraapi.repository.BrandRepository;
-import jakarta.annotation.PostConstruct;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import com.apollo.scentraapi.apiPayload.exception.ProductNotFoundException;
-import com.apollo.scentraapi.apiPayload.exception.BrandNotFoundException;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -42,18 +35,7 @@ public class ProductService {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductHandler(ErrorStatus.PRODUCT_NOT_FOUND));
 
-        return ProductResponse.ProductDto.builder()
-                .productId(product.getId())
-                .name(product.getProductName())
-                .productImage(product.getProductImage())
-                .detailImage(product.getDetailImage())
-                .description(product.getProductDescription())
-                .price(product.getPrice())
-                .brandId(product.getBrand() != null ? product.getBrand().getId() : null)
-                .brandName(product.getBrand() != null ? product.getBrand().getBrandName() : null)
-                .createdAt(product.getCreatedAt())
-                .updatedAt(product.getUpdatedAt())
-                .build();
+        return ProductConverter.toProductResponse(product);
     }
 
     public List<ProductResponse.ProductListDto> getAllProducts() {
@@ -118,16 +100,7 @@ public class ProductService {
         );
 
         // 4. 응답 DTO 반환
-        return ProductResponse.ProductUpdateResponseDTO.builder()
-                .name(product.getProductName())
-                .productImage(product.getProductImage())
-                .detailImage(product.getDetailImage())
-                .description(product.getProductDescription())
-                .price(product.getPrice())
-                .brandId(product.getBrand() != null ? product.getBrand().getId() : null)
-                .createdAt(product.getCreatedAt())
-                .updatedAt(product.getUpdatedAt())
-                .build();
+        return ProductConverter.toProductUpdateResponseDTO(product);
     }
 
     @Transactional
@@ -140,14 +113,7 @@ public class ProductService {
         productRepository.delete(product);
 
         // 3. 삭제된 상품 정보 반환
-        return ProductResponse.ProductDeleteResponseDTO.builder()
-                .productId(product.getId())
-                .name(product.getProductName())
-                .brandId(product.getBrand() != null ? product.getBrand().getId() : null)
-                .brandName(product.getBrand() != null ? product.getBrand().getBrandName() : null)
-                .createdAt(product.getCreatedAt())
-                .updatedAt(product.getUpdatedAt())
-                .build();
+        return ProductConverter.toProductDeleteResponseDTO(product);
     }
 
     public ProductResponse.ImageDTO createBackgroundImage(ProductRequest.CreateBgImgDTO request) {
@@ -182,17 +148,11 @@ public class ProductService {
 
         Product product = optionalProduct.orElseThrow(() -> new ProductHandler(ErrorStatus.PRODUCT_NOT_FOUND));
 
-        ProductLikes newLike = ProductLikes.builder()
-                                .user(user)
-                                .product(product)
-                                .build();
+        ProductLikes newLike = ProductConverter.toProductLike(product, user);
 
         productLikeRepository.save(newLike);
 
-        return ProductResponse.ProductLikeDTO.builder()
-                .productLikeId(newLike.getId())
-                .productId(newLike.getProduct().getId())
-                .build();
+        return ProductConverter.toProductLikeDTO(newLike);
     }
 
     public ProductResponse.ProductLikeDTO removeLike(User user, Long productId) {
@@ -200,10 +160,7 @@ public class ProductService {
         ProductLikes productLike = optionalProductLike.orElseThrow(() -> new ProductHandler(ErrorStatus.PRODUCT_NOT_FOUND));
 
         productLikeRepository.delete(productLike);
-        return ProductResponse.ProductLikeDTO.builder()
-                .productLikeId(productLike.getId())
-                .productId(productLike.getProduct().getId())
-                .build();
+        return ProductConverter.toProductLikeDTO(productLike);
     }
     @Transactional(readOnly = true)
     public List<ProductResponse.ProductListDto> getProductsByCategory(Long category_id) {
@@ -255,9 +212,6 @@ public class ProductService {
     public ProductResponse.ProductLikeDTO isLike(User user, Long productId) {
         Optional<ProductLikes> optionalProductLike = productLikeRepository.findByUserIdAndProductId(user.getId(), productId);
         ProductLikes productLike = optionalProductLike.orElseThrow(() -> new ProductHandler(ErrorStatus.PRODUCT_NOT_FOUND));
-        return ProductResponse.ProductLikeDTO.builder()
-                .productLikeId(productLike.getId())
-                .productId(productLike.getProduct().getId())
-                .build();
+        return ProductConverter.toProductLikeDTO(productLike);
     }
 }

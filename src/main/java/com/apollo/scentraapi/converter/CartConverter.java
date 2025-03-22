@@ -2,6 +2,7 @@ package com.apollo.scentraapi.converter;
 
 import com.apollo.scentraapi.domain.Cart;
 import com.apollo.scentraapi.domain.Product;
+import com.apollo.scentraapi.domain.User;
 import com.apollo.scentraapi.dto.response.CartResponse;
 
 public class CartConverter {
@@ -35,6 +36,14 @@ public class CartConverter {
                 .userId(cart.getUser().getId())
                 .cartItemId(cart.getId())
                 .deletedAt(cart.getUpdatedAt())
+                .build();
+    }
+
+    public static Cart toCart(User user, Product product) {
+        return Cart.builder()
+                .user(user)
+                .product(product)
+                .quantity(0)
                 .build();
     }
 }
