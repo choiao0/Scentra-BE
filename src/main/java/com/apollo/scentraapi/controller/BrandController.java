@@ -28,39 +28,39 @@ public class BrandController {
 
     @GetMapping("/{id}")
     @Operation(summary="브랜드 조회")
-    public ResponseEntity<ApiResponse<BrandResponse.BrandDto>> getBrand(@PathVariable Long id) {
+    public ApiResponse<BrandResponse.BrandDto> getBrand(@PathVariable Long id) {
         BrandResponse.BrandDto response = brandService.getBrand(id);
-        return ResponseEntity.ok(ApiResponse.onSuccess(response));
+        return ApiResponse.onSuccess(response);
     }
 
     @GetMapping
     @Operation(summary="브랜드 목록 조회")
-    public ResponseEntity<ApiResponse<List<BrandResponse.BrandListDto>>> getAllBrands() {
+    public ApiResponse<List<BrandResponse.BrandListDto>> getAllBrands() {
         List<BrandResponse.BrandListDto> response = brandService.getAllBrands();
-        return ResponseEntity.ok(ApiResponse.onSuccess(response));
+        return ApiResponse.onSuccess(response);
     }
 
     @PostMapping
     @Operation(summary="브랜드 생성(업로드)")
-    public ResponseEntity<ApiResponse<BrandResponse.BrandDto>> uploadProduct(@RequestBody BrandRequest.BrandUploadRequestDTO request) {
+    public ApiResponse<BrandResponse.BrandDto> uploadProduct(@RequestBody BrandRequest.BrandUploadRequestDTO request) {
         Brand new_brand = brandService.uploadBrand(request);
         BrandResponse.BrandDto response = BrandConverter.toBrandResponse(new_brand);
-        return ResponseEntity.ok(ApiResponse.onSuccess(response));
+        return ApiResponse.onSuccess(response);
     }
 
     @PutMapping("/{id}")
     @Operation(summary="브랜드 정보 수정")
-    public ResponseEntity<ApiResponse<BrandResponse.BrandUpdateResponseDTO>> updateBrand(
+    public ApiResponse<BrandResponse.BrandUpdateResponseDTO> updateBrand(
             @PathVariable Long id, @RequestBody BrandRequest.BrandUpdateRequestDTO request) {
         BrandResponse.BrandUpdateResponseDTO response = brandService.updateBrand(id, request);
-        return ResponseEntity.ok(ApiResponse.onSuccess(response));
+        return ApiResponse.onSuccess(response);
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary="브랜드 삭제")
-    public ResponseEntity<ApiResponse<BrandResponse.BrandDeleteResponseDTO>> deleteBrand(@PathVariable Long id) {
+    public ApiResponse<BrandResponse.BrandDeleteResponseDTO> deleteBrand(@PathVariable Long id) {
         BrandResponse.BrandDeleteResponseDTO response = brandService.deleteBrand(id);
-        return ResponseEntity.ok(ApiResponse.onSuccess(response));
+        return ApiResponse.onSuccess(response);
     }
 
     @PostMapping("/likes/{brand-id}")
