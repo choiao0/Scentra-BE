@@ -1,22 +1,17 @@
 package com.apollo.scentraapi.service;
 
 import com.apollo.scentraapi.apiPayload.code.status.ErrorStatus;
-import com.apollo.scentraapi.apiPayload.exception.ProductNotFoundException;
 import com.apollo.scentraapi.apiPayload.exception.handler.BrandHandler;
 import com.apollo.scentraapi.apiPayload.exception.handler.ProductHandler;
 import com.apollo.scentraapi.converter.BrandConverter;
-import com.apollo.scentraapi.converter.ProductConverter;
 import com.apollo.scentraapi.domain.*;
 import com.apollo.scentraapi.dto.request.BrandRequest;
-import com.apollo.scentraapi.dto.request.ProductRequest;
 import com.apollo.scentraapi.dto.response.BrandResponse;
-import com.apollo.scentraapi.dto.response.ProductResponse;
 import com.apollo.scentraapi.repository.BrandLikesRepository;
 import com.apollo.scentraapi.repository.BrandRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.apollo.scentraapi.apiPayload.exception.BrandNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +28,7 @@ public class BrandService {
     public BrandResponse.BrandDto getBrand(Long id) {
         // 1. 브랜드 조회 (없으면 예외 발생)
         Brand brand = brandRepository.findById(id)
-                .orElseThrow(BrandNotFoundException::new);
+                .orElseThrow(() -> new BrandHandler(ErrorStatus.BRAND_NOT_FOUND));
 
         return BrandResponse.BrandDto.builder()
                 .id(brand.getId())
@@ -72,7 +67,7 @@ public class BrandService {
     public BrandResponse.BrandUpdateResponseDTO updateBrand(Long id, BrandRequest.BrandUpdateRequestDTO request) {
         // 1. 브랜드 조회
         Brand brand = brandRepository.findById(id)
-                .orElseThrow(BrandNotFoundException::new);
+                .orElseThrow(() -> new BrandHandler(ErrorStatus.BRAND_NOT_FOUND));
 
         // 2. 브랜드 정보 업데이트
         brand.update(
@@ -95,7 +90,7 @@ public class BrandService {
     public BrandResponse.BrandDeleteResponseDTO deleteBrand(Long id) {
         // 1. 브랜드 조회
         Brand brand = brandRepository.findById(id)
-                .orElseThrow(BrandNotFoundException::new);
+                .orElseThrow(() -> new BrandHandler(ErrorStatus.BRAND_NOT_FOUND));
 
         // 2. 브랜드 삭제 수행
         brandRepository.delete(brand);

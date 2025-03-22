@@ -1,6 +1,7 @@
 package com.apollo.scentraapi.service;
 
 import com.apollo.scentraapi.apiPayload.code.status.ErrorStatus;
+import com.apollo.scentraapi.apiPayload.exception.handler.BrandHandler;
 import com.apollo.scentraapi.apiPayload.exception.handler.ProductHandler;
 import com.apollo.scentraapi.converter.CategoryConverter;
 import com.apollo.scentraapi.converter.ProductConverter;
@@ -39,7 +40,7 @@ public class ProductService {
     public ProductResponse.ProductDto getProduct(Long id) {
         // 1. 상품 조회 (없으면 예외 발생)
         Product product = productRepository.findById(id)
-                .orElseThrow(ProductNotFoundException::new);
+                .orElseThrow(() -> new ProductHandler(ErrorStatus.PRODUCT_NOT_FOUND));
 
         return ProductResponse.ProductDto.builder()
                 .productId(product.getId())
@@ -98,12 +99,12 @@ public class ProductService {
     public ProductResponse.ProductUpdateResponseDTO updateProduct(Long id, ProductRequest.ProductUpdateRequestDTO request) {
         // 1. 상품 조회
         Product product = productRepository.findById(id)
-                .orElseThrow(ProductNotFoundException::new);
+                .orElseThrow(() -> new ProductHandler(ErrorStatus.PRODUCT_NOT_FOUND));
 
         // 2. 브랜드 변경이 있을 경우, 브랜드 찾기
         if (request.getBrandId() != null) {
             Brand brand = brandRepository.findById(request.getBrandId())
-                    .orElseThrow(BrandNotFoundException::new);
+                    .orElseThrow(() -> new BrandHandler(ErrorStatus.BRAND_NOT_FOUND));
             product.setBrand(brand);  // ✅ 브랜드 정보 업데이트
         }
 
@@ -133,7 +134,7 @@ public class ProductService {
     public ProductResponse.ProductDeleteResponseDTO deleteProduct(Long id) {
         // 1. 상품 조회 (없으면 예외 발생)
         Product product = productRepository.findById(id)
-                .orElseThrow(ProductNotFoundException::new);
+                .orElseThrow(() -> new ProductHandler(ErrorStatus.PRODUCT_NOT_FOUND));
 
         // 2. 삭제 수행
         productRepository.delete(product);
