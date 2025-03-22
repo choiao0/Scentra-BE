@@ -41,10 +41,10 @@ public enum ErrorStatus implements BaseErrorCode {
     CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "CATEGORY4001", "카테고리가 존재하지 않습니다."),
 
     // 장바구니 에러
-    CART_NOT_FOUND(HttpStatus.NOT_FOUND, "CART404", "장바구니가 비어있습니다."),
-    PRODUCT_NOT_FOUND_ON_CART(HttpStatus.NOT_FOUND, "CART404", "상품을 찾을 수 없습니다."),
-    CART_ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "CART404", "해당 상품이 장바구니에 없습니다."),
-    INVALID_QUANTITY(HttpStatus.BAD_REQUEST, "CART400", "유효하지 않은 수량입니다."),
+    CART_NOT_FOUND(HttpStatus.NOT_FOUND, "CART4001", "장바구니가 비어있습니다."),
+    PRODUCT_NOT_FOUND_ON_CART(HttpStatus.NOT_FOUND, "CART4002", "상품을 찾을 수 없습니다."),
+    CART_ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "CART4003", "해당 상품이 장바구니에 없습니다."),
+    INVALID_QUANTITY(HttpStatus.BAD_REQUEST, "CART4004", "유효하지 않은 수량입니다."),
 
     // 리뷰 관련 에러
     REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "REVIEW4001", "리뷰가 존재하지 않습니다."),
