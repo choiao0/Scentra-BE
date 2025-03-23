@@ -13,10 +13,7 @@ import com.apollo.scentraapi.dto.request.UserRequest;
 import com.apollo.scentraapi.dto.response.BrandResponse;
 import com.apollo.scentraapi.dto.response.ProductResponse;
 import com.apollo.scentraapi.dto.response.UserResponse;
-import com.apollo.scentraapi.repository.BrandLikesRepository;
-import com.apollo.scentraapi.repository.BrandRepository;
-import com.apollo.scentraapi.repository.ProductLikesRepository;
-import com.apollo.scentraapi.repository.UserRepository;
+import com.apollo.scentraapi.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +27,7 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final SellerRepository sellerRepository;
     private final JwtUtil jwtUtil;
     private final ProductLikesRepository productLikesRepository;
     private final BrandRepository brandRepository;
@@ -49,6 +47,28 @@ public class UserService {
         String accessToken = jwtUtil.createAccessToken(savedUser.getEmail());
 
         return UserConverter.toUserSignUpResult(savedUser, accessToken);
+    }
+
+    @Transactional
+    public UserResponse.SellerSignUpResultDTO createSeller(UserRequest.SellerSignUpDTO request) {
+
+        Optional<User> findUser = userRepository.findByEmail(request.getEmail()); // 이메일로 유저가 존재하는지 검사
+
+        if (findUser.isPresent())
+            throw new UserHandler(ErrorStatus.USER_ALREADY_EXIST);
+
+        User newUser = UserConverter.toUser(request);
+        User savedUser = userRepository.save(newUser);
+
+        Brand newBrand = BrandConverter.toBrand(request);
+        Brand savedBrand = brandRepository.save(newBrand);
+
+        Seller newSeller = UserConverter.toSeller(savedUser, savedBrand);
+        Seller savedSeller = sellerRepository.save(newSeller);
+
+        String accessToken = jwtUtil.createAccessToken(savedUser.getEmail());
+
+        return UserConverter.toSellerSignUpResult(savedSeller, accessToken);
     }
 
     public UserResponse.UserSignUpResultDTO login(String email) {

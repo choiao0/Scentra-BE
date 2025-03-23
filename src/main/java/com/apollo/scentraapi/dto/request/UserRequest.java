@@ -13,6 +13,22 @@ public class UserRequest {
         @NotNull
         String email;
         String gender;
+        String phoneNum;
+        String birth;
+    }
+
+    @Getter
+    public static class SellerSignUpDTO {
+
+        String name;
+        String password;
+        @NotNull
+        String email;
+        String gender;
+//        String brandNameKr;
+        String brandNameEn;
+        String brandImage;
+        String brandDescription;
     }
 
     @Getter

@@ -3,16 +3,17 @@ package com.apollo.scentraapi.converter;
 import com.apollo.scentraapi.domain.Brand;
 import com.apollo.scentraapi.domain.Product;
 import com.apollo.scentraapi.dto.request.BrandRequest;
+import com.apollo.scentraapi.dto.request.UserRequest;
 import com.apollo.scentraapi.dto.response.BrandResponse;
 import com.apollo.scentraapi.dto.response.ProductResponse;
 
 
 public class BrandConverter {
-    public static Brand toBrand (BrandRequest.BrandUploadRequestDTO brandUploadRequestDTO) {
+    public static Brand toBrand (UserRequest.SellerSignUpDTO request) {
         return Brand.builder()
-                .brandName(brandUploadRequestDTO.getBrandName())
-                .brandImage(brandUploadRequestDTO.getBrandImage())
-                .brandDescription(brandUploadRequestDTO.getBrandDescription())
+                .brandName(request.getBrandNameEn())
+                .brandImage(request.getBrandImage())
+                .brandDescription(request.getBrandDescription())
                 .build();
     }
     public static BrandResponse.BrandDto toBrandResponse(Brand brand) {

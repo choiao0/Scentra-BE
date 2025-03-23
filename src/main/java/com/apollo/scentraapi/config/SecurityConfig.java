@@ -60,7 +60,7 @@ public class SecurityConfig {
                         .accessDeniedHandler(jwtAccessDeniedHandler))
 
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/api/users/sign-up").permitAll()
+                        .requestMatchers("/api/users/sign-up", "/api/users/sign-up/sellers").permitAll()
                         .requestMatchers("/api/users/login").permitAll()
                         .requestMatchers(AUTH_WHITELIST).permitAll()
                         .anyRequest().authenticated())

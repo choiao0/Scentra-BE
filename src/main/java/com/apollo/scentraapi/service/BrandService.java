@@ -59,13 +59,14 @@ public class BrandService {
     }
 
     public Brand uploadBrand(BrandRequest.BrandUploadRequestDTO brandUploadRequestDto) {
-        if (brandUploadRequestDto.getBrandName() == null || brandUploadRequestDto.getBrandName().isEmpty() ||
-                brandUploadRequestDto.getBrandDescription() == null || brandUploadRequestDto.getBrandImage().isEmpty()) {
-            throw new BrandHandler(ErrorStatus.BRAND_BAD_REQUEST);
-        }
-        Brand new_brand = BrandConverter.toBrand(brandUploadRequestDto);
-
-        return brandRepository.save(new_brand);
+//        if (brandUploadRequestDto.getBrandName() == null || brandUploadRequestDto.getBrandName().isEmpty() ||
+//                brandUploadRequestDto.getBrandDescription() == null || brandUploadRequestDto.getBrandImage().isEmpty()) {
+//            throw new BrandHandler(ErrorStatus.BRAND_BAD_REQUEST);
+//        }
+//        Brand new_brand = BrandConverter.toBrand(brandUploadRequestDto);
+//
+//        return brandRepository.save(new_brand);
+        return null;
     }
 
     @Transactional

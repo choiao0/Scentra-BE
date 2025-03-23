@@ -32,6 +32,15 @@ public class UserController {
         return ApiResponse.onSuccess(response);
     }
 
+    @PostMapping("/sign-up/sellers")
+    @Operation(summary = "관리자 회원가입", description = "**유저 이메일**은 필수입니다. 중복되지 않도록 입력해주세요. <br> **성별**은 MALE or FEMALE로 입력해주세요.")
+    public ApiResponse<UserResponse.SellerSignUpResultDTO> createSeller(@Valid @RequestBody UserRequest.SellerSignUpDTO request) {
+
+        UserResponse.SellerSignUpResultDTO response = userService.createSeller(request);
+
+        return ApiResponse.onSuccess(response);
+    }
+
     @PostMapping("/login")
     @Operation(summary = "로그인", description = "로그인할 유저의 이메일을 입력해주세요.")
     public ApiResponse<UserResponse.UserSignUpResultDTO> login(@RequestParam String email) {

@@ -31,6 +31,9 @@ public class User extends BaseEntity implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
+    private String phoneNum;
+    private String birth;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<ProductLikes> productLikesList = new ArrayList<>();
 
