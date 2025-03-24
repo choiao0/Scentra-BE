@@ -83,6 +83,10 @@ public class BrandService {
         Optional<Brand> optionalBrand = brandRepository.findById(brandId);
         Brand brand = optionalBrand.orElseThrow(() -> new BrandHandler(ErrorStatus.BRAND_NOT_FOUND));
 
+        Optional<BrandLikes> findBrandLikes = brandLikesRepository.findByUserAndBrand(user, brand);
+        if (findBrandLikes.isPresent())
+            throw new BrandHandler(ErrorStatus.BRAND_ALREADY_LIKED);
+
         BrandLikes newLike = BrandConverter.toBrandLikes(brand, user);
         brandLikesRepository.save(newLike);
 

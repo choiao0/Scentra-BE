@@ -147,11 +147,13 @@ public class ProductService {
 
     public ProductResponse.ProductLikeDTO addLike(User user, Long productId) {
         Optional<Product> optionalProduct = productRepository.findById(productId);
-
         Product product = optionalProduct.orElseThrow(() -> new ProductHandler(ErrorStatus.PRODUCT_NOT_FOUND));
 
-        ProductLikes newLike = ProductConverter.toProductLike(product, user);
+        Optional<ProductLikes> findProductLikes = productLikeRepository.findByUserAndProduct(user, product);
+        if (findProductLikes.isPresent())
+            throw new ProductHandler(ErrorStatus.PRODUCT_ALREADY_LIKED);
 
+        ProductLikes newLike = ProductConverter.toProductLike(product, user);
         productLikeRepository.save(newLike);
 
         return ProductConverter.toProductLikeDTO(newLike);
@@ -159,7 +161,7 @@ public class ProductService {
 
     public ProductResponse.ProductLikeDTO removeLike(User user, Long productId) {
         Optional<ProductLikes> optionalProductLike = productLikeRepository.findByUserIdAndProductId(user.getId(), productId);
-        ProductLikes productLike = optionalProductLike.orElseThrow(() -> new ProductHandler(ErrorStatus.PRODUCT_NOT_FOUND));
+        ProductLikes productLike = optionalProductLike.orElseThrow(() -> new ProductHandler(ErrorStatus.PRODUCT_NOT_LIKED));
 
         productLikeRepository.delete(productLike);
         return ProductConverter.toProductLikeDTO(productLike);
@@ -213,7 +215,7 @@ public class ProductService {
 
     public ProductResponse.ProductLikeDTO isLike(User user, Long productId) {
         Optional<ProductLikes> optionalProductLike = productLikeRepository.findByUserIdAndProductId(user.getId(), productId);
-        ProductLikes productLike = optionalProductLike.orElseThrow(() -> new ProductHandler(ErrorStatus.PRODUCT_NOT_FOUND));
+        ProductLikes productLike = optionalProductLike.orElseThrow(() -> new ProductHandler(ErrorStatus.PRODUCT_NOT_LIKED));
         return ProductConverter.toProductLikeDTO(productLike);
     }
 }

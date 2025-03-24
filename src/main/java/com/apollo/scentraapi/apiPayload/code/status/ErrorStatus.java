@@ -32,6 +32,8 @@ public enum ErrorStatus implements BaseErrorCode {
     PRODUCT_NOT_FOUND_ON_SEARCH(HttpStatus.NOT_FOUND, "PRODUCT4003", "해당 검색어에 해당하는 상품이 없습니다."),
     INVALID_SEARCH_KEYWORD(HttpStatus.BAD_REQUEST, "PRODUCT4004", "검색어를 입력해야 합니다."),
     NO_LIKED_PRODUCTS(HttpStatus.BAD_REQUEST, "PRODUCT4005", "좋아요한 상품이 없습니다."),
+    PRODUCT_NOT_LIKED(HttpStatus.BAD_REQUEST, "PRODUCT4006", "좋아요한 상품이 아닙니다."),
+    PRODUCT_ALREADY_LIKED(HttpStatus.BAD_REQUEST, "PRODUCT4007", "이미 좋아요한 상품입니다."),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "PRODUCT5001", "상품 검색 중 오류 발생"),
 
     // 브랜드 관련 에러
