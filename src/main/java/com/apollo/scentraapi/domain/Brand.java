@@ -4,6 +4,9 @@ import com.apollo.scentraapi.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Entity
 @Getter
@@ -20,6 +23,12 @@ public class Brand extends BaseEntity {
     private String brandNameEn;
     private String brandDescription;
     private String brandImage;
+
+    @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL)
+    private List<Product> productList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL)
+    private List<BrandLikes> brandLikesList = new ArrayList<>();
 
     // 상품 정보 업데이트 메서드
     public void update(String brandNameKr, String brandNameEn, String brandImage, String brandDescription) {

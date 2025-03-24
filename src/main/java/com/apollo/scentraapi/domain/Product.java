@@ -41,6 +41,12 @@ public class Product extends BaseEntity {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<CategoryMapping> categoryMappingList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<ProductLikes> productLikesList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<Review> reviewList = new ArrayList<>();
+
     public void setBrand(Brand brand){
         this.brand = brand;
     }

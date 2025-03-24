@@ -47,6 +47,9 @@ public class User extends BaseEntity implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Cart> cartList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Orders> orderList = new ArrayList<>();
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Seller seller;
 
