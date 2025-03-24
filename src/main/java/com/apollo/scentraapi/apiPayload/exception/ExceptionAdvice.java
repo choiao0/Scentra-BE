@@ -64,10 +64,6 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(generalException,errorReasonHttpStatus,null,request);
     }
 
-    @ExceptionHandler(ProductNotFoundException.class)
-    public ResponseEntity<ApiResponse<Void>> handleProductNotFoundException(ProductNotFoundException ex) {
-        return ResponseEntity.status(404).body(ApiResponse.error(ex.getCode(), ex.getMessage()));
-    }
 
     private ResponseEntity<Object> handleExceptionInternal(Exception e, ErrorReasonDTO reason,
                                                            HttpHeaders headers, HttpServletRequest request) {
