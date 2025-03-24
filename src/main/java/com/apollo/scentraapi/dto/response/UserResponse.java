@@ -12,6 +12,8 @@ public class UserResponse {
     @Getter
     public static class UserSignUpResultDTO {
         UUID userId;
+        String name;
+        String email;
         String accessToken;
     }
 
