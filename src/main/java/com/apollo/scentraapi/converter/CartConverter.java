@@ -14,7 +14,8 @@ public class CartConverter {
                 .productId(cart.getProduct().getId())
                 .quantity(cart.getQuantity())
                 .productName(cart.getProduct().getProductName())
-                .brandName(cart.getProduct().getBrand().getBrandName())
+                .brandNameKr(cart.getProduct().getBrand().getBrandNameKr())
+                .brandNameEn(cart.getProduct().getBrand().getBrandNameEn())
                 .productImage(cart.getProduct().getProductImage())
                 .addedDate(cart.getUpdatedAt())
                 .build();

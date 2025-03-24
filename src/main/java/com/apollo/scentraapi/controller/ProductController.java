@@ -10,7 +10,6 @@ import com.apollo.scentraapi.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,8 +46,7 @@ public class ProductController {
 
     @PutMapping("/{id}")
     @Operation(summary="상품 정보 수정")
-    public ApiResponse<ProductResponse.ProductUpdateResponseDTO> updateProduct(
-            @PathVariable Long id, @RequestBody ProductRequest.ProductUpdateRequestDTO request) {
+    public ApiResponse<ProductResponse.ProductUpdateResponseDTO> updateProduct(@PathVariable Long id, @RequestBody ProductRequest.ProductUpdateRequestDTO request) {
 
         ProductResponse.ProductUpdateResponseDTO response = productService.updateProduct(id, request);
         return ApiResponse.onSuccess(response);
@@ -92,8 +90,7 @@ public class ProductController {
     @GetMapping("/category/{category_id}")
     @Operation(summary="태그 ID로 제품 목록 조회")
     public ApiResponse<List<ProductResponse.ProductListDto>> getProductsByCategory(@PathVariable Long category_id) {
-        List<ProductResponse.ProductListDto> response = productService.
-                getProductsByCategory(category_id);
+        List<ProductResponse.ProductListDto> response = productService.getProductsByCategory(category_id);
         return ApiResponse.onSuccess(response);
     }
 

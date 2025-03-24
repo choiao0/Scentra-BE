@@ -10,7 +10,8 @@ import com.apollo.scentraapi.dto.response.BrandResponse;
 public class BrandConverter {
     public static Brand toBrand(UserRequest.SellerSignUpDTO request) {
         return Brand.builder()
-                .brandName(request.getBrandNameEn())
+                .brandNameKr(request.getBrandNameKr())
+                .brandNameEn(request.getBrandNameEn())
                 .brandImage(request.getBrandImage())
                 .brandDescription(request.getBrandDescription())
                 .build();
@@ -19,7 +20,8 @@ public class BrandConverter {
     public static BrandResponse.BrandDto toBrandResponse(Brand brand) {
         return BrandResponse.BrandDto.builder()
                 .id(brand.getId())
-                .brandName(brand.getBrandName())
+                .brandNameKr(brand.getBrandNameKr())
+                .brandNameEn(brand.getBrandNameEn())
                 .brandImage(brand.getBrandImage())
                 .brandDescription(brand.getBrandDescription())
                 .build();
@@ -28,14 +30,17 @@ public class BrandConverter {
     public static BrandResponse.BrandListDto toBrandListDto(Brand brand) {
         return BrandResponse.BrandListDto.builder()
                 .id(brand.getId())
-                .brandName(brand.getBrandName())
+                .brandNameKr(brand.getBrandNameKr())
+                .brandNameEn(brand.getBrandNameEn())
                 .brandImage(brand.getBrandImage())
+                .brandDescription(brand.getBrandDescription())
                 .build();
     }
 
     public static BrandResponse.BrandUpdateResponseDTO toBrandUpdateResponseDTO(Brand brand) {
         return BrandResponse.BrandUpdateResponseDTO.builder()
-                .brandName(brand.getBrandName())
+                .brandNameKr(brand.getBrandNameKr())
+                .brandNameEn(brand.getBrandNameEn())
                 .brandImage(brand.getBrandImage())
                 .brandDescription(brand.getBrandDescription())
                 .createdAt(brand.getCreatedAt())
@@ -46,7 +51,8 @@ public class BrandConverter {
     public static BrandResponse.BrandDeleteResponseDTO toBrandDeleteResponseDTO(Brand brand) {
         return BrandResponse.BrandDeleteResponseDTO.builder()
                 .id(brand.getId())
-                .brandName(brand.getBrandName())
+                .brandNameKr(brand.getBrandNameKr())
+                .brandNameEn(brand.getBrandNameEn())
                 .createdAt(brand.getCreatedAt())
                 .updatedAt(brand.getUpdatedAt())
                 .build();

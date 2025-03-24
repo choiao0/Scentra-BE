@@ -4,7 +4,6 @@ import com.apollo.scentraapi.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -17,13 +16,15 @@ public class Brand extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String brandName;
+    private String brandNameKr;
+    private String brandNameEn;
     private String brandDescription;
     private String brandImage;
 
     // 상품 정보 업데이트 메서드
-    public void update(String brandName, String brandImage, String brandDescription) {
-        if (brandName != null) this.brandName = brandName;
+    public void update(String brandNameKr, String brandNameEn, String brandImage, String brandDescription) {
+        if (brandNameKr != null) this.brandNameKr = brandNameKr;
+        if (brandNameEn != null) this.brandNameEn = brandNameEn;
         if (brandImage != null) this.brandImage = brandImage;
         if (brandDescription != null) this.brandDescription = brandDescription;
     }

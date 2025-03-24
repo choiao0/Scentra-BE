@@ -9,10 +9,11 @@ public class ProductResponse {
     @Builder
     @Getter
     public static class ProductListDto {
-        Long product_id;
-        String brand_name;
-        String product_name;
-        String product_image;
+        Long productId;
+        String brandNameKr;
+        String brandNameEn;
+        String productName;
+        String productImage;
         double price;
     }
 
@@ -26,7 +27,8 @@ public class ProductResponse {
         String description;
         Double price;
         Long brandId;
-        String brandName;
+        String brandNameKr;
+        String brandNameEn;
         LocalDateTime createdAt;
         LocalDateTime updatedAt;
     }
@@ -56,7 +58,8 @@ public class ProductResponse {
         Long productId;
         String name;
         Long brandId;
-        String brandName;
+        String brandNameKr;
+        String brandNameEn;
         LocalDateTime createdAt;
         LocalDateTime updatedAt;
     }

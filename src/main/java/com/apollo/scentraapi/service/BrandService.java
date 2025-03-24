@@ -56,7 +56,8 @@ public class BrandService {
 
         // 2. 브랜드 정보 업데이트
         brand.update(
-                request.getBrandName(),
+                request.getBrandNameKr(),
+                request.getBrandNameEn(),
                 request.getBrandImage(),
                 request.getBrandDescription()
         );

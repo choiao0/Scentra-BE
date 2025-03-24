@@ -113,9 +113,11 @@ public class UserService {
 
         for (ProductLikes like : likes) {
             Product product = like.getProduct();
-            Optional<Brand> brand = brandRepository.findById(product.getBrand().getId());
-            String brand_name = brand.map(Brand::getBrandName).orElse(null); // 상품 브랜드 존재 하지 않을 시 null 처리
-            ProductResponse.ProductListDto product_dto = ProductConverter.toProductListDto(product, brand_name);
+            Brand brand = brandRepository.findById(product.getBrand().getId())
+                    .orElseThrow(() -> new BrandHandler(ErrorStatus.BRAND_NOT_FOUND));
+            String brandNameKr = brand.getBrandNameKr();
+            String brandNameEn = brand.getBrandNameEn();
+            ProductResponse.ProductListDto product_dto = ProductConverter.toProductListDto(product, brandNameKr, brandNameEn);
             productList.add(product_dto);
         }
         return productList;

@@ -6,20 +6,20 @@ import com.apollo.scentraapi.domain.User;
 import com.apollo.scentraapi.dto.request.ProductRequest;
 import com.apollo.scentraapi.dto.response.ProductResponse;
 
-import java.time.LocalDateTime;
 
 public class ProductConverter {
 
-    public static ProductResponse.ProductListDto toProductListDto(Product product, String brand_name) {
+    public static ProductResponse.ProductListDto toProductListDto(Product product, String brandNameKr, String brandNameEn) {
         return ProductResponse.ProductListDto.builder()
-                .product_id(product.getId())
-                .brand_name(brand_name)
-                .product_name(product.getProductName())
-                .product_image(product.getProductImage())
+                .productId(product.getId())
+                .brandNameKr(brandNameKr)
+                .brandNameEn(brandNameEn)
+                .productName(product.getProductName())
+                .productImage(product.getProductImage())
                 .price(product.getPrice())
                 .build();
     }
-    public static Product toProduct (ProductRequest.ProductUploadDto productUploadDto) {
+    public static Product toProduct(ProductRequest.ProductUploadDto productUploadDto) {
         return Product.builder()
                 .productName(productUploadDto.getName())
                 .productImage(productUploadDto.getProduct_image())
@@ -37,7 +37,8 @@ public class ProductConverter {
                 .description(product.getProductDescription())
                 .price(product.getPrice())
                 .brandId(product.getBrand().getId())
-                .brandName(product.getBrand().getBrandName())
+                .brandNameKr(product.getBrand().getBrandNameKr())
+                .brandNameEn(product.getBrand().getBrandNameEn())
                 .createdAt(product.getCreatedAt())
                 .updatedAt(product.getUpdatedAt())
                 .build();
@@ -66,8 +67,9 @@ public class ProductConverter {
         return ProductResponse.ProductDeleteResponseDTO.builder()
                 .productId(product.getId())
                 .name(product.getProductName())
-                .brandId(product.getBrand() != null ? product.getBrand().getId() : null)
-                .brandName(product.getBrand() != null ? product.getBrand().getBrandName() : null)
+                .brandId(product.getBrand().getId())
+                .brandNameKr(product.getBrand().getBrandNameKr())
+                .brandNameEn(product.getBrand().getBrandNameEn())
                 .createdAt(product.getCreatedAt())
                 .updatedAt(product.getUpdatedAt())
                 .build();

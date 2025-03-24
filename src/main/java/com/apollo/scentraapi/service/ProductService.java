@@ -48,9 +48,11 @@ public class ProductService {
 
         for (Product product : products) {
             Long brand_id = product.getBrand().getId();
-            Optional<Brand> brand = brandRepository.findById(brand_id);
-            String brand_name = brand.map(Brand::getBrandName).orElse(null); // 상품 브랜드 존재 하지 않을 시 null 처리
-            ProductResponse.ProductListDto product_dto = ProductConverter.toProductListDto(product, brand_name);
+            Brand brand = brandRepository.findById(brand_id)
+                    .orElseThrow(() -> new BrandHandler(ErrorStatus.BRAND_NOT_FOUND));
+            String brandNameKr = brand.getBrandNameKr();
+            String brandNameEn = brand.getBrandNameEn();
+            ProductResponse.ProductListDto product_dto = ProductConverter.toProductListDto(product, brandNameKr, brandNameEn);
             productList.add(product_dto);
         }
         return productList;
@@ -172,9 +174,9 @@ public class ProductService {
         return mappings.stream()
                 .map(mapping -> {
                     Product product = mapping.getProduct();
-                    String brandName = (product.getBrand() != null) ? product.getBrand().getBrandName() : "Unknown Brand"; // 브랜드 정보 포함
-
-                    return ProductConverter.toProductListDto(product, brandName);
+                    String brandNameKr = product.getBrand().getBrandNameKr();
+                    String brandNameEn = product.getBrand().getBrandNameEn();
+                    return ProductConverter.toProductListDto(product, brandNameKr, brandNameEn);
                 })
                 .collect(Collectors.toList());
     }
@@ -187,8 +189,10 @@ public class ProductService {
 
         // 2. 검색 실행
         List<Product> filteredProducts = productRepository.findAll().stream()
-                .filter(product -> product.getProductName().toLowerCase().contains(keyword.toLowerCase()) ||
-                        (product.getBrand() != null && product.getBrand().getBrandName().toLowerCase().contains(keyword.toLowerCase()))) // ✅ null 체크 추가
+                .filter(product -> product.getProductName().toLowerCase().contains(keyword.toLowerCase()) ||  // (1) 키워드가 상품명에 포함됨
+                        (product.getBrand().getBrandNameKr() != null && product.getBrand().getBrandNameKr().toLowerCase().contains(keyword.toLowerCase())) ||  // (2) 키워드가 국문 브랜드명에 포함됨
+                        (product.getBrand().getBrandNameEn() != null && product.getBrand().getBrandNameEn().toLowerCase().contains(keyword.toLowerCase())      // (3) 키워드가 영문 브랜드명에 포함됨
+                        ))
                 .toList();
 
 
@@ -199,11 +203,9 @@ public class ProductService {
 
         return filteredProducts.stream()
                 .map(product -> {
-                    String brand_name = Optional.ofNullable(product.getBrand()) // ✅ Optional 활용
-                            .map(Brand::getBrandName)
-                            .orElse("Unknown Brand"); // 브랜드 정보가 없으면 "Unknown Brand" 설정
-
-                    return ProductConverter.toProductListDto(product, brand_name); // ✅ brand_name을 명시적으로 전달
+                    String brandNameKr = product.getBrand().getBrandNameKr();
+                    String brandNameEn = product.getBrand().getBrandNameEn();
+                    return ProductConverter.toProductListDto(product, brandNameKr, brandNameEn);
                 })
                 .collect(Collectors.toList());
 

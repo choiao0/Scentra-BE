@@ -34,8 +34,7 @@ public class BrandController {
 
     @PutMapping("/{id}")
     @Operation(summary="브랜드 정보 수정")
-    public ApiResponse<BrandResponse.BrandUpdateResponseDTO> updateBrand(
-            @PathVariable Long id, @RequestBody BrandRequest.BrandUpdateRequestDTO request) {
+    public ApiResponse<BrandResponse.BrandUpdateResponseDTO> updateBrand(@PathVariable Long id, @RequestBody BrandRequest.BrandUpdateRequestDTO request) {
         BrandResponse.BrandUpdateResponseDTO response = brandService.updateBrand(id, request);
         return ApiResponse.onSuccess(response);
     }
