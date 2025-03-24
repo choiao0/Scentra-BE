@@ -91,7 +91,7 @@ public class BrandService {
 
     public BrandResponse.BrandLikeDTO removeLike(User user, Long brandId) {
         Optional<BrandLikes> optionalBrandLike = brandLikesRepository.findByUserIdAndBrandId(user.getId(), brandId);
-        BrandLikes brandLike = optionalBrandLike.orElseThrow(() -> new BrandHandler(ErrorStatus.BRAND_NOT_FOUND));
+        BrandLikes brandLike = optionalBrandLike.orElseThrow(() -> new BrandHandler(ErrorStatus.BRAND_NOT_LIKED));
 
         brandLikesRepository.delete(brandLike);
         return BrandConverter.toBrandLikeDTO(brandLike);
@@ -99,7 +99,7 @@ public class BrandService {
 
     public BrandResponse.BrandLikeDTO isLike(User user, Long brandId) {
         Optional<BrandLikes> optionalBrandLike = brandLikesRepository.findByUserIdAndBrandId(user.getId(), brandId);
-        BrandLikes brandLike = optionalBrandLike.orElseThrow(() -> new BrandHandler(ErrorStatus.BRAND_NOT_FOUND));
+        BrandLikes brandLike = optionalBrandLike.orElseThrow(() -> new BrandHandler(ErrorStatus.BRAND_NOT_LIKED));
 
         return BrandConverter.toBrandLikeDTO(brandLike);
     }

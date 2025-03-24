@@ -108,7 +108,7 @@ public class UserService {
         List<ProductResponse.ProductListDto> productList = new ArrayList<>();
 
         if (likes.isEmpty()) {
-            throw new ProductHandler(ErrorStatus.PRODUCT_NOT_FOUND);
+            throw new ProductHandler(ErrorStatus.NO_LIKED_PRODUCTS);
         }
 
         for (ProductLikes like : likes) {
@@ -128,7 +128,7 @@ public class UserService {
         List<BrandResponse.BrandListDto> brandList = new ArrayList<>();
 
         if (likes.isEmpty()) {
-            throw new BrandHandler(ErrorStatus.BRAND_NOT_FOUND);
+            throw new BrandHandler(ErrorStatus.NO_LIKED_BRANDS);
         }
 
         for (BrandLikes like : likes) {
