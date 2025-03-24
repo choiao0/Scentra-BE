@@ -37,8 +37,8 @@ public class ProductController {
     }
 
     @PostMapping
-    @Operation(summary="상품 업로드")
-    public ApiResponse<ProductResponse.ProductDto> uploadProduct(@RequestBody ProductRequest.ProductUploadDto request) {
+    @Operation(summary="상품 업로드", description = "**추천 성별**은 MALE or FEMALE or BOTH로 입력해주세요.")
+    public ApiResponse<ProductResponse.ProductDto> uploadProduct(@Valid @RequestBody ProductRequest.ProductUploadDto request) {
         Product new_product = productService.uploadProduct(request);
         ProductResponse.ProductDto response = ProductConverter.toProductResponse(new_product);
         return ApiResponse.onSuccess(response);

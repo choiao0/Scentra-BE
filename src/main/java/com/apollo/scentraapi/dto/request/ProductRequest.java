@@ -1,6 +1,7 @@
 package com.apollo.scentraapi.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 import java.util.List;
@@ -8,22 +9,27 @@ import java.util.List;
 public class ProductRequest {
     @Getter
     public static class ProductUploadDto {
-        String name;
-        String product_image;
-        String detail_image;
-        String description;
+        @NotBlank
+        String productNameKr;
+        @NotBlank
+        String productNameEn;
+        String productImage;
+        String detailImage;
         Double price;
-        Long brand_id;
+        String targetGender;
+        @NotNull
+        Long brandId;
         List<String> category;
     }
 
     @Getter
     public static class ProductUpdateRequestDTO {
-        String name;
+        String productNameKr;
+        String productNameEn;
         String productImage;
         String detailImage;
-        String description;
         Double price;
+        String targetGender;
         Long brandId;
     }
 

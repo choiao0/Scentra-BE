@@ -59,12 +59,8 @@ public class ProductService {
     }
 
     public Product uploadProduct(ProductRequest.ProductUploadDto productUploadDto) {
-        if (productUploadDto.getName() == null || productUploadDto.getName().isEmpty() ||
-                productUploadDto.getProduct_image() == null || productUploadDto.getProduct_image().isEmpty() || productUploadDto.getPrice() == null) {
-            throw new ProductHandler(ErrorStatus.PRODUCT_BAD_REQUEST);
-        }
         Product new_product = ProductConverter.toProduct(productUploadDto);
-        Brand brand = brandRepository.findById(productUploadDto.getBrand_id())
+        Brand brand = brandRepository.findById(productUploadDto.getBrandId())
                 .orElseThrow(() -> new ProductHandler(ErrorStatus.BRAND_NOT_FOUND));
         new_product.setBrand(brand);
         new_product = productRepository.save(new_product);
@@ -94,11 +90,12 @@ public class ProductService {
 
         // 3. 상품 정보 업데이트
         product.update(
-                request.getName(),
+                request.getProductNameKr(),
+                request.getProductNameEn(),
                 request.getProductImage(),
                 request.getDetailImage(),
-                request.getDescription(),
-                request.getPrice()
+                request.getPrice(),
+                request.getTargetGender()
         );
 
         // 4. 응답 DTO 반환
@@ -191,9 +188,11 @@ public class ProductService {
 
         // 2. 검색 실행
         List<Product> filteredProducts = productRepository.findAll().stream()
-                .filter(product -> product.getProductName().toLowerCase().contains(keyword.toLowerCase()) ||  // (1) 키워드가 상품명에 포함됨
-                        (product.getBrand().getBrandNameKr() != null && product.getBrand().getBrandNameKr().toLowerCase().contains(keyword.toLowerCase())) ||  // (2) 키워드가 국문 브랜드명에 포함됨
-                        (product.getBrand().getBrandNameEn() != null && product.getBrand().getBrandNameEn().toLowerCase().contains(keyword.toLowerCase())      // (3) 키워드가 영문 브랜드명에 포함됨
+                .filter(product ->
+                        (product.getProductNameKr() != null && product.getProductNameKr().contains(keyword)) ||  // (1) 키워드가 상품명에 포함됨
+                        (product.getProductNameEn() != null && product.getProductNameEn().toLowerCase().contains(keyword.toLowerCase())) ||
+                        (product.getBrand().getBrandNameKr() != null && product.getBrand().getBrandNameKr().contains(keyword)) ||  // (2) 키워드가 브랜드명에 포함됨
+                        (product.getBrand().getBrandNameEn() != null && product.getBrand().getBrandNameEn().toLowerCase().contains(keyword.toLowerCase())
                         ))
                 .toList();
 
