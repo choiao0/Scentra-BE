@@ -7,7 +7,6 @@ import com.apollo.scentraapi.dto.response.BrandResponse;
 import com.apollo.scentraapi.service.BrandService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,31 +20,31 @@ public class BrandController {
 
     @GetMapping("/{id}")
     @Operation(summary="브랜드 조회")
-    public ResponseEntity<ApiResponse<BrandResponse.BrandDto>> getBrand(@PathVariable Long id) {
+    public ApiResponse<BrandResponse.BrandDto> getBrand(@PathVariable Long id) {
         BrandResponse.BrandDto response = brandService.getBrand(id);
-        return ResponseEntity.ok(ApiResponse.onSuccess(response));
+        return ApiResponse.onSuccess(response);
     }
 
     @GetMapping
     @Operation(summary="브랜드 목록 조회")
-    public ResponseEntity<ApiResponse<List<BrandResponse.BrandListDto>>> getAllBrands() {
+    public ApiResponse<List<BrandResponse.BrandListDto>> getAllBrands() {
         List<BrandResponse.BrandListDto> response = brandService.getAllBrands();
-        return ResponseEntity.ok(ApiResponse.onSuccess(response));
+        return ApiResponse.onSuccess(response);
     }
 
     @PutMapping("/{id}")
     @Operation(summary="브랜드 정보 수정")
-    public ResponseEntity<ApiResponse<BrandResponse.BrandUpdateResponseDTO>> updateBrand(
+    public ApiResponse<BrandResponse.BrandUpdateResponseDTO> updateBrand(
             @PathVariable Long id, @RequestBody BrandRequest.BrandUpdateRequestDTO request) {
         BrandResponse.BrandUpdateResponseDTO response = brandService.updateBrand(id, request);
-        return ResponseEntity.ok(ApiResponse.onSuccess(response));
+        return ApiResponse.onSuccess(response);
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary="브랜드 삭제")
-    public ResponseEntity<ApiResponse<BrandResponse.BrandDeleteResponseDTO>> deleteBrand(@PathVariable Long id) {
+    public ApiResponse<BrandResponse.BrandDeleteResponseDTO> deleteBrand(@PathVariable Long id) {
         BrandResponse.BrandDeleteResponseDTO response = brandService.deleteBrand(id);
-        return ResponseEntity.ok(ApiResponse.onSuccess(response));
+        return ApiResponse.onSuccess(response);
     }
 
     @PostMapping("/likes/{brand-id}")

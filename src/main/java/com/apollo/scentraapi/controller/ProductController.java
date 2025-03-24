@@ -25,9 +25,9 @@ public class ProductController {
 
     @GetMapping("/{id}")
     @Operation(summary="상품 조회")
-    public ResponseEntity<ApiResponse<ProductResponse.ProductDto>> getProduct(@PathVariable Long id) {
+    public ApiResponse<ProductResponse.ProductDto> getProduct(@PathVariable Long id) {
         ProductResponse.ProductDto response = productService.getProduct(id);
-        return ResponseEntity.ok(ApiResponse.onSuccess(response));
+        return ApiResponse.onSuccess(response);
     }
 
     @GetMapping
@@ -47,18 +47,18 @@ public class ProductController {
 
     @PutMapping("/{id}")
     @Operation(summary="상품 정보 수정")
-    public ResponseEntity<ApiResponse<ProductResponse.ProductUpdateResponseDTO>> updateProduct(
+    public ApiResponse<ProductResponse.ProductUpdateResponseDTO> updateProduct(
             @PathVariable Long id, @RequestBody ProductRequest.ProductUpdateRequestDTO request) {
 
         ProductResponse.ProductUpdateResponseDTO response = productService.updateProduct(id, request);
-        return ResponseEntity.ok(ApiResponse.onSuccess(response));
+        return ApiResponse.onSuccess(response);
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary="상품 삭제")
-    public ResponseEntity<ApiResponse<ProductResponse.ProductDeleteResponseDTO>> deleteProduct(@PathVariable Long id) {
+    public ApiResponse<ProductResponse.ProductDeleteResponseDTO> deleteProduct(@PathVariable Long id) {
         ProductResponse.ProductDeleteResponseDTO response = productService.deleteProduct(id);
-        return ResponseEntity.ok(ApiResponse.onSuccess(response));
+        return ApiResponse.onSuccess(response);
     }
 
     @PostMapping("background-image")
@@ -99,9 +99,9 @@ public class ProductController {
 
     @GetMapping("/search")
     @Operation(summary = "검색어 기반 상품 조회", description = "검색어가 상품 이름 또는 브랜드 이름에 포함된 상품을 조회합니다.")
-    public ResponseEntity<List<ProductResponse.ProductListDto>> searchProducts (@RequestParam String keyword) {
+    public ApiResponse<List<ProductResponse.ProductListDto>> searchProducts (@RequestParam String keyword) {
         List<ProductResponse.ProductListDto> response = productService.searchProducts(keyword);
-        return ResponseEntity.ok(response);
+        return ApiResponse.onSuccess(response);
     }
 
     @GetMapping("/likes/{product-id}")

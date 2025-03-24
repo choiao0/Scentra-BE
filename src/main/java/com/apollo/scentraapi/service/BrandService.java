@@ -12,7 +12,6 @@ import com.apollo.scentraapi.repository.BrandRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.apollo.scentraapi.apiPayload.exception.BrandNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,14 +28,9 @@ public class BrandService {
     public BrandResponse.BrandDto getBrand(Long id) {
         // 1. 브랜드 조회 (없으면 예외 발생)
         Brand brand = brandRepository.findById(id)
-                .orElseThrow(BrandNotFoundException::new);
+                .orElseThrow(() -> new BrandHandler(ErrorStatus.BRAND_NOT_FOUND));
 
-        return BrandResponse.BrandDto.builder()
-                .id(brand.getId())
-                .brandName(brand.getBrandName())
-                .brandImage(brand.getBrandImage())
-                .brandDescription(brand.getBrandDescription())
-                .build();
+        return BrandConverter.toBrandResponse(brand);
     }
 
     public List<BrandResponse.BrandListDto> getAllBrands() {
@@ -58,7 +52,7 @@ public class BrandService {
     public BrandResponse.BrandUpdateResponseDTO updateBrand(Long id, BrandRequest.BrandUpdateRequestDTO request) {
         // 1. 브랜드 조회
         Brand brand = brandRepository.findById(id)
-                .orElseThrow(BrandNotFoundException::new);
+                .orElseThrow(() -> new BrandHandler(ErrorStatus.BRAND_NOT_FOUND));
 
         // 2. 브랜드 정보 업데이트
         brand.update(
@@ -68,49 +62,30 @@ public class BrandService {
         );
 
         // 3. 응답 DTO 반환
-        return BrandResponse.BrandUpdateResponseDTO.builder()
-                .brandName(brand.getBrandName())
-                .brandImage(brand.getBrandImage())
-                .brandDescription(brand.getBrandDescription())
-                .createdAt(brand.getCreatedAt())
-                .updatedAt(brand.getUpdatedAt())
-                .build();
+        return BrandConverter.toBrandUpdateResponseDTO(brand);
     }
 
     @Transactional
     public BrandResponse.BrandDeleteResponseDTO deleteBrand(Long id) {
         // 1. 브랜드 조회
         Brand brand = brandRepository.findById(id)
-                .orElseThrow(BrandNotFoundException::new);
+                .orElseThrow(() -> new BrandHandler(ErrorStatus.BRAND_NOT_FOUND));
 
         // 2. 브랜드 삭제 수행
         brandRepository.delete(brand);
 
         // 3. 삭제된 브랜드 정보 반환
-        return BrandResponse.BrandDeleteResponseDTO.builder()
-                .id(brand.getId())
-                .brandName(brand.getBrandName())
-                .createdAt(brand.getCreatedAt())
-                .updatedAt(brand.getUpdatedAt())
-                .build();
+        return BrandConverter.toBrandDeleteResponseDTO(brand);
     }
 
     public BrandResponse.BrandLikeDTO addLike(User user, Long brandId) {
         Optional<Brand> optionalBrand = brandRepository.findById(brandId);
-
         Brand brand = optionalBrand.orElseThrow(() -> new BrandHandler(ErrorStatus.BRAND_NOT_FOUND));
 
-        BrandLikes newLike = BrandLikes.builder()
-                .user(user)
-                .brand(brand)
-                .build();
-
+        BrandLikes newLike = BrandConverter.toBrandLikes(brand, user);
         brandLikesRepository.save(newLike);
 
-        return BrandResponse.BrandLikeDTO.builder()
-                .brandLikeId(newLike.getId())
-                .brandId(newLike.getBrand().getId())
-                .build();
+        return BrandConverter.toBrandLikeDTO(newLike);
     }
 
     public BrandResponse.BrandLikeDTO removeLike(User user, Long brandId) {
@@ -118,19 +93,13 @@ public class BrandService {
         BrandLikes brandLike = optionalBrandLike.orElseThrow(() -> new BrandHandler(ErrorStatus.BRAND_NOT_FOUND));
 
         brandLikesRepository.delete(brandLike);
-        return BrandResponse.BrandLikeDTO.builder()
-                .brandLikeId(brandLike.getId())
-                .brandId(brandLike.getBrand().getId())
-                .build();
+        return BrandConverter.toBrandLikeDTO(brandLike);
     }
 
     public BrandResponse.BrandLikeDTO isLike(User user, Long brandId) {
         Optional<BrandLikes> optionalBrandLike = brandLikesRepository.findByUserIdAndBrandId(user.getId(), brandId);
         BrandLikes brandLike = optionalBrandLike.orElseThrow(() -> new BrandHandler(ErrorStatus.BRAND_NOT_FOUND));
 
-        return BrandResponse.BrandLikeDTO.builder()
-                .brandLikeId(brandLike.getId())
-                .brandId(brandLike.getBrand().getId())
-                .build();
+        return BrandConverter.toBrandLikeDTO(brandLike);
     }
 }

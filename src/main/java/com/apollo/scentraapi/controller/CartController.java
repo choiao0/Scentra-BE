@@ -24,9 +24,9 @@ public class CartController {
 
     @GetMapping
     @Operation(summary = "유저의 장바구니 목록 조회")
-    public ResponseEntity<List<CartResponse.CartItemDto>> getCartItems(@AuthenticationPrincipal User user){
+    public List<CartResponse.CartItemDto> getCartItems(@AuthenticationPrincipal User user){
         UUID userId = user.getId();
-        return ResponseEntity.ok(cartService.getCartItems(userId));
+        return cartService.getCartItems(userId);
     }
 
     @PostMapping
