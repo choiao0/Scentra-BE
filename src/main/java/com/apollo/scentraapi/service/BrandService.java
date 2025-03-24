@@ -1,16 +1,12 @@
 package com.apollo.scentraapi.service;
 
 import com.apollo.scentraapi.apiPayload.code.status.ErrorStatus;
-import com.apollo.scentraapi.apiPayload.exception.ProductNotFoundException;
 import com.apollo.scentraapi.apiPayload.exception.handler.BrandHandler;
 import com.apollo.scentraapi.apiPayload.exception.handler.ProductHandler;
 import com.apollo.scentraapi.converter.BrandConverter;
-import com.apollo.scentraapi.converter.ProductConverter;
 import com.apollo.scentraapi.domain.*;
 import com.apollo.scentraapi.dto.request.BrandRequest;
-import com.apollo.scentraapi.dto.request.ProductRequest;
 import com.apollo.scentraapi.dto.response.BrandResponse;
-import com.apollo.scentraapi.dto.response.ProductResponse;
 import com.apollo.scentraapi.repository.BrandLikesRepository;
 import com.apollo.scentraapi.repository.BrandRepository;
 import lombok.RequiredArgsConstructor;
@@ -56,17 +52,6 @@ public class BrandService {
             brandList.add(brand_dto);
         }
         return brandList;
-    }
-
-    public Brand uploadBrand(BrandRequest.BrandUploadRequestDTO brandUploadRequestDto) {
-//        if (brandUploadRequestDto.getBrandName() == null || brandUploadRequestDto.getBrandName().isEmpty() ||
-//                brandUploadRequestDto.getBrandDescription() == null || brandUploadRequestDto.getBrandImage().isEmpty()) {
-//            throw new BrandHandler(ErrorStatus.BRAND_BAD_REQUEST);
-//        }
-//        Brand new_brand = BrandConverter.toBrand(brandUploadRequestDto);
-//
-//        return brandRepository.save(new_brand);
-        return null;
     }
 
     @Transactional

@@ -7,6 +7,7 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -32,7 +33,7 @@ public class User extends BaseEntity implements UserDetails {
     private Gender gender;
 
     private String phoneNum;
-    private String birth;
+    private LocalDate birth;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<ProductLikes> productLikesList = new ArrayList<>();

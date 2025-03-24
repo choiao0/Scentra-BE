@@ -3,6 +3,8 @@ package com.apollo.scentraapi.dto.request;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
+import java.time.LocalDate;
+
 public class UserRequest {
 
     @Getter
@@ -14,7 +16,7 @@ public class UserRequest {
         String email;
         String gender;
         String phoneNum;
-        String birth;
+        LocalDate birth;
     }
 
     @Getter
@@ -24,8 +26,8 @@ public class UserRequest {
         String password;
         @NotNull
         String email;
-        String gender;
-//        String brandNameKr;
+        String phoneNum;
+        String brandNameKr;
         String brandNameEn;
         String brandImage;
         String brandDescription;

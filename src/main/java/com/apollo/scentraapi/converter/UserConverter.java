@@ -30,7 +30,7 @@ public class UserConverter {
                 .name(request.getName())
                 .email(request.getEmail())
                 .password(request.getPassword())
-                .gender(Gender.valueOf(request.getGender()))
+                .phoneNum(request.getPhoneNum())
                 .productLikesList(new ArrayList<>())
                 .reviewList(new ArrayList<>())
                 .cartList(new ArrayList<>())

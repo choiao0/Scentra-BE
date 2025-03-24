@@ -17,13 +17,8 @@ public class Brand extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name="brand_name")
     private String brandName;
-
-    @Column(name="brand_description")
     private String brandDescription;
-
-    @Column(name="brand_image")
     private String brandImage;
 
     // 상품 정보 업데이트 메서드

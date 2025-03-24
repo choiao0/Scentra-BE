@@ -33,7 +33,7 @@ public class UserController {
     }
 
     @PostMapping("/sign-up/sellers")
-    @Operation(summary = "관리자 회원가입", description = "**유저 이메일**은 필수입니다. 중복되지 않도록 입력해주세요. <br> **성별**은 MALE or FEMALE로 입력해주세요.")
+    @Operation(summary = "판매자 회원가입", description = "**유저 이메일**은 필수입니다. 중복되지 않도록 입력해주세요. <br> **성별**은 MALE or FEMALE로 입력해주세요.")
     public ApiResponse<UserResponse.SellerSignUpResultDTO> createSeller(@Valid @RequestBody UserRequest.SellerSignUpDTO request) {
 
         UserResponse.SellerSignUpResultDTO response = userService.createSeller(request);
