@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -17,7 +19,6 @@ public class Orders extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name="total_price")
     private Double totalPrice;
 
     private LocalDateTime date;
@@ -26,10 +27,12 @@ public class Orders extends BaseEntity {
 
     private String address;
 
-    @Column(name="product_count")
     private Integer productCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
+    private List<OrderDetail> orderDetailList = new ArrayList<>();
 }
