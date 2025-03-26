@@ -9,12 +9,14 @@ public class CategoryResponse {
     @Getter
     public static class CategoryDto {
         private Long id;
-        private String name;
+        private String categoryNameKr;
+        private String categoryNameEn;
     }
 
     @Builder
     @Getter
     public static class CategoryNameDto {
-        private String name;
+        private String categoryNameKr;
+        private String categoryNameEn;
     }
 }

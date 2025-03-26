@@ -66,7 +66,7 @@ public class ProductService {
         new_product = productRepository.save(new_product);
 
         for (String c : productUploadDto.getCategory()) {
-            Category category = categoryRepository.findByCategoryName(c)
+            Category category = categoryRepository.findByCategoryNameKr(c)
                     .orElseThrow(() -> new ProductHandler(ErrorStatus.CATEGORY_NOT_FOUND));
             CategoryMapping mapping = CategoryConverter.toCategoryMapping(category, new_product);
             categoryMappingRepository.save(mapping);

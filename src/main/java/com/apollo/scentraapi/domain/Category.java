@@ -18,7 +18,8 @@ public class Category extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String categoryName;
+    private String categoryNameKr;
+    private String categoryNameEn;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<CategoryMapping> categoryMappingList = new ArrayList<>();

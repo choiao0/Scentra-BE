@@ -19,7 +19,7 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
 
     public CategoryResponse.CategoryDto createCategory(CategoryRequest.CategoryNameDto category) {
-        Category new_category = CategoryConverter.toCategory(category.getName());
+        Category new_category = CategoryConverter.toCategory(category.getCategoryNameKr(), category.getCategoryNameEn());
         categoryRepository.save(new_category);
         return CategoryConverter.toCategoryResponse(new_category);
     }

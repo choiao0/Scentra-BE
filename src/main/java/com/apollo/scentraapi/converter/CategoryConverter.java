@@ -13,22 +13,25 @@ public class CategoryConverter {
                 .build();
     }
 
-    public static Category toCategory(String name) {
+    public static Category toCategory(String nameKr, String nameEn) {
         return Category.builder()
-                .categoryName(name)
+                .categoryNameKr(nameKr)
+                .categoryNameEn(nameEn)
                 .build();
     }
 
     public static CategoryResponse.CategoryDto toCategoryResponse(Category category) {
         return CategoryResponse.CategoryDto.builder()
                 .id(category.getId())
-                .name(category.getCategoryName())
+                .categoryNameKr(category.getCategoryNameKr())
+                .categoryNameEn(category.getCategoryNameEn())
                 .build();
     }
 
     public static CategoryResponse.CategoryNameDto toCategoryNameResponse(Category category) {
         return CategoryResponse.CategoryNameDto.builder()
-                .name(category.getCategoryName())
+                .categoryNameKr(category.getCategoryNameKr())
+                .categoryNameEn(category.getCategoryNameEn())
                 .build();
     }
 }
