@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/categories")
@@ -25,8 +27,12 @@ public class CategoryController {
 
     @GetMapping
     @Operation(summary = "카테고리 목록 반환")
-    public ApiResponse<List<CategoryResponse.CategoryDto>> getCategories() {
-        List<CategoryResponse.CategoryDto> response = categoryService.getAllCategories();
+    public ApiResponse<Map<String, List<CategoryResponse.CategoryDto>>> getCategories() {
+        List<CategoryResponse.CategoryDto> categories = categoryService.getAllCategories();
+
+        Map<String, List<CategoryResponse.CategoryDto>> response = categories.stream()
+                .collect(Collectors.groupingBy(CategoryResponse.CategoryDto::getCategoryType));
+
         return ApiResponse.onSuccess(response);
     }
 
