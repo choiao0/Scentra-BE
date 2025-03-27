@@ -11,6 +11,7 @@ public class CategoryResponse {
         private Long id;
         private String categoryNameKr;
         private String categoryNameEn;
+        private String categoryType;
     }
 
     @Builder

@@ -10,5 +10,6 @@ public class CategoryRequest {
     public static class CategoryNameDto {
         private String categoryNameKr;
         private String categoryNameEn;
+        private String categoryType;
     }
 }

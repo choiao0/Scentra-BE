@@ -17,7 +17,7 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @PostMapping
-    @Operation(summary = "카테고리 생성")
+    @Operation(summary = "카테고리 생성", description = "**카테고리타입**은 TYPE or NOTE or MOOD로 입력해주세요.")
     public ApiResponse<CategoryResponse.CategoryDto> createCategory(CategoryRequest.CategoryNameDto categoryDto) {
         CategoryResponse.CategoryDto response = categoryService.createCategory(categoryDto);
         return ApiResponse.onSuccess(response);
