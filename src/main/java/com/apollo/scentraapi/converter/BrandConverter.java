@@ -1,41 +1,46 @@
 package com.apollo.scentraapi.converter;
 
 import com.apollo.scentraapi.domain.Brand;
+import com.apollo.scentraapi.dto.request.UserRequest;
 import com.apollo.scentraapi.domain.BrandLikes;
-import com.apollo.scentraapi.domain.Product;
 import com.apollo.scentraapi.domain.User;
-import com.apollo.scentraapi.dto.request.BrandRequest;
 import com.apollo.scentraapi.dto.response.BrandResponse;
-import com.apollo.scentraapi.dto.response.ProductResponse;
 
 
 public class BrandConverter {
-    public static Brand toBrand(BrandRequest.BrandUploadRequestDTO brandUploadRequestDTO) {
+    public static Brand toBrand(UserRequest.SellerSignUpDTO request) {
         return Brand.builder()
-                .brandName(brandUploadRequestDTO.getBrandName())
-                .brandImage(brandUploadRequestDTO.getBrandImage())
-                .brandDescription(brandUploadRequestDTO.getBrandDescription())
+                .brandNameKr(request.getBrandNameKr())
+                .brandNameEn(request.getBrandNameEn())
+                .brandImage(request.getBrandImage())
+                .brandDescription(request.getBrandDescription())
                 .build();
     }
+
     public static BrandResponse.BrandDto toBrandResponse(Brand brand) {
         return BrandResponse.BrandDto.builder()
                 .id(brand.getId())
-                .brandName(brand.getBrandName())
+                .brandNameKr(brand.getBrandNameKr())
+                .brandNameEn(brand.getBrandNameEn())
                 .brandImage(brand.getBrandImage())
                 .brandDescription(brand.getBrandDescription())
                 .build();
     }
+
     public static BrandResponse.BrandListDto toBrandListDto(Brand brand) {
         return BrandResponse.BrandListDto.builder()
                 .id(brand.getId())
-                .brandName(brand.getBrandName())
+                .brandNameKr(brand.getBrandNameKr())
+                .brandNameEn(brand.getBrandNameEn())
                 .brandImage(brand.getBrandImage())
+                .brandDescription(brand.getBrandDescription())
                 .build();
     }
 
     public static BrandResponse.BrandUpdateResponseDTO toBrandUpdateResponseDTO(Brand brand) {
         return BrandResponse.BrandUpdateResponseDTO.builder()
-                .brandName(brand.getBrandName())
+                .brandNameKr(brand.getBrandNameKr())
+                .brandNameEn(brand.getBrandNameEn())
                 .brandImage(brand.getBrandImage())
                 .brandDescription(brand.getBrandDescription())
                 .createdAt(brand.getCreatedAt())
@@ -46,7 +51,8 @@ public class BrandConverter {
     public static BrandResponse.BrandDeleteResponseDTO toBrandDeleteResponseDTO(Brand brand) {
         return BrandResponse.BrandDeleteResponseDTO.builder()
                 .id(brand.getId())
-                .brandName(brand.getBrandName())
+                .brandNameKr(brand.getBrandNameKr())
+                .brandNameEn(brand.getBrandNameEn())
                 .createdAt(brand.getCreatedAt())
                 .updatedAt(brand.getUpdatedAt())
                 .build();

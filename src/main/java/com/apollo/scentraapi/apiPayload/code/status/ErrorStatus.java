@@ -31,11 +31,17 @@ public enum ErrorStatus implements BaseErrorCode {
     PRODUCT_BAD_REQUEST(HttpStatus.BAD_REQUEST, "PRODUCT4002", "상품 업로드에 대한 요청이 올바르지 않습니다."),
     PRODUCT_NOT_FOUND_ON_SEARCH(HttpStatus.NOT_FOUND, "PRODUCT4003", "해당 검색어에 해당하는 상품이 없습니다."),
     INVALID_SEARCH_KEYWORD(HttpStatus.BAD_REQUEST, "PRODUCT4004", "검색어를 입력해야 합니다."),
+    NO_LIKED_PRODUCTS(HttpStatus.BAD_REQUEST, "PRODUCT4005", "좋아요한 상품이 없습니다."),
+    PRODUCT_NOT_LIKED(HttpStatus.BAD_REQUEST, "PRODUCT4006", "좋아요한 상품이 아닙니다."),
+    PRODUCT_ALREADY_LIKED(HttpStatus.BAD_REQUEST, "PRODUCT4007", "이미 좋아요한 상품입니다."),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "PRODUCT5001", "상품 검색 중 오류 발생"),
 
     // 브랜드 관련 에러
     BRAND_NOT_FOUND(HttpStatus.NOT_FOUND, "BRAND4001", "브랜드가 존재하지 않습니다."),
     BRAND_BAD_REQUEST(HttpStatus.BAD_REQUEST, "BRAND4002", "브랜드 생성에 대한 요청이 올바르지 않습니다."),
+    NO_LIKED_BRANDS(HttpStatus.BAD_REQUEST, "BRAND4003", "좋아요한 브랜드가 없습니다."),
+    BRAND_NOT_LIKED(HttpStatus.BAD_REQUEST, "BRAND4004", "좋아요한 브랜드가 아닙니다."),
+    BRAND_ALREADY_LIKED(HttpStatus.BAD_REQUEST, "BRAND4005", "이미 좋아요한 브랜드입니다."),
 
     // 카테고리 관련 에러
     CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "CATEGORY4001", "카테고리가 존재하지 않습니다."),

@@ -16,8 +16,10 @@ public class CartResponse {
         private UUID userId;
         private Long productId;   // 상품 ID
         private int quantity;     // 담긴 개수
-        private String productName;
-        private String brandName;
+        private String productNameKr;
+        private String productNameEn;
+        private String brandNameKr;
+        private String brandNameEn;
         private String productImage;
         private LocalDateTime addedDate; // 상품이 추가된 날짜
     }

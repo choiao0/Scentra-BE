@@ -13,10 +13,7 @@ import com.apollo.scentraapi.dto.request.UserRequest;
 import com.apollo.scentraapi.dto.response.BrandResponse;
 import com.apollo.scentraapi.dto.response.ProductResponse;
 import com.apollo.scentraapi.dto.response.UserResponse;
-import com.apollo.scentraapi.repository.BrandLikesRepository;
-import com.apollo.scentraapi.repository.BrandRepository;
-import com.apollo.scentraapi.repository.ProductLikesRepository;
-import com.apollo.scentraapi.repository.UserRepository;
+import com.apollo.scentraapi.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +27,7 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final SellerRepository sellerRepository;
     private final JwtUtil jwtUtil;
     private final ProductLikesRepository productLikesRepository;
     private final BrandRepository brandRepository;
@@ -49,6 +47,28 @@ public class UserService {
         String accessToken = jwtUtil.createAccessToken(savedUser.getEmail());
 
         return UserConverter.toUserSignUpResult(savedUser, accessToken);
+    }
+
+    @Transactional
+    public UserResponse.SellerSignUpResultDTO createSeller(UserRequest.SellerSignUpDTO request) {
+
+        Optional<User> findUser = userRepository.findByEmail(request.getEmail()); // 이메일로 유저가 존재하는지 검사
+
+        if (findUser.isPresent())
+            throw new UserHandler(ErrorStatus.USER_ALREADY_EXIST);
+
+        User newUser = UserConverter.toUser(request);
+        User savedUser = userRepository.save(newUser);
+
+        Brand newBrand = BrandConverter.toBrand(request);
+        Brand savedBrand = brandRepository.save(newBrand);
+
+        Seller newSeller = UserConverter.toSeller(savedUser, savedBrand);
+        Seller savedSeller = sellerRepository.save(newSeller);
+
+        String accessToken = jwtUtil.createAccessToken(savedUser.getEmail());
+
+        return UserConverter.toSellerSignUpResult(savedSeller, accessToken);
     }
 
     public UserResponse.UserSignUpResultDTO login(String email) {
@@ -88,14 +108,16 @@ public class UserService {
         List<ProductResponse.ProductListDto> productList = new ArrayList<>();
 
         if (likes.isEmpty()) {
-            throw new ProductHandler(ErrorStatus.PRODUCT_NOT_FOUND);
+            throw new ProductHandler(ErrorStatus.NO_LIKED_PRODUCTS);
         }
 
         for (ProductLikes like : likes) {
             Product product = like.getProduct();
-            Optional<Brand> brand = brandRepository.findById(product.getBrand().getId());
-            String brand_name = brand.map(Brand::getBrandName).orElse(null); // 상품 브랜드 존재 하지 않을 시 null 처리
-            ProductResponse.ProductListDto product_dto = ProductConverter.toProductListDto(product, brand_name);
+            Brand brand = brandRepository.findById(product.getBrand().getId())
+                    .orElseThrow(() -> new BrandHandler(ErrorStatus.BRAND_NOT_FOUND));
+            String brandNameKr = brand.getBrandNameKr();
+            String brandNameEn = brand.getBrandNameEn();
+            ProductResponse.ProductListDto product_dto = ProductConverter.toProductListDto(product, brandNameKr, brandNameEn);
             productList.add(product_dto);
         }
         return productList;
@@ -106,7 +128,7 @@ public class UserService {
         List<BrandResponse.BrandListDto> brandList = new ArrayList<>();
 
         if (likes.isEmpty()) {
-            throw new BrandHandler(ErrorStatus.BRAND_NOT_FOUND);
+            throw new BrandHandler(ErrorStatus.NO_LIKED_BRANDS);
         }
 
         for (BrandLikes like : likes) {

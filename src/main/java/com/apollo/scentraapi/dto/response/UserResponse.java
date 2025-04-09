@@ -21,6 +21,17 @@ public class UserResponse {
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor
     @Getter
+    public static class SellerSignUpResultDTO {
+        UUID userId;
+        UUID sellerId;
+        Long brandId;
+        String accessToken;
+    }
+
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
+    @Getter
     public static class UserInfoResultDTO {
         UUID userId;
         String name;

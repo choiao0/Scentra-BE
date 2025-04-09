@@ -4,7 +4,9 @@ import com.apollo.scentraapi.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Entity
 @Getter
@@ -17,25 +19,22 @@ public class Brand extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name="brand_name")
-    private String brandName;
-
-    @Column(name="brand_description")
+    private String brandNameKr;
+    private String brandNameEn;
     private String brandDescription;
-
-    @Column(name="brand_image")
     private String brandImage;
 
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL)
+    private List<Product> productList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL)
+    private List<BrandLikes> brandLikesList = new ArrayList<>();
 
     // 상품 정보 업데이트 메서드
-    public void update(String brandName, String brandImage,
-                       String brandDescription) {
-        if (brandName != null) this.brandName = brandName;
+    public void update(String brandNameKr, String brandNameEn, String brandImage, String brandDescription) {
+        if (brandNameKr != null) this.brandNameKr = brandNameKr;
+        if (brandNameEn != null) this.brandNameEn = brandNameEn;
         if (brandImage != null) this.brandImage = brandImage;
         if (brandDescription != null) this.brandDescription = brandDescription;
-
-        this.updatedAt = LocalDateTime.now();
     }
 }

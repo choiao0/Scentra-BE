@@ -1,5 +1,7 @@
 package com.apollo.scentraapi.converter;
 
+import com.apollo.scentraapi.domain.Brand;
+import com.apollo.scentraapi.domain.Seller;
 import com.apollo.scentraapi.domain.User;
 import com.apollo.scentraapi.domain.enums.Gender;
 import com.apollo.scentraapi.dto.request.UserRequest;
@@ -15,9 +17,29 @@ public class UserConverter {
                 .email(request.getEmail())
                 .password(request.getPassword())
                 .gender(Gender.valueOf(request.getGender()))
+                .phoneNum(request.getPhoneNum())
+                .birth(request.getBirth())
                 .productLikesList(new ArrayList<>())
                 .reviewList(new ArrayList<>())
                 .cartList(new ArrayList<>())
+                .build();
+    }
+
+    public static User toUser(UserRequest.SellerSignUpDTO request) {
+        return User.builder()
+                .name(request.getName())
+                .email(request.getEmail())
+                .password(request.getPassword())
+                .phoneNum(request.getPhoneNum())
+                .productLikesList(new ArrayList<>())
+                .reviewList(new ArrayList<>())
+                .cartList(new ArrayList<>())
+                .build();
+    }
+    public static Seller toSeller(User user, Brand brand) {
+        return Seller.builder()
+                .user(user)
+                .brand(brand)
                 .build();
     }
 
@@ -26,6 +48,15 @@ public class UserConverter {
                 .userId(user.getId())
                 .name(user.getName())
                 .email(user.getEmail())
+                .accessToken(accessToken)
+                .build();
+    }
+
+    public static UserResponse.SellerSignUpResultDTO toSellerSignUpResult(Seller seller, String accessToken) {
+        return UserResponse.SellerSignUpResultDTO.builder()
+                .userId(seller.getUser().getId())
+                .sellerId(seller.getId())
+                .brandId(seller.getBrand().getId())
                 .accessToken(accessToken)
                 .build();
     }

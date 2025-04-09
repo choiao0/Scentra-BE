@@ -48,16 +48,6 @@ public class BrandService {
         return brandList;
     }
 
-    public Brand uploadBrand(BrandRequest.BrandUploadRequestDTO brandUploadRequestDto) {
-        if (brandUploadRequestDto.getBrandName() == null || brandUploadRequestDto.getBrandName().isEmpty() ||
-                brandUploadRequestDto.getBrandDescription() == null || brandUploadRequestDto.getBrandImage().isEmpty()) {
-            throw new BrandHandler(ErrorStatus.BRAND_BAD_REQUEST);
-        }
-        Brand new_brand = BrandConverter.toBrand(brandUploadRequestDto);
-
-        return brandRepository.save(new_brand);
-    }
-
     @Transactional
     public BrandResponse.BrandUpdateResponseDTO updateBrand(Long id, BrandRequest.BrandUpdateRequestDTO request) {
         // 1. 브랜드 조회
@@ -66,7 +56,8 @@ public class BrandService {
 
         // 2. 브랜드 정보 업데이트
         brand.update(
-                request.getBrandName(),
+                request.getBrandNameKr(),
+                request.getBrandNameEn(),
                 request.getBrandImage(),
                 request.getBrandDescription()
         );
@@ -92,6 +83,10 @@ public class BrandService {
         Optional<Brand> optionalBrand = brandRepository.findById(brandId);
         Brand brand = optionalBrand.orElseThrow(() -> new BrandHandler(ErrorStatus.BRAND_NOT_FOUND));
 
+        Optional<BrandLikes> findBrandLikes = brandLikesRepository.findByUserAndBrand(user, brand);
+        if (findBrandLikes.isPresent())
+            throw new BrandHandler(ErrorStatus.BRAND_ALREADY_LIKED);
+
         BrandLikes newLike = BrandConverter.toBrandLikes(brand, user);
         brandLikesRepository.save(newLike);
 
@@ -100,7 +95,7 @@ public class BrandService {
 
     public BrandResponse.BrandLikeDTO removeLike(User user, Long brandId) {
         Optional<BrandLikes> optionalBrandLike = brandLikesRepository.findByUserIdAndBrandId(user.getId(), brandId);
-        BrandLikes brandLike = optionalBrandLike.orElseThrow(() -> new BrandHandler(ErrorStatus.BRAND_NOT_FOUND));
+        BrandLikes brandLike = optionalBrandLike.orElseThrow(() -> new BrandHandler(ErrorStatus.BRAND_NOT_LIKED));
 
         brandLikesRepository.delete(brandLike);
         return BrandConverter.toBrandLikeDTO(brandLike);
@@ -108,7 +103,7 @@ public class BrandService {
 
     public BrandResponse.BrandLikeDTO isLike(User user, Long brandId) {
         Optional<BrandLikes> optionalBrandLike = brandLikesRepository.findByUserIdAndBrandId(user.getId(), brandId);
-        BrandLikes brandLike = optionalBrandLike.orElseThrow(() -> new BrandHandler(ErrorStatus.BRAND_NOT_FOUND));
+        BrandLikes brandLike = optionalBrandLike.orElseThrow(() -> new BrandHandler(ErrorStatus.BRAND_NOT_LIKED));
 
         return BrandConverter.toBrandLikeDTO(brandLike);
     }

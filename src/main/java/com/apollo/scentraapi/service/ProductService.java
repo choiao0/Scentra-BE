@@ -48,27 +48,25 @@ public class ProductService {
 
         for (Product product : products) {
             Long brand_id = product.getBrand().getId();
-            Optional<Brand> brand = brandRepository.findById(brand_id);
-            String brand_name = brand.map(Brand::getBrandName).orElse(null); // 상품 브랜드 존재 하지 않을 시 null 처리
-            ProductResponse.ProductListDto product_dto = ProductConverter.toProductListDto(product, brand_name);
+            Brand brand = brandRepository.findById(brand_id)
+                    .orElseThrow(() -> new BrandHandler(ErrorStatus.BRAND_NOT_FOUND));
+            String brandNameKr = brand.getBrandNameKr();
+            String brandNameEn = brand.getBrandNameEn();
+            ProductResponse.ProductListDto product_dto = ProductConverter.toProductListDto(product, brandNameKr, brandNameEn);
             productList.add(product_dto);
         }
         return productList;
     }
 
     public Product uploadProduct(ProductRequest.ProductUploadDto productUploadDto) {
-        if (productUploadDto.getName() == null || productUploadDto.getName().isEmpty() ||
-                productUploadDto.getProduct_image() == null || productUploadDto.getProduct_image().isEmpty() || productUploadDto.getPrice() == null) {
-            throw new ProductHandler(ErrorStatus.PRODUCT_BAD_REQUEST);
-        }
         Product new_product = ProductConverter.toProduct(productUploadDto);
-        Brand brand = brandRepository.findById(productUploadDto.getBrand_id())
+        Brand brand = brandRepository.findById(productUploadDto.getBrandId())
                 .orElseThrow(() -> new ProductHandler(ErrorStatus.BRAND_NOT_FOUND));
         new_product.setBrand(brand);
         new_product = productRepository.save(new_product);
 
         for (String c : productUploadDto.getCategory()) {
-            Category category = categoryRepository.findByCategoryName(c)
+            Category category = categoryRepository.findByCategoryNameKr(c)
                     .orElseThrow(() -> new ProductHandler(ErrorStatus.CATEGORY_NOT_FOUND));
             CategoryMapping mapping = CategoryConverter.toCategoryMapping(category, new_product);
             categoryMappingRepository.save(mapping);
@@ -92,11 +90,12 @@ public class ProductService {
 
         // 3. 상품 정보 업데이트
         product.update(
-                request.getName(),
+                request.getProductNameKr(),
+                request.getProductNameEn(),
                 request.getProductImage(),
                 request.getDetailImage(),
-                request.getDescription(),
-                request.getPrice()
+                request.getPrice(),
+                request.getTargetGender()
         );
 
         // 4. 응답 DTO 반환
@@ -145,11 +144,13 @@ public class ProductService {
 
     public ProductResponse.ProductLikeDTO addLike(User user, Long productId) {
         Optional<Product> optionalProduct = productRepository.findById(productId);
-
         Product product = optionalProduct.orElseThrow(() -> new ProductHandler(ErrorStatus.PRODUCT_NOT_FOUND));
 
-        ProductLikes newLike = ProductConverter.toProductLike(product, user);
+        Optional<ProductLikes> findProductLikes = productLikeRepository.findByUserAndProduct(user, product);
+        if (findProductLikes.isPresent())
+            throw new ProductHandler(ErrorStatus.PRODUCT_ALREADY_LIKED);
 
+        ProductLikes newLike = ProductConverter.toProductLike(product, user);
         productLikeRepository.save(newLike);
 
         return ProductConverter.toProductLikeDTO(newLike);
@@ -157,7 +158,7 @@ public class ProductService {
 
     public ProductResponse.ProductLikeDTO removeLike(User user, Long productId) {
         Optional<ProductLikes> optionalProductLike = productLikeRepository.findByUserIdAndProductId(user.getId(), productId);
-        ProductLikes productLike = optionalProductLike.orElseThrow(() -> new ProductHandler(ErrorStatus.PRODUCT_NOT_FOUND));
+        ProductLikes productLike = optionalProductLike.orElseThrow(() -> new ProductHandler(ErrorStatus.PRODUCT_NOT_LIKED));
 
         productLikeRepository.delete(productLike);
         return ProductConverter.toProductLikeDTO(productLike);
@@ -172,9 +173,9 @@ public class ProductService {
         return mappings.stream()
                 .map(mapping -> {
                     Product product = mapping.getProduct();
-                    String brandName = (product.getBrand() != null) ? product.getBrand().getBrandName() : "Unknown Brand"; // 브랜드 정보 포함
-
-                    return ProductConverter.toProductListDto(product, brandName);
+                    String brandNameKr = product.getBrand().getBrandNameKr();
+                    String brandNameEn = product.getBrand().getBrandNameEn();
+                    return ProductConverter.toProductListDto(product, brandNameKr, brandNameEn);
                 })
                 .collect(Collectors.toList());
     }
@@ -187,8 +188,12 @@ public class ProductService {
 
         // 2. 검색 실행
         List<Product> filteredProducts = productRepository.findAll().stream()
-                .filter(product -> product.getProductName().toLowerCase().contains(keyword.toLowerCase()) ||
-                        (product.getBrand() != null && product.getBrand().getBrandName().toLowerCase().contains(keyword.toLowerCase()))) // ✅ null 체크 추가
+                .filter(product ->
+                        (product.getProductNameKr() != null && product.getProductNameKr().contains(keyword)) ||  // (1) 키워드가 상품명에 포함됨
+                        (product.getProductNameEn() != null && product.getProductNameEn().toLowerCase().contains(keyword.toLowerCase())) ||
+                        (product.getBrand().getBrandNameKr() != null && product.getBrand().getBrandNameKr().contains(keyword)) ||  // (2) 키워드가 브랜드명에 포함됨
+                        (product.getBrand().getBrandNameEn() != null && product.getBrand().getBrandNameEn().toLowerCase().contains(keyword.toLowerCase())
+                        ))
                 .toList();
 
 
@@ -199,11 +204,9 @@ public class ProductService {
 
         return filteredProducts.stream()
                 .map(product -> {
-                    String brand_name = Optional.ofNullable(product.getBrand()) // ✅ Optional 활용
-                            .map(Brand::getBrandName)
-                            .orElse("Unknown Brand"); // 브랜드 정보가 없으면 "Unknown Brand" 설정
-
-                    return ProductConverter.toProductListDto(product, brand_name); // ✅ brand_name을 명시적으로 전달
+                    String brandNameKr = product.getBrand().getBrandNameKr();
+                    String brandNameEn = product.getBrand().getBrandNameEn();
+                    return ProductConverter.toProductListDto(product, brandNameKr, brandNameEn);
                 })
                 .collect(Collectors.toList());
 
@@ -211,7 +214,7 @@ public class ProductService {
 
     public ProductResponse.ProductLikeDTO isLike(User user, Long productId) {
         Optional<ProductLikes> optionalProductLike = productLikeRepository.findByUserIdAndProductId(user.getId(), productId);
-        ProductLikes productLike = optionalProductLike.orElseThrow(() -> new ProductHandler(ErrorStatus.PRODUCT_NOT_FOUND));
+        ProductLikes productLike = optionalProductLike.orElseThrow(() -> new ProductHandler(ErrorStatus.PRODUCT_NOT_LIKED));
         return ProductConverter.toProductLikeDTO(productLike);
     }
 }

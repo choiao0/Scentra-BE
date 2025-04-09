@@ -1,10 +1,9 @@
 package com.apollo.scentraapi.domain;
 
 import com.apollo.scentraapi.domain.common.BaseEntity;
+import com.apollo.scentraapi.domain.enums.Gender;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.time.LocalDateTime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,19 +19,14 @@ public class Product extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name="product_name")
-    private String productName;
-
-    @Column(name="product_image")
+    private String productNameKr;
+    private String productNameEn;
     private String productImage;
-
-    @Column(name="detail_image")
     private String detailImage;
-
-    @Column(name="product_description")
-    private String productDescription;
-
     private Double price;
+
+    @Enumerated(EnumType.STRING)
+    private Gender targetGender;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "brand_id")
@@ -41,18 +35,25 @@ public class Product extends BaseEntity {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<CategoryMapping> categoryMappingList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<ProductLikes> productLikesList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<Review> reviewList = new ArrayList<>();
+
     public void setBrand(Brand brand){
         this.brand = brand;
     }
 
     // 상품 정보 업데이트 메서드
-    public void update(String name, String productImage,
-                              String detailImage, String description, Double price) {
-        if (name != null) this.productName = name;
+    public void update(String productNameKr, String productNameEn, String productImage,
+                       String detailImage, Double price, String targetGender) {
+        if (productNameKr != null) this.productNameKr = productNameKr;
+        if (productNameEn != null) this.productNameEn = productNameEn;
         if (productImage != null) this.productImage = productImage;
         if (detailImage != null) this.detailImage = detailImage;
-        if (description != null) this.productDescription = description;
         if (price != null) this.price = price;
+        if (targetGender != null) this.targetGender = Gender.valueOf(targetGender);
     }
 
 }

@@ -9,24 +9,29 @@ public class ProductResponse {
     @Builder
     @Getter
     public static class ProductListDto {
-        Long product_id;
-        String brand_name;
-        String product_name;
-        String product_image;
+        Long productId;
+        String brandNameKr;
+        String brandNameEn;
+        String productNameKr;
+        String productNameEn;
+        String productImage;
         double price;
+        String targetGender;
     }
 
     @Builder
     @Getter
     public static class ProductDto {
         Long productId;
-        String name;
+        String productNameKr;
+        String productNameEn;
         String productImage;
         String detailImage;
-        String description;
         Double price;
+        String targetGender;
         Long brandId;
-        String brandName;
+        String brandNameKr;
+        String brandNameEn;
         LocalDateTime createdAt;
         LocalDateTime updatedAt;
     }
@@ -40,11 +45,12 @@ public class ProductResponse {
     @Builder
     @Getter
     public static class ProductUpdateResponseDTO {
-        String name;
+        String productNameKr;
+        String productNameEn;
         String productImage;
         String detailImage;
-        String description;
         Double price;
+        String targetGender;
         Long brandId;
         LocalDateTime createdAt;
         LocalDateTime updatedAt;
@@ -54,9 +60,11 @@ public class ProductResponse {
     @Getter
     public static class ProductDeleteResponseDTO {
         Long productId;
-        String name;
+        String productNameKr;
+        String productNameEn;
         Long brandId;
-        String brandName;
+        String brandNameKr;
+        String brandNameEn;
         LocalDateTime createdAt;
         LocalDateTime updatedAt;
     }

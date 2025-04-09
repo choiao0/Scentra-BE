@@ -13,8 +13,10 @@ public class CartConverter {
                 .userId(cart.getUser().getId())
                 .productId(cart.getProduct().getId())
                 .quantity(cart.getQuantity())
-                .productName(cart.getProduct().getProductName())
-                .brandName(cart.getProduct().getBrand().getBrandName())
+                .productNameKr(cart.getProduct().getProductNameKr())
+                .productNameEn(cart.getProduct().getProductNameEn())
+                .brandNameKr(cart.getProduct().getBrand().getBrandNameKr())
+                .brandNameEn(cart.getProduct().getBrand().getBrandNameEn())
                 .productImage(cart.getProduct().getProductImage())
                 .addedDate(cart.getUpdatedAt())
                 .build();

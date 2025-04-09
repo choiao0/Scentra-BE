@@ -3,41 +3,47 @@ package com.apollo.scentraapi.converter;
 import com.apollo.scentraapi.domain.Product;
 import com.apollo.scentraapi.domain.ProductLikes;
 import com.apollo.scentraapi.domain.User;
+import com.apollo.scentraapi.domain.enums.Gender;
 import com.apollo.scentraapi.dto.request.ProductRequest;
 import com.apollo.scentraapi.dto.response.ProductResponse;
 
-import java.time.LocalDateTime;
 
 public class ProductConverter {
 
-    public static ProductResponse.ProductListDto toProductListDto(Product product, String brand_name) {
+    public static ProductResponse.ProductListDto toProductListDto(Product product, String brandNameKr, String brandNameEn) {
         return ProductResponse.ProductListDto.builder()
-                .product_id(product.getId())
-                .brand_name(brand_name)
-                .product_name(product.getProductName())
-                .product_image(product.getProductImage())
+                .productId(product.getId())
+                .brandNameKr(brandNameKr)
+                .brandNameEn(brandNameEn)
+                .productNameKr(product.getProductNameKr())
+                .productNameEn(product.getProductNameEn())
+                .productImage(product.getProductImage())
                 .price(product.getPrice())
+                .targetGender(String.valueOf(product.getTargetGender()))
                 .build();
     }
-    public static Product toProduct (ProductRequest.ProductUploadDto productUploadDto) {
+    public static Product toProduct(ProductRequest.ProductUploadDto productUploadDto) {
         return Product.builder()
-                .productName(productUploadDto.getName())
-                .productImage(productUploadDto.getProduct_image())
-                .detailImage(productUploadDto.getDetail_image())
-                .productDescription(productUploadDto.getDescription())
+                .productNameKr(productUploadDto.getProductNameKr())
+                .productNameEn(productUploadDto.getProductNameEn())
+                .productImage(productUploadDto.getProductImage())
+                .detailImage(productUploadDto.getDetailImage())
                 .price(productUploadDto.getPrice())
+                .targetGender(Gender.valueOf(productUploadDto.getTargetGender()))
                 .build();
     }
     public static ProductResponse.ProductDto toProductResponse(Product product) {
         return ProductResponse.ProductDto.builder()
                 .productId(product.getId())
-                .name(product.getProductName())
+                .productNameKr(product.getProductNameKr())
+                .productNameEn(product.getProductNameEn())
                 .productImage(product.getProductImage())
                 .detailImage(product.getDetailImage())
-                .description(product.getProductDescription())
                 .price(product.getPrice())
+                .targetGender(String.valueOf(product.getTargetGender()))
                 .brandId(product.getBrand().getId())
-                .brandName(product.getBrand().getBrandName())
+                .brandNameKr(product.getBrand().getBrandNameKr())
+                .brandNameEn(product.getBrand().getBrandNameEn())
                 .createdAt(product.getCreatedAt())
                 .updatedAt(product.getUpdatedAt())
                 .build();
@@ -51,12 +57,13 @@ public class ProductConverter {
 
     public static ProductResponse.ProductUpdateResponseDTO toProductUpdateResponseDTO(Product product) {
         return ProductResponse.ProductUpdateResponseDTO.builder()
-                .name(product.getProductName())
+                .productNameKr(product.getProductNameKr())
+                .productNameEn(product.getProductNameEn())
                 .productImage(product.getProductImage())
                 .detailImage(product.getDetailImage())
-                .description(product.getProductDescription())
                 .price(product.getPrice())
-                .brandId(product.getBrand() != null ? product.getBrand().getId() : null)
+                .targetGender(String.valueOf(product.getTargetGender()))
+                .brandId(product.getBrand().getId())
                 .createdAt(product.getCreatedAt())
                 .updatedAt(product.getUpdatedAt())
                 .build();
@@ -65,9 +72,11 @@ public class ProductConverter {
     public static ProductResponse.ProductDeleteResponseDTO toProductDeleteResponseDTO(Product product) {
         return ProductResponse.ProductDeleteResponseDTO.builder()
                 .productId(product.getId())
-                .name(product.getProductName())
-                .brandId(product.getBrand() != null ? product.getBrand().getId() : null)
-                .brandName(product.getBrand() != null ? product.getBrand().getBrandName() : null)
+                .productNameKr(product.getProductNameKr())
+                .productNameEn(product.getProductNameEn())
+                .brandId(product.getBrand().getId())
+                .brandNameKr(product.getBrand().getBrandNameKr())
+                .brandNameEn(product.getBrand().getBrandNameEn())
                 .createdAt(product.getCreatedAt())
                 .updatedAt(product.getUpdatedAt())
                 .build();

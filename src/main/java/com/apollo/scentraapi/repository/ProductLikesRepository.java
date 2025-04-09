@@ -1,5 +1,6 @@
 package com.apollo.scentraapi.repository;
 
+import com.apollo.scentraapi.domain.Product;
 import com.apollo.scentraapi.domain.ProductLikes;
 import com.apollo.scentraapi.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,4 +14,5 @@ import java.util.UUID;
 public interface ProductLikesRepository extends JpaRepository<ProductLikes, Long> {
     List<ProductLikes> findAllByUser(User user);
     Optional<ProductLikes> findByUserIdAndProductId(UUID userId, Long productId);
+    Optional<ProductLikes> findByUserAndProduct(User user, Product product);
 }

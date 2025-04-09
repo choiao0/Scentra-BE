@@ -11,7 +11,8 @@ public class BrandResponse {
     @Getter
     public static class BrandDto {
         Long id;
-        String brandName;
+        String brandNameKr;
+        String brandNameEn;
         String brandDescription;
         String brandImage;
     }
@@ -20,14 +21,17 @@ public class BrandResponse {
     @Getter
     public static class BrandListDto {
         Long id;
-        String brandName;
+        String brandNameKr;
+        String brandNameEn;
+        String brandDescription;
         String brandImage;
     }
 
     @Builder
     @Getter
     public static class BrandUpdateResponseDTO {
-        String brandName;
+        String brandNameKr;
+        String brandNameEn;
         String brandDescription;
         String brandImage;
         LocalDateTime createdAt;
@@ -38,7 +42,8 @@ public class BrandResponse {
     @Getter
     public static class BrandDeleteResponseDTO {
         Long id;
-        String brandName;
+        String brandNameKr;
+        String brandNameEn;
         LocalDateTime createdAt;
         LocalDateTime updatedAt;
     }
