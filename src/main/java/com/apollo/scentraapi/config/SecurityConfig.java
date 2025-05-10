@@ -65,7 +65,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/users/login").permitAll()
                         .requestMatchers(HttpMethod.GET,
                                 "/api/products", "/api/products/*", "/api/products/category/*",
-                                "/api/brands", "/api/brands/*", "/api/reviews/*", "/api/categories", "/api/categories/*").permitAll()
+                                "/api/brands", "/api/brands/*", "/api/reviews/*", "/api/categories", "/api/categories/*",
+                                "/api/products/likes/*", "/api/brands/likes/*").permitAll()
                         .requestMatchers(AUTH_WHITELIST).permitAll()
                         .anyRequest().authenticated())
 
