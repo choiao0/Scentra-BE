@@ -7,6 +7,7 @@ import com.apollo.scentraapi.auth.handler.JwtAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -62,6 +63,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/api/users/sign-up", "/api/users/sign-up/sellers").permitAll()
                         .requestMatchers("/api/users/login").permitAll()
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/products", "/api/products/*", "/api/products/category/*",
+                                "/api/brands", "/api/brands/*", "/api/reviews/*", "/api/categories", "/api/categories/*").permitAll()
                         .requestMatchers(AUTH_WHITELIST).permitAll()
                         .anyRequest().authenticated())
 
