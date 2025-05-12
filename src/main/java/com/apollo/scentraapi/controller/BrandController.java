@@ -1,6 +1,8 @@
 package com.apollo.scentraapi.controller;
 
 import com.apollo.scentraapi.apiPayload.ApiResponse;
+import com.apollo.scentraapi.apiPayload.code.status.ErrorStatus;
+import com.apollo.scentraapi.apiPayload.exception.handler.BrandHandler;
 import com.apollo.scentraapi.domain.User;
 import com.apollo.scentraapi.dto.request.BrandRequest;
 import com.apollo.scentraapi.dto.response.BrandResponse;
@@ -63,6 +65,7 @@ public class BrandController {
     @GetMapping("/likes/{brand-id}")
     @Operation(summary = "브랜드 좋아요 여부 확인")
     public ApiResponse<BrandResponse.BrandLikeDTO> isLike(@AuthenticationPrincipal User user, @PathVariable("brand-id") Long id) {
+        if (user == null) throw new BrandHandler(ErrorStatus.BRAND_NOT_LIKED);
         BrandResponse.BrandLikeDTO response = brandService.isLike(user, id);
         return ApiResponse.onSuccess(response);
     }
