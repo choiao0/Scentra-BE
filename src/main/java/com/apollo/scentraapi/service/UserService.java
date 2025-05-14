@@ -29,6 +29,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final SellerRepository sellerRepository;
     private final JwtUtil jwtUtil;
+    private final ProductRepository productRepository;
     private final ProductLikesRepository productLikesRepository;
     private final BrandRepository brandRepository;
     private final BrandLikesRepository brandLikesRepository;
@@ -71,14 +72,20 @@ public class UserService {
         return UserConverter.toSellerSignUpResult(savedSeller, accessToken);
     }
 
-    public UserResponse.UserSignUpResultDTO login(String email) {
+    public UserResponse.LoginResultDTO login(String email) {
 
         User findUser = userRepository.findByEmail(email) // 이메일로 유저가 존재하는지 검사
                 .orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
 
+        Seller findSeller = sellerRepository.findByUser(findUser).orElse(null);
+        Long totalProducts = null;
+        if (findSeller != null) {
+            totalProducts = productRepository.countByBrand(findSeller.getBrand());
+        }
+
         String accessToken = jwtUtil.createAccessToken(email);
 
-        return UserConverter.toUserSignUpResult(findUser, accessToken);
+        return UserConverter.toLoginResult(findUser, findSeller, totalProducts, accessToken);
     }
 
     public User updateUser(User user, UserRequest.UserUpdateDTO request) {

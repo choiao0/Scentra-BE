@@ -43,9 +43,9 @@ public class UserController {
 
     @PostMapping("/login")
     @Operation(summary = "로그인", description = "로그인할 유저의 이메일을 입력해주세요.")
-    public ApiResponse<UserResponse.UserSignUpResultDTO> login(@RequestParam String email) {
+    public ApiResponse<UserResponse.LoginResultDTO> login(@RequestParam String email) {
 
-        UserResponse.UserSignUpResultDTO response = userService.login(email);
+        UserResponse.LoginResultDTO response = userService.login(email);
 
         return ApiResponse.onSuccess(response);
     }
