@@ -3,12 +3,15 @@ package com.apollo.scentraapi.service;
 import com.apollo.scentraapi.apiPayload.code.status.ErrorStatus;
 import com.apollo.scentraapi.apiPayload.exception.handler.BrandHandler;
 import com.apollo.scentraapi.apiPayload.exception.handler.ProductHandler;
+import com.apollo.scentraapi.apiPayload.exception.handler.UserHandler;
 import com.apollo.scentraapi.converter.BrandConverter;
 import com.apollo.scentraapi.domain.*;
 import com.apollo.scentraapi.dto.request.BrandRequest;
 import com.apollo.scentraapi.dto.response.BrandResponse;
 import com.apollo.scentraapi.repository.BrandLikesRepository;
 import com.apollo.scentraapi.repository.BrandRepository;
+import com.apollo.scentraapi.repository.SellerRepository;
+import com.apollo.scentraapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +26,8 @@ public class BrandService {
 
     private final BrandRepository brandRepository;
     private final BrandLikesRepository brandLikesRepository;
+    private final SellerRepository sellerRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public BrandResponse.BrandDto getBrand(Long id) {
@@ -31,6 +36,12 @@ public class BrandService {
                 .orElseThrow(() -> new BrandHandler(ErrorStatus.BRAND_NOT_FOUND));
 
         return BrandConverter.toBrandResponse(brand);
+    }
+
+    public BrandResponse.RetrieveBrandResponseDTO retrieveBrand(User user) {
+        Seller seller = sellerRepository.findByUser(user);
+        Brand brand = seller.getBrand();
+        return BrandConverter.toRetrieveBrandResponse(brand);
     }
 
     public List<BrandResponse.BrandListDto> getAllBrands() {
