@@ -55,6 +55,12 @@ public enum ErrorStatus implements BaseErrorCode {
     // 리뷰 관련 에러
     REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "REVIEW4001", "리뷰가 존재하지 않습니다."),
     REVIEW_OWNER_MISMATCH(HttpStatus.BAD_REQUEST, "REVIEW4002", "해당 유저가 작성한 리뷰가 아닙니다."),
+
+    // S3 관련 에러
+    FILE_NOT_UPLOADED(HttpStatus.BAD_REQUEST, "S34001", "이미지 업로드에 실패하였습니다."),
+    FILE_IS_EMPTY(HttpStatus.BAD_REQUEST, "S34002", "파일이 비어있습니다."),
+    FILE_NOT_IMAGE(HttpStatus.BAD_REQUEST, "S34003", "이미지 파일만 업로드 가능합니다."),
+    IO_EXCEPTION_ON_IMAGE_DELETE(HttpStatus.BAD_REQUEST, "S34004", "이미지 삭제에 실패하였습니다.."),
     ;
 
     private final HttpStatus httpStatus;
