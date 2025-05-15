@@ -60,8 +60,9 @@ public class ProductService {
 
     public Product uploadProduct(ProductRequest.ProductUploadDto productUploadDto) {
         Product new_product = ProductConverter.toProduct(productUploadDto);
-        Brand brand = brandRepository.findById(productUploadDto.getBrandId())
-                .orElseThrow(() -> new ProductHandler(ErrorStatus.BRAND_NOT_FOUND));
+        Brand brand = brandRepository.findByBrandNameEn(productUploadDto.getBrandNameEn())
+                .orElseGet(() -> brandRepository.findByBrandNameKr(productUploadDto.getBrandNameKr())
+                .orElseThrow(() -> new ProductHandler(ErrorStatus.BRAND_NOT_FOUND)));
         new_product.setBrand(brand);
         new_product = productRepository.save(new_product);
 
