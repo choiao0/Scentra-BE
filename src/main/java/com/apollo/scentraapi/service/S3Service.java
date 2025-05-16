@@ -26,14 +26,13 @@ public class S3Service {
 
     private S3Client s3Client;
 
-    @Value("${cloud.aws.s3.bucket}")
+    @Value("${spring.cloud.aws.s3.bucket}")
     private String bucketName;
 
     @Transactional
     public String uploadFile(MultipartFile file) {
 
         validateFile(file);
-
         String fileName = generateUniqueFileName(file.getOriginalFilename());
 
         try {
