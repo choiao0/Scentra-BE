@@ -13,6 +13,7 @@ import com.apollo.scentraapi.repository.BrandRepository;
 import com.apollo.scentraapi.repository.SellerRepository;
 import com.apollo.scentraapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.integration.IntegrationProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,8 +40,10 @@ public class BrandService {
     }
 
     public BrandResponse.RetrieveBrandResponseDTO retrieveBrand(User user) {
-        Seller seller = sellerRepository.findByUser(user);
+        Seller seller = sellerRepository.findByUser(user)
+                .orElseThrow(() -> new BrandHandler(ErrorStatus.BRAND_NOT_FOUND));
         Brand brand = seller.getBrand();
+        System.out.println(brand.getBrandNameKr());
         return BrandConverter.toRetrieveBrandResponse(brand);
     }
 

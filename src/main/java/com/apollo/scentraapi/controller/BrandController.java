@@ -72,7 +72,7 @@ public class BrandController {
 
     @GetMapping("/sellers")
     @Operation(summary = "판매자 브랜드 조회")
-    public ApiResponse<BrandResponse.RetrieveBrandResponseDTO> getBrandbySeller(@AuthenticationPrincipal User user) {
+    public ApiResponse<BrandResponse.RetrieveBrandResponseDTO> getBrandBySeller(@AuthenticationPrincipal User user) {
         BrandResponse.RetrieveBrandResponseDTO response = brandService.retrieveBrand(user);
         return ApiResponse.onSuccess(response);
     }
