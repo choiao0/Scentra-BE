@@ -41,8 +41,8 @@ public class S3Service {
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                     .bucket(bucketName)
                     .key(fileName)
-//                    .contentType(file.getContentType())
-//                    .acl(ObjectCannedACL.BUCKET_OWNER_FULL_CONTROL)
+                    .contentType(file.getContentType())
+                    .acl(ObjectCannedACL.BUCKET_OWNER_FULL_CONTROL)
                     .build();
             s3Client.putObject(putObjectRequest, RequestBody.fromBytes(file.getBytes()));
         } catch (IOException e) {
