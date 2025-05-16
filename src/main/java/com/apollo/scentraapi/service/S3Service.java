@@ -12,6 +12,7 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.S3Utilities;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetUrlRequest;
+import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
@@ -19,12 +20,13 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class S3Service {
 
-    private S3Client s3Client;
+    private final S3Client s3Client;
 
     @Value("${spring.cloud.aws.s3.bucket}")
     private String bucketName;
@@ -68,7 +70,9 @@ public class S3Service {
     }
 
     private String generateUniqueFileName(String originalFilename) {
-        return originalFilename.substring(originalFilename.lastIndexOf("."));
+        String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+        String uniqueId = UUID.randomUUID().toString().replace("-", "");
+        return uniqueId + extension;
     }
 
     public void deleteImage(String imageAddress) {
@@ -89,7 +93,7 @@ public class S3Service {
             URL url = new URL(imageAddress);
             String decodingKey = URLDecoder.decode(url.getPath(), "UTF-8");
             return decodingKey.substring(1);
-        } catch (MalformedURLException | UnsupportedEncodingException e){
+        } catch (MalformedURLException | UnsupportedEncodingException e) {
             throw new S3Handler(ErrorStatus.IO_EXCEPTION_ON_IMAGE_DELETE);
         }
     }

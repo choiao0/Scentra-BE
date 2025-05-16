@@ -9,11 +9,14 @@ import com.apollo.scentraapi.domain.User;
 import com.apollo.scentraapi.dto.request.ProductRequest;
 import com.apollo.scentraapi.dto.response.ProductResponse;
 import com.apollo.scentraapi.service.ProductService;
+import com.apollo.scentraapi.service.S3Service;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -23,6 +26,7 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
+    private final S3Service s3Service;
 
     @GetMapping("/{id}")
     @Operation(summary="상품 조회")
@@ -74,7 +78,6 @@ public class ProductController {
         return ApiResponse.onSuccess(response);
     }
 
-
     @PostMapping("/likes/{product-id}")
     @Operation(summary="상품 좋아요 추가")
     public ApiResponse<ProductResponse.ProductLikeDTO> addLike(@AuthenticationPrincipal User user, @PathVariable("product-id")Long id) {
@@ -109,5 +112,18 @@ public class ProductController {
         if (user == null) throw new ProductHandler(ErrorStatus.PRODUCT_NOT_LIKED);
         ProductResponse.ProductLikeDTO response = productService.isLike(user, id);
         return ApiResponse.onSuccess(response);
+    }
+
+    @PostMapping(value = "/test/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "이미지 업로드 테스트")
+    public ApiResponse<String> uploadTest(@RequestPart MultipartFile file) {
+        return ApiResponse.onSuccess(s3Service.uploadFile(file));
+    }
+
+    @PostMapping(value = "/test/delete")
+    @Operation(summary = "이미지 삭제 테스트", description = "\"\" 없이 url만 입력해주세요.")
+    public ApiResponse<String> deleteTest(@RequestBody String fileUrl) {
+        s3Service.deleteImage(fileUrl);
+        return ApiResponse.onSuccess(fileUrl);
     }
 }

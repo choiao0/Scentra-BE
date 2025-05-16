@@ -51,7 +51,7 @@ public class ProductConverter {
 
     public static ProductResponse.ImageDTO toImageDTO(String url) {
         return ProductResponse.ImageDTO.builder()
-                .ImageUrl(url)
+                .imageUrl(url)
                 .build();
     }
 
