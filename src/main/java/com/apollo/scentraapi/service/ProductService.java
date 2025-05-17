@@ -58,6 +58,7 @@ public class ProductService {
         return productList;
     }
 
+    @Transactional
     public Product uploadProduct(ProductRequest.ProductUploadDto productUploadDto) {
         Product new_product = ProductConverter.toProduct(productUploadDto);
         Brand brand = brandRepository.findByBrandNameEn(productUploadDto.getBrandNameEn())

@@ -43,7 +43,6 @@ public class BrandService {
         Seller seller = sellerRepository.findByUser(user)
                 .orElseThrow(() -> new BrandHandler(ErrorStatus.BRAND_NOT_FOUND));
         Brand brand = seller.getBrand();
-        System.out.println(brand.getBrandNameKr());
         return BrandConverter.toRetrieveBrandResponse(brand);
     }
 
