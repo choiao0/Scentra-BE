@@ -39,7 +39,7 @@ public class ProductResponse {
     @Builder
     @Getter
     public static class ImageDTO {
-        String ImageUrl;
+        String imageUrl;
     }
 
     @Builder

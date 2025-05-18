@@ -61,6 +61,20 @@ public class UserConverter {
                 .build();
     }
 
+    public static UserResponse.LoginResultDTO toLoginResult(User user, Seller seller, Long totalProducts, String accessToken) {
+        return UserResponse.LoginResultDTO.builder()
+                .userId(user.getId())
+                .name(user.getName())
+                .email(user.getEmail())
+                .accessToken(accessToken)
+                .sellerId(seller != null ? seller.getId() : null)
+                .brandNameKr(seller != null ? seller.getBrand().getBrandNameKr() : null)
+                .brandNameEn(seller != null ? seller.getBrand().getBrandNameEn() : null)
+                .phoneNum(user.getPhoneNum())
+                .totalProducts(totalProducts)
+                .build();
+    }
+
     public static UserResponse.UserInfoResultDTO toUserInfoResult(User user) {
         return UserResponse.UserInfoResultDTO.builder()
                 .userId(user.getId())
