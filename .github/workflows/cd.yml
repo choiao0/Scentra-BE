@@ -49,18 +49,18 @@ jobs:
       # 8. Save SSH key
       - name: Save EC2 key
         run: |
-          echo "${{ secrets.EC2_KEY }}" > ec2_key.pem
+          echo "${{ secrets.EC2_KEY }}" | base64 -d > ec2_key.pem
           chmod 600 ec2_key.pem
 
       # 9. SSH to EC@ and deploy container
       - name: Deploy on EC2
         run: |
           ssh -o StrictHostKeyChecking=no -i ec2_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << EOF
-          docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"
-          docker pull $IMAGE_NAME
-          docker stop scentra || true
-          docker rm scentra || true
-          docker run -d --name scentra \
+          sudo docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"
+          sudo docker pull $IMAGE_NAME
+          sudo docker stop scentra || true
+          sudo docker rm scentra || true
+          sudo docker run -d --name scentra \
             -e DB_URL=${{ secrets.DB_URL }} \
             -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
             -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
