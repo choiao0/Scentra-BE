@@ -11,4 +11,9 @@ public class BrandRequest {
         String brandDescription;
         String brandImage;
     }
+
+    @Getter
+    public static class RetrieveBrandRequestDTO {
+        String userEmail;
+    }
 }

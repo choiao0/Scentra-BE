@@ -72,4 +72,10 @@ public class BrandConverter {
                 .build();
     }
 
+    public static BrandResponse.RetrieveBrandResponseDTO toRetrieveBrandResponse(Brand brand) {
+        return BrandResponse.RetrieveBrandResponseDTO.builder()
+                .brandNameEn(brand.getBrandNameEn())
+                .brandNameKr(brand.getBrandNameKr())
+                .build();
+    }
 }

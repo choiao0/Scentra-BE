@@ -13,12 +13,13 @@ public class ProductRequest {
         String productNameKr;
         @NotBlank
         String productNameEn;
+        @NotNull
+        String brandNameEn;
+        String brandNameKr;
         String productImage;
         String detailImage;
         Double price;
         String targetGender;
-        @NotNull
-        Long brandId;
         List<String> category;
     }
 
