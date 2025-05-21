@@ -49,7 +49,7 @@ jobs:
       # 8. Save SSH key
       - name: Save EC2 key
         run: |
-          echo "${{ secrets.EC2_KEY }}" | base64 -d > ec2_key.pem
+          echo "${{ secrets.EC2_KEY }}" > ec2_key.pem
           chmod 600 ec2_key.pem
 
       # 9. SSH to EC@ and deploy container
