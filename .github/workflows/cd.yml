@@ -69,6 +69,7 @@ jobs:
             -e S3_REGION=${{ secrets.S3_REGION }} \
             -e S3_ACCESS_KEY=${{ secrets.S3_ACCESS_KEY }} \
             -e S3_SECRET_KEY=${{ secrets.S3_SECRET_KEY }} \
+            -e FRONTEND_HOST=${{ secrets.FRONTEND_HOST }} \
             -p 8080:8080 $IMAGE_NAME
           EOF
 
