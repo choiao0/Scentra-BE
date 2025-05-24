@@ -54,6 +54,7 @@ public class UserResponse {
         String password;
         String email;
         String gender;
+        String phoneNum;
     }
 
     @Builder

@@ -74,6 +74,7 @@ public class BrandConverter {
 
     public static BrandResponse.RetrieveBrandResponseDTO toRetrieveBrandResponse(Brand brand) {
         return BrandResponse.RetrieveBrandResponseDTO.builder()
+                .id(brand.getId())
                 .brandNameEn(brand.getBrandNameEn())
                 .brandNameKr(brand.getBrandNameKr())
                 .build();

@@ -82,6 +82,7 @@ public class UserConverter {
                 .password(user.getPassword())
                 .email(user.getEmail())
                 .gender(String.valueOf(user.getGender()))
+                .phoneNum(user.getPhoneNum())
                 .build();
     }
 
