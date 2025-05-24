@@ -40,5 +40,6 @@ public class UserRequest {
         String password;
         String email;
         String gender;
+        String phoneNum;
     }
 }

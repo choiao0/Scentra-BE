@@ -58,6 +58,7 @@ public class BrandResponse {
     @Builder
     @Getter
     public static class RetrieveBrandResponseDTO {
+        Long id;
         String brandNameKr;
         String brandNameEn;
     }
