@@ -5,6 +5,7 @@ import com.apollo.scentraapi.auth.filter.JwtExceptionHandlerFilter;
 import com.apollo.scentraapi.auth.handler.JwtAccessDeniedHandler;
 import com.apollo.scentraapi.auth.handler.JwtAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -28,6 +29,9 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtExceptionHandlerFilter jwtExceptionHandlerFilter;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @Value("${spring.cors.allowed-origins}")
+    private String allowedOrigins;
 
     private static final String[] AUTH_WHITELIST = {
             "/v3/api-docs/**",
@@ -80,7 +84,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173")); // 허용할 프론트엔드 도메인
+        configuration.setAllowedOrigins(List.of(allowedOrigins)); // 허용할 프론트엔드 도메인
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE")); // 허용할 HTTP 메서드
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type")); // 허용할 헤더
         configuration.setAllowCredentials(true); // 쿠키, 인증 정보 포함 허용
