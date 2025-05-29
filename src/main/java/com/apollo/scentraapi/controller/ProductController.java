@@ -42,10 +42,12 @@ public class ProductController {
         return ApiResponse.onSuccess(response);
     }
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary="상품 업로드", description = "**추천 성별**은 MALE or FEMALE or BOTH로 입력해주세요. <br> **카테고리명**은 한국어로 입력해주세요.")
-    public ApiResponse<ProductResponse.ProductDto> uploadProduct(@Valid @RequestBody ProductRequest.ProductUploadDto request) {
-        Product new_product = productService.uploadProduct(request);
+    public ApiResponse<ProductResponse.ProductDto> uploadProduct(@RequestPart MultipartFile productImage,
+                                                                 @RequestPart MultipartFile detailImage,
+                                                                 @RequestPart("request") @Valid ProductRequest.ProductUploadDto request) {
+        Product new_product = productService.uploadProduct(productImage, detailImage, request);
         ProductResponse.ProductDto response = ProductConverter.toProductResponse(new_product);
         return ApiResponse.onSuccess(response);
     }

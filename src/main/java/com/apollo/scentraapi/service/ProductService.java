@@ -13,6 +13,7 @@ import com.apollo.scentraapi.repository.BrandRepository;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProductService {
 
+    private final S3Service s3Service;
     private final ProductRepository productRepository;
     private final BrandRepository brandRepository;
     private final CategoryMappingRepository categoryMappingRepository;
@@ -59,8 +61,10 @@ public class ProductService {
     }
 
     @Transactional
-    public Product uploadProduct(ProductRequest.ProductUploadDto productUploadDto) {
-        Product new_product = ProductConverter.toProduct(productUploadDto);
+    public Product uploadProduct(MultipartFile image, MultipartFile bgImage, ProductRequest.ProductUploadDto productUploadDto) {
+        String productImage = s3Service.uploadFile(image);
+        String detailImage = s3Service.uploadFile(bgImage);
+        Product new_product = ProductConverter.toProduct(productImage, detailImage, productUploadDto);
         Brand brand = brandRepository.findByBrandNameEn(productUploadDto.getBrandNameEn())
                 .orElseGet(() -> brandRepository.findByBrandNameKr(productUploadDto.getBrandNameKr())
                 .orElseThrow(() -> new ProductHandler(ErrorStatus.BRAND_NOT_FOUND)));

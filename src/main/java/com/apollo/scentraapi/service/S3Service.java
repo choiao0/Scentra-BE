@@ -70,9 +70,9 @@ public class S3Service {
     }
 
     private String generateUniqueFileName(String originalFilename) {
-        String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+//        String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
         String uniqueId = UUID.randomUUID().toString().replace("-", "");
-        return uniqueId + extension;
+        return uniqueId;
     }
 
     public void deleteImage(String imageAddress) {

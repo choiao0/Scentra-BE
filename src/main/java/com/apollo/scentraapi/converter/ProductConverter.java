@@ -22,12 +22,12 @@ public class ProductConverter {
                 .targetGender(String.valueOf(product.getTargetGender()))
                 .build();
     }
-    public static Product toProduct(ProductRequest.ProductUploadDto productUploadDto) {
+    public static Product toProduct(String productImage, String detailImage, ProductRequest.ProductUploadDto productUploadDto) {
         return Product.builder()
                 .productNameKr(productUploadDto.getProductNameKr())
                 .productNameEn(productUploadDto.getProductNameEn())
-                .productImage(productUploadDto.getProductImage())
-                .detailImage(productUploadDto.getDetailImage())
+                .productImage(productImage)
+                .detailImage(detailImage)
                 .price(productUploadDto.getPrice())
                 .targetGender(Gender.valueOf(productUploadDto.getTargetGender()))
                 .build();

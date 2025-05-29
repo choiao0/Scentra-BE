@@ -16,8 +16,8 @@ public class ProductRequest {
         @NotNull
         String brandNameEn;
         String brandNameKr;
-        String productImage;
-        String detailImage;
+//        String productImage;
+//        String detailImage;
         Double price;
         String targetGender;
         List<String> category;
