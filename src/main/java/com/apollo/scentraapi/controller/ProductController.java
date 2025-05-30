@@ -45,7 +45,7 @@ public class ProductController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary="상품 업로드", description = "**추천 성별**은 MALE or FEMALE or BOTH로 입력해주세요. <br> **카테고리명**은 한국어로 입력해주세요.")
     public ApiResponse<ProductResponse.ProductDto> uploadProduct(@RequestPart MultipartFile productImage,
-                                                                 @RequestPart MultipartFile detailImage,
+                                                                 @RequestPart(required = false) MultipartFile detailImage,
                                                                  @RequestPart("request") @Valid ProductRequest.ProductUploadDto request) {
         Product new_product = productService.uploadProduct(productImage, detailImage, request);
         ProductResponse.ProductDto response = ProductConverter.toProductResponse(new_product);
