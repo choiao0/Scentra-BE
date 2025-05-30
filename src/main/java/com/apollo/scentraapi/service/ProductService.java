@@ -61,10 +61,11 @@ public class ProductService {
     }
 
     @Transactional
-    public Product uploadProduct(MultipartFile image, MultipartFile bgImage, ProductRequest.ProductUploadDto productUploadDto) {
-        String productImage = s3Service.uploadFile(image);
-        String detailImage = s3Service.uploadFile(bgImage);
-        Product new_product = ProductConverter.toProduct(productImage, detailImage, productUploadDto);
+    public Product uploadProduct(MultipartFile productImage, MultipartFile detailImage, ProductRequest.ProductUploadDto productUploadDto) {
+        String productImageUrl = s3Service.uploadFile(productImage);
+        String detailImageUrl = null;
+        if (detailImage != null) detailImageUrl = s3Service.uploadFile(detailImage);
+        Product new_product = ProductConverter.toProduct(productImageUrl, detailImageUrl, productUploadDto);
         Brand brand = brandRepository.findByBrandNameEn(productUploadDto.getBrandNameEn())
                 .orElseGet(() -> brandRepository.findByBrandNameKr(productUploadDto.getBrandNameKr())
                 .orElseThrow(() -> new ProductHandler(ErrorStatus.BRAND_NOT_FOUND)));
@@ -116,7 +117,7 @@ public class ProductService {
 
         // 2. 삭제 수행
         s3Service.deleteImage(product.getProductImage());
-        s3Service.deleteImage(product.getDetailImage());
+        if (product.getDetailImage() != null) s3Service.deleteImage(product.getDetailImage());
         productRepository.delete(product);
 
         // 3. 삭제된 상품 정보 반환
