@@ -115,6 +115,8 @@ public class ProductService {
                 .orElseThrow(() -> new ProductHandler(ErrorStatus.PRODUCT_NOT_FOUND));
 
         // 2. 삭제 수행
+        s3Service.deleteImage(product.getProductImage());
+        s3Service.deleteImage(product.getDetailImage());
         productRepository.delete(product);
 
         // 3. 삭제된 상품 정보 반환
