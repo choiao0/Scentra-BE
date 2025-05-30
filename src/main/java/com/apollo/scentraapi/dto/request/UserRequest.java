@@ -29,7 +29,7 @@ public class UserRequest {
         String phoneNum;
         String brandNameKr;
         String brandNameEn;
-        String brandImage;
+//        String brandImage;
         String brandDescription;
     }
 
