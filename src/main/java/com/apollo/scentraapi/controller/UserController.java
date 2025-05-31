@@ -11,8 +11,10 @@ import com.apollo.scentraapi.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -32,11 +34,12 @@ public class UserController {
         return ApiResponse.onSuccess(response);
     }
 
-    @PostMapping("/sign-up/sellers")
+    @PostMapping(value = "/sign-up/sellers", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "판매자 회원가입", description = "**유저 이메일**은 필수입니다. 중복되지 않도록 입력해주세요. <br> **성별**은 MALE or FEMALE로 입력해주세요.")
-    public ApiResponse<UserResponse.SellerSignUpResultDTO> createSeller(@Valid @RequestBody UserRequest.SellerSignUpDTO request) {
+    public ApiResponse<UserResponse.SellerSignUpResultDTO> createSeller(@RequestPart MultipartFile brandImage,
+                                                                        @RequestPart @Valid UserRequest.SellerSignUpDTO request) {
 
-        UserResponse.SellerSignUpResultDTO response = userService.createSeller(request);
+        UserResponse.SellerSignUpResultDTO response = userService.createSeller(brandImage, request);
 
         return ApiResponse.onSuccess(response);
     }

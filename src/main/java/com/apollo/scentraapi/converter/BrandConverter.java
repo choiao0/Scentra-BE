@@ -8,11 +8,11 @@ import com.apollo.scentraapi.dto.response.BrandResponse;
 
 
 public class BrandConverter {
-    public static Brand toBrand(UserRequest.SellerSignUpDTO request) {
+    public static Brand toBrand(String brandImage, UserRequest.SellerSignUpDTO request) {
         return Brand.builder()
                 .brandNameKr(request.getBrandNameKr())
                 .brandNameEn(request.getBrandNameEn())
-                .brandImage(request.getBrandImage())
+                .brandImage(brandImage)
                 .brandDescription(request.getBrandDescription())
                 .build();
     }
