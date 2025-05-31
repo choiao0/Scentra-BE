@@ -53,7 +53,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponse.SellerSignUpResultDTO createSeller(MultipartFile brandImg, UserRequest.SellerSignUpDTO request) {
+    public UserResponse.SellerSignUpResultDTO createSeller(MultipartFile brandImage, UserRequest.SellerSignUpDTO request) {
 
         Optional<User> findUser = userRepository.findByEmail(request.getEmail()); // 이메일로 유저가 존재하는지 검사
 
@@ -63,9 +63,9 @@ public class UserService {
         User newUser = UserConverter.toUser(request);
         User savedUser = userRepository.save(newUser);
 
-        String brandImage = s3Service.uploadFile(brandImg);
+        String brandImageUrl = s3Service.uploadFile(brandImage);
 
-        Brand newBrand = BrandConverter.toBrand(brandImage, request);
+        Brand newBrand = BrandConverter.toBrand(brandImageUrl, request);
         Brand savedBrand = brandRepository.save(newBrand);
 
         Seller newSeller = UserConverter.toSeller(savedUser, savedBrand);
