@@ -13,6 +13,7 @@ import com.apollo.scentraapi.repository.BrandRepository;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProductService {
 
+    private final S3Service s3Service;
     private final ProductRepository productRepository;
     private final BrandRepository brandRepository;
     private final CategoryMappingRepository categoryMappingRepository;
@@ -59,8 +61,11 @@ public class ProductService {
     }
 
     @Transactional
-    public Product uploadProduct(ProductRequest.ProductUploadDto productUploadDto) {
-        Product new_product = ProductConverter.toProduct(productUploadDto);
+    public Product uploadProduct(MultipartFile productImage, MultipartFile detailImage, ProductRequest.ProductUploadDto productUploadDto) {
+        String productImageUrl = s3Service.uploadFile(productImage);
+        String detailImageUrl = null;
+        if (detailImage != null) detailImageUrl = s3Service.uploadFile(detailImage);
+        Product new_product = ProductConverter.toProduct(productImageUrl, detailImageUrl, productUploadDto);
         Brand brand = brandRepository.findByBrandNameEn(productUploadDto.getBrandNameEn())
                 .orElseGet(() -> brandRepository.findByBrandNameKr(productUploadDto.getBrandNameKr())
                 .orElseThrow(() -> new ProductHandler(ErrorStatus.BRAND_NOT_FOUND)));
@@ -111,6 +116,8 @@ public class ProductService {
                 .orElseThrow(() -> new ProductHandler(ErrorStatus.PRODUCT_NOT_FOUND));
 
         // 2. 삭제 수행
+        s3Service.deleteImage(product.getProductImage());
+        if (product.getDetailImage() != null) s3Service.deleteImage(product.getDetailImage());
         productRepository.delete(product);
 
         // 3. 삭제된 상품 정보 반환
