@@ -13,6 +13,7 @@ public class CartConverter {
                 .userId(cart.getUser().getId())
                 .productId(cart.getProduct().getId())
                 .quantity(cart.getQuantity())
+                .price(cart.getProduct().getPrice())
                 .productNameKr(cart.getProduct().getProductNameKr())
                 .productNameEn(cart.getProduct().getProductNameEn())
                 .brandNameKr(cart.getProduct().getBrand().getBrandNameKr())
