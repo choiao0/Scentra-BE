@@ -63,10 +63,10 @@ public class S3Service {
         if (file == null || file.isEmpty()) {
             throw new S3Handler(ErrorStatus.FILE_IS_EMPTY);
         }
-        String contentType = file.getContentType();
-        if (contentType == null || !contentType.startsWith("image/")) {
-            throw new S3Handler(ErrorStatus.FILE_NOT_IMAGE);
-        }
+//        String contentType = file.getContentType();
+//        if (contentType == null || !contentType.startsWith("image/")) {
+//            throw new S3Handler(ErrorStatus.FILE_NOT_IMAGE);
+//        }
     }
 
     private String generateUniqueFileName(String originalFilename) {
