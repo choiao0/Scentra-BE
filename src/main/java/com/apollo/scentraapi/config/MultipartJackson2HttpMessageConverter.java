@@ -7,13 +7,12 @@ import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
 
+/**
+ * octet-stream 타입 -> ObjectMapper로 파싱해주는 컨버터
+ * Content-Type: multipart/form-data인 요청에서 JSON 형식의 문자열을 파싱할 수 있도록 한다.
+ */
 @Component
 public class MultipartJackson2HttpMessageConverter extends AbstractJackson2HttpMessageConverter {
-
-    /**
-     * octet-stream 타입 -> ObjectMapper로 파싱해주는 컨버터
-     * Content-Type: multipart/form-data인 요청에서 JSON 형식의 문자열을 파싱할 수 있도록 함
-     */
     public MultipartJackson2HttpMessageConverter(ObjectMapper objectMapper) {
         super(objectMapper, MediaType.APPLICATION_OCTET_STREAM);
     }

@@ -19,13 +19,16 @@ public class ApiResponse<T> {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private T result;
 
-
-    // 성공한 경우 응답 생성
+    /**
+     * 요청이 성공한 경우의 응답을 생성한다.
+     */
     public static <T> ApiResponse<T> onSuccess(T result){
         return new ApiResponse<>(true, SuccessStatus._OK.getCode() , SuccessStatus._OK.getMessage(), result);
     }
 
-    // 실패한 경우 응답 생성
+    /**
+     * 요청이 실패한 경우의 응답을 생성한다.
+     */
     public static <T> ApiResponse<T> onFailure(String code, String message, T data){
         return new ApiResponse<>(false, code, message, data);
     }

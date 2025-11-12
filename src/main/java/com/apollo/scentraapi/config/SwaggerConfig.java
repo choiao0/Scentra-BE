@@ -35,8 +35,8 @@ public class SwaggerConfig {
 
     private Info apiInfo() {
         return new Info()
-                .title("Scentra API Test") // API의 제목
-                .description("생성형 AI 활용 향수 플랫폼 Scnetra API 테스트 페이지입니다.") // API에 대한 설명
-                .version("1.0.0"); // API의 버전
+                .title("Scentra API Test")  // API의 제목
+                .description("생성형 AI 활용 향수 플랫폼 Scnetra API 테스트 페이지입니다.")  // API에 대한 설명
+                .version("1.0.0");  // API의 버전
     }
 }
