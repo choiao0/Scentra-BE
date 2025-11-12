@@ -48,13 +48,13 @@ public class ProductService {
         }
 
         for (Product product : products) {
-            Long brand_id = product.getBrand().getId();
-            Brand brand = brandRepository.findById(brand_id)
+            Long brandId = product.getBrand().getId();
+            Brand brand = brandRepository.findById(brandId)
                     .orElseThrow(() -> new BrandException(ErrorStatus.BRAND_NOT_FOUND));
             String brandNameKr = brand.getBrandNameKr();
             String brandNameEn = brand.getBrandNameEn();
-            ProductResponse.ProductListDto product_dto = ProductConverter.toProductListDto(product, brandNameKr, brandNameEn);
-            productList.add(product_dto);
+            ProductResponse.ProductListDto productDto = ProductConverter.toProductListDto(product, brandNameKr, brandNameEn);
+            productList.add(productDto);
         }
         return productList;
     }
@@ -67,21 +67,21 @@ public class ProductService {
             detailImageUrl = s3Service.uploadFile(detailImage);
         }
 
-        Product new_product = ProductConverter.toProduct(productImageUrl, detailImageUrl, productUploadDto);
+        Product newProduct = ProductConverter.toProduct(productImageUrl, detailImageUrl, productUploadDto);
         Brand brand = brandRepository.findByBrandNameEn(productUploadDto.getBrandNameEn())
                 .orElseGet(() -> brandRepository.findByBrandNameKr(productUploadDto.getBrandNameKr())
                 .orElseThrow(() -> new ProductException(ErrorStatus.BRAND_NOT_FOUND)));
-        new_product.setBrand(brand);
-        new_product = productRepository.save(new_product);
+        newProduct.setBrand(brand);
+        newProduct = productRepository.save(newProduct);
 
         for (String c : productUploadDto.getCategory()) {
             Category category = categoryRepository.findByCategoryNameKr(c)
                     .orElseThrow(() -> new ProductException(ErrorStatus.CATEGORY_NOT_FOUND));
-            CategoryMapping mapping = CategoryConverter.toCategoryMapping(category, new_product);
+            CategoryMapping mapping = CategoryConverter.toCategoryMapping(category, newProduct);
             categoryMappingRepository.save(mapping);
         }
 
-        return new_product;
+        return newProduct;
     }
 
     @Transactional
@@ -172,8 +172,8 @@ public class ProductService {
         return ProductConverter.toProductLikeDTO(productLike);
     }
     @Transactional(readOnly = true)
-    public List<ProductResponse.ProductListDto> getProductsByCategory(Long category_id) {
-        List<CategoryMapping> mappings = categoryMappingRepository.findByCategoryId(category_id);
+    public List<ProductResponse.ProductListDto> getProductsByCategory(Long categoryId) {
+        List<CategoryMapping> mappings = categoryMappingRepository.findByCategoryId(categoryId);
 
         if (mappings.isEmpty()) {
             throw new ProductException(ErrorStatus.PRODUCT_NOT_FOUND);

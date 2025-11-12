@@ -20,10 +20,10 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
 
     public CategoryResponse.CategoryDto createCategory(CategoryRequest.CategoryNameDto category) {
-        Category new_category = CategoryConverter.toCategory(
+        Category newCategory = CategoryConverter.toCategory(
                 category.getCategoryNameKr(), category.getCategoryNameEn(), category.getCategoryType());
-        categoryRepository.save(new_category);
-        return CategoryConverter.toCategoryResponse(new_category);
+        categoryRepository.save(newCategory);
+        return CategoryConverter.toCategoryResponse(newCategory);
     }
 
     public List<CategoryResponse.CategoryDto> getAllCategories() {
@@ -36,14 +36,14 @@ public class CategoryService {
         return categoryDtos;
     }
 
-    public CategoryResponse.CategoryNameDto getCategoryById(Long category_id) {
-        Category category = categoryRepository.findById(category_id)
+    public CategoryResponse.CategoryNameDto getCategoryById(Long categoryId) {
+        Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(()-> new ProductException(ErrorStatus.CATEGORY_NOT_FOUND));
         return CategoryConverter.toCategoryNameResponse(category);
     }
 
-    public CategoryResponse.CategoryDto deleteCategoryById(Long category_id) {
-        Category category = categoryRepository.findById(category_id)
+    public CategoryResponse.CategoryDto deleteCategoryById(Long categoryId) {
+        Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(()-> new ProductException(ErrorStatus.CATEGORY_NOT_FOUND));
         categoryRepository.delete(category);
         return CategoryConverter.toCategoryResponse(category);

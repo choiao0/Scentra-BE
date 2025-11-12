@@ -49,8 +49,8 @@ public class BrandService {
         }
 
         for (Brand brand : brands) {
-            BrandResponse.BrandListDto brand_dto = BrandConverter.toBrandListDto(brand);
-            brandList.add(brand_dto);
+            BrandResponse.BrandListDto brandDto = BrandConverter.toBrandListDto(brand);
+            brandList.add(brandDto);
         }
         return brandList;
     }

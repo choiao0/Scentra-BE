@@ -125,8 +125,8 @@ public class UserService {
                     .orElseThrow(() -> new BrandException(ErrorStatus.BRAND_NOT_FOUND));
             String brandNameKr = brand.getBrandNameKr();
             String brandNameEn = brand.getBrandNameEn();
-            ProductResponse.ProductListDto product_dto = ProductConverter.toProductListDto(product, brandNameKr, brandNameEn);
-            productList.add(product_dto);
+            ProductResponse.ProductListDto productDto = ProductConverter.toProductListDto(product, brandNameKr, brandNameEn);
+            productList.add(productDto);
         }
         return productList;
     }
@@ -141,8 +141,8 @@ public class UserService {
 
         for (BrandLikes like : likes) {
             Brand brand = like.getBrand();
-            BrandResponse.BrandListDto brand_dto = BrandConverter.toBrandListDto(brand);
-            brandList.add(brand_dto);
+            BrandResponse.BrandListDto brandDto = BrandConverter.toBrandListDto(brand);
+            brandList.add(brandDto);
         }
         return brandList;
     }
