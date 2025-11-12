@@ -1,8 +1,8 @@
 package com.apollo.scentraapi.service;
 
 import com.apollo.scentraapi.apiPayload.code.status.ErrorStatus;
-import com.apollo.scentraapi.apiPayload.exception.handler.BrandHandler;
-import com.apollo.scentraapi.apiPayload.exception.handler.ProductHandler;
+import com.apollo.scentraapi.apiPayload.exception.handler.BrandException;
+import com.apollo.scentraapi.apiPayload.exception.handler.ProductException;
 import com.apollo.scentraapi.converter.CategoryConverter;
 import com.apollo.scentraapi.converter.ProductConverter;
 import com.apollo.scentraapi.domain.*;
@@ -35,7 +35,7 @@ public class ProductService {
     public ProductResponse.ProductDto getProduct(Long id) {
         // 1. 상품 조회 (없으면 예외 발생)
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ProductHandler(ErrorStatus.PRODUCT_NOT_FOUND));
+                .orElseThrow(() -> new ProductException(ErrorStatus.PRODUCT_NOT_FOUND));
 
         return ProductConverter.toProductResponse(product);
     }
@@ -45,13 +45,13 @@ public class ProductService {
         List<ProductResponse.ProductListDto> productList = new ArrayList<>();
 
         if (products.isEmpty()) {
-            throw new ProductHandler(ErrorStatus.PRODUCT_NOT_FOUND);
+            throw new ProductException(ErrorStatus.PRODUCT_NOT_FOUND);
         }
 
         for (Product product : products) {
             Long brand_id = product.getBrand().getId();
             Brand brand = brandRepository.findById(brand_id)
-                    .orElseThrow(() -> new BrandHandler(ErrorStatus.BRAND_NOT_FOUND));
+                    .orElseThrow(() -> new BrandException(ErrorStatus.BRAND_NOT_FOUND));
             String brandNameKr = brand.getBrandNameKr();
             String brandNameEn = brand.getBrandNameEn();
             ProductResponse.ProductListDto product_dto = ProductConverter.toProductListDto(product, brandNameKr, brandNameEn);
@@ -68,13 +68,13 @@ public class ProductService {
         Product new_product = ProductConverter.toProduct(productImageUrl, detailImageUrl, productUploadDto);
         Brand brand = brandRepository.findByBrandNameEn(productUploadDto.getBrandNameEn())
                 .orElseGet(() -> brandRepository.findByBrandNameKr(productUploadDto.getBrandNameKr())
-                .orElseThrow(() -> new ProductHandler(ErrorStatus.BRAND_NOT_FOUND)));
+                .orElseThrow(() -> new ProductException(ErrorStatus.BRAND_NOT_FOUND)));
         new_product.setBrand(brand);
         new_product = productRepository.save(new_product);
 
         for (String c : productUploadDto.getCategory()) {
             Category category = categoryRepository.findByCategoryNameKr(c)
-                    .orElseThrow(() -> new ProductHandler(ErrorStatus.CATEGORY_NOT_FOUND));
+                    .orElseThrow(() -> new ProductException(ErrorStatus.CATEGORY_NOT_FOUND));
             CategoryMapping mapping = CategoryConverter.toCategoryMapping(category, new_product);
             categoryMappingRepository.save(mapping);
         }
@@ -86,12 +86,12 @@ public class ProductService {
     public ProductResponse.ProductUpdateResponseDTO updateProduct(Long id, ProductRequest.ProductUpdateRequestDTO request) {
         // 1. 상품 조회
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ProductHandler(ErrorStatus.PRODUCT_NOT_FOUND));
+                .orElseThrow(() -> new ProductException(ErrorStatus.PRODUCT_NOT_FOUND));
 
         // 2. 브랜드 변경이 있을 경우, 브랜드 찾기
         if (request.getBrandId() != null) {
             Brand brand = brandRepository.findById(request.getBrandId())
-                    .orElseThrow(() -> new BrandHandler(ErrorStatus.BRAND_NOT_FOUND));
+                    .orElseThrow(() -> new BrandException(ErrorStatus.BRAND_NOT_FOUND));
             product.setBrand(brand);  // ✅ 브랜드 정보 업데이트
         }
 
@@ -113,7 +113,7 @@ public class ProductService {
     public ProductResponse.ProductDeleteResponseDTO deleteProduct(Long id) {
         // 1. 상품 조회 (없으면 예외 발생)
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ProductHandler(ErrorStatus.PRODUCT_NOT_FOUND));
+                .orElseThrow(() -> new ProductException(ErrorStatus.PRODUCT_NOT_FOUND));
 
         // 2. 삭제 수행
         s3Service.deleteImage(product.getProductImage());
@@ -153,11 +153,11 @@ public class ProductService {
 
     public ProductResponse.ProductLikeDTO addLike(User user, Long productId) {
         Optional<Product> optionalProduct = productRepository.findById(productId);
-        Product product = optionalProduct.orElseThrow(() -> new ProductHandler(ErrorStatus.PRODUCT_NOT_FOUND));
+        Product product = optionalProduct.orElseThrow(() -> new ProductException(ErrorStatus.PRODUCT_NOT_FOUND));
 
         Optional<ProductLikes> findProductLikes = productLikeRepository.findByUserAndProduct(user, product);
         if (findProductLikes.isPresent())
-            throw new ProductHandler(ErrorStatus.PRODUCT_ALREADY_LIKED);
+            throw new ProductException(ErrorStatus.PRODUCT_ALREADY_LIKED);
 
         ProductLikes newLike = ProductConverter.toProductLike(product, user);
         productLikeRepository.save(newLike);
@@ -167,7 +167,7 @@ public class ProductService {
 
     public ProductResponse.ProductLikeDTO removeLike(User user, Long productId) {
         Optional<ProductLikes> optionalProductLike = productLikeRepository.findByUserIdAndProductId(user.getId(), productId);
-        ProductLikes productLike = optionalProductLike.orElseThrow(() -> new ProductHandler(ErrorStatus.PRODUCT_NOT_LIKED));
+        ProductLikes productLike = optionalProductLike.orElseThrow(() -> new ProductException(ErrorStatus.PRODUCT_NOT_LIKED));
 
         productLikeRepository.delete(productLike);
         return ProductConverter.toProductLikeDTO(productLike);
@@ -177,7 +177,7 @@ public class ProductService {
         List<CategoryMapping> mappings = categoryMappingRepository.findByCategoryId(category_id);
 
         if (mappings.isEmpty()) {
-            throw new ProductHandler(ErrorStatus.PRODUCT_NOT_FOUND); // 예외 처리 추가
+            throw new ProductException(ErrorStatus.PRODUCT_NOT_FOUND); // 예외 처리 추가
         }
         return mappings.stream()
                 .map(mapping -> {
@@ -192,7 +192,7 @@ public class ProductService {
     public List<ProductResponse.ProductListDto> searchProducts(String keyword) {
         // 1. 검색어가 null 또는 빈 문자열일 경우 예외 처리
         if (keyword == null || keyword.trim().isEmpty()) {
-            throw new ProductHandler(ErrorStatus.INVALID_SEARCH_KEYWORD);
+            throw new ProductException(ErrorStatus.INVALID_SEARCH_KEYWORD);
         }
 
         // 2. 검색 실행
@@ -208,7 +208,7 @@ public class ProductService {
 
         // 3. 검색 결과 없을 경우 예외 처리
         if (filteredProducts.isEmpty()) {
-            throw new ProductHandler(ErrorStatus.PRODUCT_NOT_FOUND);
+            throw new ProductException(ErrorStatus.PRODUCT_NOT_FOUND);
         }
 
         return filteredProducts.stream()
@@ -223,7 +223,7 @@ public class ProductService {
 
     public ProductResponse.ProductLikeDTO isLike(User user, Long productId) {
         Optional<ProductLikes> optionalProductLike = productLikeRepository.findByUserIdAndProductId(user.getId(), productId);
-        ProductLikes productLike = optionalProductLike.orElseThrow(() -> new ProductHandler(ErrorStatus.PRODUCT_NOT_LIKED));
+        ProductLikes productLike = optionalProductLike.orElseThrow(() -> new ProductException(ErrorStatus.PRODUCT_NOT_LIKED));
         return ProductConverter.toProductLikeDTO(productLike);
     }
 }

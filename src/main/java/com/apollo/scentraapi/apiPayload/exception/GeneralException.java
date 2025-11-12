@@ -1,7 +1,7 @@
 package com.apollo.scentraapi.apiPayload.exception;
 
-import com.apollo.scentraapi.apiPayload.code.BaseErrorCode;
 import com.apollo.scentraapi.apiPayload.code.ErrorReasonDTO;
+import com.apollo.scentraapi.apiPayload.code.status.ErrorStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -9,11 +9,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class GeneralException extends RuntimeException {
 
-    private BaseErrorCode code;
-
-    public ErrorReasonDTO getErrorReason() {
-        return this.code.getReason();
-    }
+    private final ErrorStatus code;
 
     public ErrorReasonDTO getErrorReasonHttpStatus(){
         return this.code.getReasonHttpStatus();

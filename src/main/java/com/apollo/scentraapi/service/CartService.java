@@ -1,9 +1,9 @@
 package com.apollo.scentraapi.service;
 
 import com.apollo.scentraapi.apiPayload.code.status.ErrorStatus;
-import com.apollo.scentraapi.apiPayload.exception.handler.CartHandler;
-import com.apollo.scentraapi.apiPayload.exception.handler.ProductHandler;
-import com.apollo.scentraapi.apiPayload.exception.handler.UserHandler;
+import com.apollo.scentraapi.apiPayload.exception.handler.CartException;
+import com.apollo.scentraapi.apiPayload.exception.handler.ProductException;
+import com.apollo.scentraapi.apiPayload.exception.handler.UserException;
 import com.apollo.scentraapi.domain.Product;
 import com.apollo.scentraapi.domain.User;
 import com.apollo.scentraapi.domain.Cart;
@@ -35,7 +35,7 @@ public class CartService {
     public List<CartResponse.CartItemDto> getCartItems(UUID userId) {
         List<Cart> cartItems = cartRepository.findByUserId(userId);
         if (cartItems.isEmpty()) {
-            throw new CartHandler(ErrorStatus.CART_NOT_FOUND);  // ✅ 장바구니 비었을 때 예외 발생
+            throw new CartException(ErrorStatus.CART_NOT_FOUND);  // ✅ 장바구니 비었을 때 예외 발생
         }
 
         return cartItems.stream()
@@ -43,7 +43,7 @@ public class CartService {
                     Optional<Product> optionalProduct = productRepository.findById(cart.getProduct().getId());
 
                     if (optionalProduct.isEmpty()) {
-                        throw new ProductHandler(ErrorStatus.PRODUCT_NOT_FOUND); // ✅ 상품 없을 경우 예외 발생
+                        throw new ProductException(ErrorStatus.PRODUCT_NOT_FOUND); // ✅ 상품 없을 경우 예외 발생
                     }
 
                     return CartConverter.toCartItemDto(cart);
@@ -54,10 +54,10 @@ public class CartService {
     @Transactional
     public CartResponse.CartUpdateDto addCartItem(UUID userId, CartRequest.CartUpdateDTO request) {
         Product product = productRepository.findById(request.getProductId())
-                .orElseThrow(() -> new ProductHandler(ErrorStatus.PRODUCT_NOT_FOUND));
+                .orElseThrow(() -> new ProductException(ErrorStatus.PRODUCT_NOT_FOUND));
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
+                .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
 
         // 장바구니에서 해당 유저의 같은 상품 조회
         Cart cartItem = cartRepository.findByUserIdAndProductId(userId, product.getId())
@@ -74,12 +74,12 @@ public class CartService {
     @Transactional
     public void decreaseCartItem(UUID userId, CartRequest.CartUpdateDTO request) {
         Cart cartItem = cartRepository.findByUserIdAndProductId(userId, request.getProductId())
-                .orElseThrow(() -> new CartHandler(ErrorStatus.CART_ITEM_NOT_FOUND));
+                .orElseThrow(() -> new CartException(ErrorStatus.CART_ITEM_NOT_FOUND));
 
         // ✅ **수량이 0이면 삭제, 음수면 예외 발생**
         int updatedQuantity = cartItem.getQuantity() - request.getQuantity();
         if (updatedQuantity < 0) {
-            throw new CartHandler(ErrorStatus.INVALID_QUANTITY);
+            throw new CartException(ErrorStatus.INVALID_QUANTITY);
         } if (updatedQuantity <= 0) {
             cartRepository.delete(cartItem);
         } else {
@@ -92,7 +92,7 @@ public class CartService {
     @Transactional
     public void removeCartItem(UUID userId, CartRequest.CartDeleteDTO request) {
         Cart cartItem = cartRepository.findByUserIdAndProductId(userId, request.getProductId())
-                .orElseThrow(() -> new CartHandler(ErrorStatus.CART_ITEM_NOT_FOUND));
+                .orElseThrow(() -> new CartException(ErrorStatus.CART_ITEM_NOT_FOUND));
 
         cartRepository.deleteByUserIdAndProductId(userId, request.getProductId()); // ✅ 레포지토리 활용
     }

@@ -1,9 +1,9 @@
 package com.apollo.scentraapi.service;
 
 import com.apollo.scentraapi.apiPayload.code.status.ErrorStatus;
-import com.apollo.scentraapi.apiPayload.exception.handler.BrandHandler;
-import com.apollo.scentraapi.apiPayload.exception.handler.ProductHandler;
-import com.apollo.scentraapi.apiPayload.exception.handler.UserHandler;
+import com.apollo.scentraapi.apiPayload.exception.handler.BrandException;
+import com.apollo.scentraapi.apiPayload.exception.handler.ProductException;
+import com.apollo.scentraapi.apiPayload.exception.handler.UserException;
 import com.apollo.scentraapi.auth.JwtUtil;
 import com.apollo.scentraapi.converter.BrandConverter;
 import com.apollo.scentraapi.converter.ProductConverter;
@@ -42,7 +42,7 @@ public class UserService {
         Optional<User> findUser = userRepository.findByEmail(request.getEmail()); // 이메일로 유저가 존재하는지 검사
 
         if (findUser.isPresent())
-            throw new UserHandler(ErrorStatus.USER_ALREADY_EXIST);
+            throw new UserException(ErrorStatus.USER_ALREADY_EXIST);
 
         User newUser = UserConverter.toUser(request);
         User savedUser = userRepository.save(newUser);
@@ -58,7 +58,7 @@ public class UserService {
         Optional<User> findUser = userRepository.findByEmail(request.getEmail()); // 이메일로 유저가 존재하는지 검사
 
         if (findUser.isPresent())
-            throw new UserHandler(ErrorStatus.USER_ALREADY_EXIST);
+            throw new UserException(ErrorStatus.USER_ALREADY_EXIST);
 
         User newUser = UserConverter.toUser(request);
         User savedUser = userRepository.save(newUser);
@@ -79,7 +79,7 @@ public class UserService {
     public UserResponse.LoginResultDTO login(String email) {
 
         User findUser = userRepository.findByEmail(email) // 이메일로 유저가 존재하는지 검사
-                .orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
+                .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
 
         Seller findSeller = sellerRepository.findByUser(findUser).orElse(null);
         Long totalProducts = null;
@@ -99,7 +99,7 @@ public class UserService {
             Optional<User> findUser = userRepository.findByEmail(request.getEmail());
 
             if (findUser.isPresent())
-                throw new UserHandler(ErrorStatus.USER_ALREADY_EXIST);
+                throw new UserException(ErrorStatus.USER_ALREADY_EXIST);
         }
 
         user.update(request.getName(), request.getPassword(), request.getEmail(), request.getGender());
@@ -119,13 +119,13 @@ public class UserService {
         List<ProductResponse.ProductListDto> productList = new ArrayList<>();
 
         if (likes.isEmpty()) {
-            throw new ProductHandler(ErrorStatus.NO_LIKED_PRODUCTS);
+            throw new ProductException(ErrorStatus.NO_LIKED_PRODUCTS);
         }
 
         for (ProductLikes like : likes) {
             Product product = like.getProduct();
             Brand brand = brandRepository.findById(product.getBrand().getId())
-                    .orElseThrow(() -> new BrandHandler(ErrorStatus.BRAND_NOT_FOUND));
+                    .orElseThrow(() -> new BrandException(ErrorStatus.BRAND_NOT_FOUND));
             String brandNameKr = brand.getBrandNameKr();
             String brandNameEn = brand.getBrandNameEn();
             ProductResponse.ProductListDto product_dto = ProductConverter.toProductListDto(product, brandNameKr, brandNameEn);
@@ -139,7 +139,7 @@ public class UserService {
         List<BrandResponse.BrandListDto> brandList = new ArrayList<>();
 
         if (likes.isEmpty()) {
-            throw new BrandHandler(ErrorStatus.NO_LIKED_BRANDS);
+            throw new BrandException(ErrorStatus.NO_LIKED_BRANDS);
         }
 
         for (BrandLikes like : likes) {

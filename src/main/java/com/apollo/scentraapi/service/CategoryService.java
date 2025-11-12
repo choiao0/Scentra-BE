@@ -1,7 +1,7 @@
 package com.apollo.scentraapi.service;
 
 import com.apollo.scentraapi.apiPayload.code.status.ErrorStatus;
-import com.apollo.scentraapi.apiPayload.exception.handler.ProductHandler;
+import com.apollo.scentraapi.apiPayload.exception.handler.ProductException;
 import com.apollo.scentraapi.converter.CategoryConverter;
 import com.apollo.scentraapi.domain.Category;
 import com.apollo.scentraapi.dto.request.CategoryRequest;
@@ -36,13 +36,13 @@ public class CategoryService {
 
     public CategoryResponse.CategoryNameDto getCategoryById(Long category_id) {
         Category category = categoryRepository.findById(category_id)
-                .orElseThrow(()-> new ProductHandler(ErrorStatus.CATEGORY_NOT_FOUND));
+                .orElseThrow(()-> new ProductException(ErrorStatus.CATEGORY_NOT_FOUND));
         return CategoryConverter.toCategoryNameResponse(category);
     }
 
     public CategoryResponse.CategoryDto deleteCategoryById(Long category_id) {
         Category category = categoryRepository.findById(category_id)
-                .orElseThrow(()-> new ProductHandler(ErrorStatus.CATEGORY_NOT_FOUND));
+                .orElseThrow(()-> new ProductException(ErrorStatus.CATEGORY_NOT_FOUND));
         categoryRepository.delete(category);
         return CategoryConverter.toCategoryResponse(category);
     }

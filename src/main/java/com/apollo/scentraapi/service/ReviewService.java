@@ -1,8 +1,8 @@
 package com.apollo.scentraapi.service;
 
 import com.apollo.scentraapi.apiPayload.code.status.ErrorStatus;
-import com.apollo.scentraapi.apiPayload.exception.handler.ProductHandler;
-import com.apollo.scentraapi.apiPayload.exception.handler.UserHandler;
+import com.apollo.scentraapi.apiPayload.exception.handler.ProductException;
+import com.apollo.scentraapi.apiPayload.exception.handler.UserException;
 import com.apollo.scentraapi.converter.ReviewConverter;
 import com.apollo.scentraapi.domain.Product;
 import com.apollo.scentraapi.domain.Review;
@@ -30,9 +30,9 @@ public class ReviewService {
     public Review createReview(User user, Long productId, ReviewRequest.ReviewCreateDTO request) {
 
         User findUser = userRepository.findById(user.getId())
-                .orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
+                .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
         Product findProduct = productRepository.findById(productId)
-                .orElseThrow(() -> new ProductHandler(ErrorStatus.PRODUCT_NOT_FOUND));
+                .orElseThrow(() -> new ProductException(ErrorStatus.PRODUCT_NOT_FOUND));
 
         Review newReview = ReviewConverter.toReview(findProduct, request);
         newReview.setUser(findUser);
@@ -44,9 +44,9 @@ public class ReviewService {
     public Review updateReview(User user, Long reviewId, ReviewRequest.ReviewUpdateDTO request) {
 
         Review findReview = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new ProductHandler(ErrorStatus.REVIEW_NOT_FOUND));
+                .orElseThrow(() -> new ProductException(ErrorStatus.REVIEW_NOT_FOUND));
         if (!findReview.getUser().getId().equals(user.getId()))
-            throw new ProductHandler(ErrorStatus.REVIEW_OWNER_MISMATCH);
+            throw new ProductException(ErrorStatus.REVIEW_OWNER_MISMATCH);
 
         findReview.update(request.getContent(), request.getRating(), request.getImageUrl());
 
@@ -57,11 +57,11 @@ public class ReviewService {
     public void deleteReview(User user, Long reviewId) {
 
         Review findReview = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new ProductHandler(ErrorStatus.REVIEW_NOT_FOUND));
+                .orElseThrow(() -> new ProductException(ErrorStatus.REVIEW_NOT_FOUND));
         User findUser = userRepository.findById(user.getId())
-                .orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
+                .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
         if (!findReview.getUser().getId().equals(user.getId()))
-            throw new ProductHandler(ErrorStatus.REVIEW_OWNER_MISMATCH);
+            throw new ProductException(ErrorStatus.REVIEW_OWNER_MISMATCH);
 
         findUser.getReviewList().remove(findReview);
         reviewRepository.delete(findReview);
@@ -70,7 +70,7 @@ public class ReviewService {
     public List<Review> getReviewList(Long productId) {
 
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ProductHandler(ErrorStatus.PRODUCT_NOT_FOUND));
+                .orElseThrow(() -> new ProductException(ErrorStatus.PRODUCT_NOT_FOUND));
 
         return reviewRepository.findAllByProduct(product);
     }
