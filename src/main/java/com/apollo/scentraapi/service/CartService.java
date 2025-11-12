@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -46,8 +45,7 @@ public class CartService {
                     }
 
                     return CartConverter.toCartItemDto(cart);
-                })
-                .collect(Collectors.toList());
+                }).toList();
     }
 
     @Transactional

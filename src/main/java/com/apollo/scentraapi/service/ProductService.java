@@ -18,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -184,8 +183,7 @@ public class ProductService {
                     String brandNameKr = product.getBrand().getBrandNameKr();
                     String brandNameEn = product.getBrand().getBrandNameEn();
                     return ProductConverter.toProductListDto(product, brandNameKr, brandNameEn);
-                })
-                .collect(Collectors.toList());
+                }).toList();
     }
 
     public List<ProductResponse.ProductListDto> searchProducts(String keyword) {
@@ -215,9 +213,7 @@ public class ProductService {
                     String brandNameKr = product.getBrand().getBrandNameKr();
                     String brandNameEn = product.getBrand().getBrandNameEn();
                     return ProductConverter.toProductListDto(product, brandNameKr, brandNameEn);
-                })
-                .collect(Collectors.toList());
-
+                }).toList();
     }
 
     public ProductResponse.ProductLikeDTO isLike(User user, Long productId) {
