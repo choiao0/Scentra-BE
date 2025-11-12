@@ -33,7 +33,6 @@ public class ProductService {
 
     @Transactional
     public ProductResponse.ProductDto getProduct(Long id) {
-        // 1. 상품 조회 (없으면 예외 발생)
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductException(ErrorStatus.PRODUCT_NOT_FOUND));
 
@@ -64,7 +63,10 @@ public class ProductService {
     public Product uploadProduct(MultipartFile productImage, MultipartFile detailImage, ProductRequest.ProductUploadDto productUploadDto) {
         String productImageUrl = s3Service.uploadFile(productImage);
         String detailImageUrl = null;
-        if (detailImage != null) detailImageUrl = s3Service.uploadFile(detailImage);
+        if (detailImage != null) {
+            detailImageUrl = s3Service.uploadFile(detailImage);
+        }
+
         Product new_product = ProductConverter.toProduct(productImageUrl, detailImageUrl, productUploadDto);
         Brand brand = brandRepository.findByBrandNameEn(productUploadDto.getBrandNameEn())
                 .orElseGet(() -> brandRepository.findByBrandNameKr(productUploadDto.getBrandNameKr())
@@ -84,18 +86,15 @@ public class ProductService {
 
     @Transactional
     public ProductResponse.ProductUpdateResponseDTO updateProduct(Long id, ProductRequest.ProductUpdateRequestDTO request) {
-        // 1. 상품 조회
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductException(ErrorStatus.PRODUCT_NOT_FOUND));
 
-        // 2. 브랜드 변경이 있을 경우, 브랜드 찾기
         if (request.getBrandId() != null) {
             Brand brand = brandRepository.findById(request.getBrandId())
                     .orElseThrow(() -> new BrandException(ErrorStatus.BRAND_NOT_FOUND));
-            product.setBrand(brand);  // ✅ 브랜드 정보 업데이트
+            product.setBrand(brand);
         }
 
-        // 3. 상품 정보 업데이트
         product.update(
                 request.getProductNameKr(),
                 request.getProductNameEn(),
@@ -105,22 +104,20 @@ public class ProductService {
                 request.getTargetGender()
         );
 
-        // 4. 응답 DTO 반환
         return ProductConverter.toProductUpdateResponseDTO(product);
     }
 
     @Transactional
     public ProductResponse.ProductDeleteResponseDTO deleteProduct(Long id) {
-        // 1. 상품 조회 (없으면 예외 발생)
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductException(ErrorStatus.PRODUCT_NOT_FOUND));
 
-        // 2. 삭제 수행
         s3Service.deleteImage(product.getProductImage());
-        if (product.getDetailImage() != null) s3Service.deleteImage(product.getDetailImage());
+        if (product.getDetailImage() != null) {
+            s3Service.deleteImage(product.getDetailImage());
+        }
         productRepository.delete(product);
 
-        // 3. 삭제된 상품 정보 반환
         return ProductConverter.toProductDeleteResponseDTO(product);
     }
 
@@ -156,8 +153,9 @@ public class ProductService {
         Product product = optionalProduct.orElseThrow(() -> new ProductException(ErrorStatus.PRODUCT_NOT_FOUND));
 
         Optional<ProductLikes> findProductLikes = productLikeRepository.findByUserAndProduct(user, product);
-        if (findProductLikes.isPresent())
+        if (findProductLikes.isPresent()) {
             throw new ProductException(ErrorStatus.PRODUCT_ALREADY_LIKED);
+        }
 
         ProductLikes newLike = ProductConverter.toProductLike(product, user);
         productLikeRepository.save(newLike);
@@ -167,7 +165,8 @@ public class ProductService {
 
     public ProductResponse.ProductLikeDTO removeLike(User user, Long productId) {
         Optional<ProductLikes> optionalProductLike = productLikeRepository.findByUserIdAndProductId(user.getId(), productId);
-        ProductLikes productLike = optionalProductLike.orElseThrow(() -> new ProductException(ErrorStatus.PRODUCT_NOT_LIKED));
+        ProductLikes productLike = optionalProductLike
+                .orElseThrow(() -> new ProductException(ErrorStatus.PRODUCT_NOT_LIKED));
 
         productLikeRepository.delete(productLike);
         return ProductConverter.toProductLikeDTO(productLike);
@@ -177,7 +176,7 @@ public class ProductService {
         List<CategoryMapping> mappings = categoryMappingRepository.findByCategoryId(category_id);
 
         if (mappings.isEmpty()) {
-            throw new ProductException(ErrorStatus.PRODUCT_NOT_FOUND); // 예외 처리 추가
+            throw new ProductException(ErrorStatus.PRODUCT_NOT_FOUND);
         }
         return mappings.stream()
                 .map(mapping -> {
@@ -190,12 +189,12 @@ public class ProductService {
     }
 
     public List<ProductResponse.ProductListDto> searchProducts(String keyword) {
-        // 1. 검색어가 null 또는 빈 문자열일 경우 예외 처리
+        // 검색어가 null 또는 빈 문자열일 경우 예외 처리
         if (keyword == null || keyword.trim().isEmpty()) {
             throw new ProductException(ErrorStatus.INVALID_SEARCH_KEYWORD);
         }
 
-        // 2. 검색 실행
+        // 검색 실행
         List<Product> filteredProducts = productRepository.findAll().stream()
                 .filter(product ->
                         (product.getProductNameKr() != null && product.getProductNameKr().contains(keyword)) ||  // (1) 키워드가 상품명에 포함됨
@@ -206,7 +205,7 @@ public class ProductService {
                 .toList();
 
 
-        // 3. 검색 결과 없을 경우 예외 처리
+        // 검색 결과 없을 경우 예외 처리
         if (filteredProducts.isEmpty()) {
             throw new ProductException(ErrorStatus.PRODUCT_NOT_FOUND);
         }

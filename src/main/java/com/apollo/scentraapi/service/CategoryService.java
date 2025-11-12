@@ -16,10 +16,12 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
+
     private final CategoryRepository categoryRepository;
 
     public CategoryResponse.CategoryDto createCategory(CategoryRequest.CategoryNameDto category) {
-        Category new_category = CategoryConverter.toCategory(category.getCategoryNameKr(), category.getCategoryNameEn(), category.getCategoryType());
+        Category new_category = CategoryConverter.toCategory(
+                category.getCategoryNameKr(), category.getCategoryNameEn(), category.getCategoryType());
         categoryRepository.save(new_category);
         return CategoryConverter.toCategoryResponse(new_category);
     }

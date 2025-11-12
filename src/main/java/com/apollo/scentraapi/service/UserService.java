@@ -38,11 +38,11 @@ public class UserService {
 
     @Transactional
     public UserResponse.UserSignUpResultDTO createUser(UserRequest.UserSignUpDTO request) {
+        Optional<User> findUser = userRepository.findByEmail(request.getEmail());
 
-        Optional<User> findUser = userRepository.findByEmail(request.getEmail()); // 이메일로 유저가 존재하는지 검사
-
-        if (findUser.isPresent())
+        if (findUser.isPresent()) {
             throw new UserException(ErrorStatus.USER_ALREADY_EXIST);
+        }
 
         User newUser = UserConverter.toUser(request);
         User savedUser = userRepository.save(newUser);
@@ -54,11 +54,11 @@ public class UserService {
 
     @Transactional
     public UserResponse.SellerSignUpResultDTO createSeller(MultipartFile brandImage, UserRequest.SellerSignUpDTO request) {
+        Optional<User> findUser = userRepository.findByEmail(request.getEmail());
 
-        Optional<User> findUser = userRepository.findByEmail(request.getEmail()); // 이메일로 유저가 존재하는지 검사
-
-        if (findUser.isPresent())
+        if (findUser.isPresent()) {
             throw new UserException(ErrorStatus.USER_ALREADY_EXIST);
+        }
 
         User newUser = UserConverter.toUser(request);
         User savedUser = userRepository.save(newUser);
@@ -77,8 +77,7 @@ public class UserService {
     }
 
     public UserResponse.LoginResultDTO login(String email) {
-
-        User findUser = userRepository.findByEmail(email) // 이메일로 유저가 존재하는지 검사
+        User findUser = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
 
         Seller findSeller = sellerRepository.findByUser(findUser).orElse(null);
@@ -93,13 +92,12 @@ public class UserService {
     }
 
     public User updateUser(User user, UserRequest.UserUpdateDTO request) {
-
-        // 이메일 중복 검사
         if (request.getEmail() != null) {
             Optional<User> findUser = userRepository.findByEmail(request.getEmail());
 
-            if (findUser.isPresent())
+            if (findUser.isPresent()) {
                 throw new UserException(ErrorStatus.USER_ALREADY_EXIST);
+            }
         }
 
         user.update(request.getName(), request.getPassword(), request.getEmail(), request.getPhoneNum(), request.getGender());
@@ -110,7 +108,6 @@ public class UserService {
     }
 
     public void deleteUser(User user) {
-
         userRepository.delete(user);
     }
 

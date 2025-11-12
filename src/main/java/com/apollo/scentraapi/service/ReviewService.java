@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-
 @Service
 @RequiredArgsConstructor
 public class ReviewService {
@@ -28,7 +27,6 @@ public class ReviewService {
 
     @Transactional
     public Review createReview(User user, Long productId, ReviewRequest.ReviewCreateDTO request) {
-
         User findUser = userRepository.findById(user.getId())
                 .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
         Product findProduct = productRepository.findById(productId)
@@ -42,11 +40,12 @@ public class ReviewService {
 
     @Transactional
     public Review updateReview(User user, Long reviewId, ReviewRequest.ReviewUpdateDTO request) {
-
         Review findReview = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new ProductException(ErrorStatus.REVIEW_NOT_FOUND));
-        if (!findReview.getUser().getId().equals(user.getId()))
+
+        if (!findReview.getUser().getId().equals(user.getId())) {
             throw new ProductException(ErrorStatus.REVIEW_OWNER_MISMATCH);
+        }
 
         findReview.update(request.getContent(), request.getRating(), request.getImageUrl());
 
@@ -55,20 +54,20 @@ public class ReviewService {
 
     @Transactional
     public void deleteReview(User user, Long reviewId) {
-
         Review findReview = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new ProductException(ErrorStatus.REVIEW_NOT_FOUND));
         User findUser = userRepository.findById(user.getId())
                 .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
-        if (!findReview.getUser().getId().equals(user.getId()))
+
+        if (!findReview.getUser().getId().equals(user.getId())) {
             throw new ProductException(ErrorStatus.REVIEW_OWNER_MISMATCH);
+        }
 
         findUser.getReviewList().remove(findReview);
         reviewRepository.delete(findReview);
     }
 
     public List<Review> getReviewList(Long productId) {
-
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ProductException(ErrorStatus.PRODUCT_NOT_FOUND));
 

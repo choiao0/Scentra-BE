@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -27,15 +26,15 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class CartService {
+
     private final CartRepository cartRepository;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
 
-    // 장바구니 목록 조회 (상품 정보 포함)
     public List<CartResponse.CartItemDto> getCartItems(UUID userId) {
         List<Cart> cartItems = cartRepository.findByUserId(userId);
         if (cartItems.isEmpty()) {
-            throw new CartException(ErrorStatus.CART_NOT_FOUND);  // ✅ 장바구니 비었을 때 예외 발생
+            throw new CartException(ErrorStatus.CART_NOT_FOUND);
         }
 
         return cartItems.stream()
@@ -43,7 +42,7 @@ public class CartService {
                     Optional<Product> optionalProduct = productRepository.findById(cart.getProduct().getId());
 
                     if (optionalProduct.isEmpty()) {
-                        throw new ProductException(ErrorStatus.PRODUCT_NOT_FOUND); // ✅ 상품 없을 경우 예외 발생
+                        throw new ProductException(ErrorStatus.PRODUCT_NOT_FOUND);
                     }
 
                     return CartConverter.toCartItemDto(cart);
@@ -59,28 +58,24 @@ public class CartService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
 
-        // 장바구니에서 해당 유저의 같은 상품 조회
         Cart cartItem = cartRepository.findByUserIdAndProductId(userId, product.getId())
                 .orElseGet(() -> CartConverter.toCart(user, product));
 
-        // 기존 상품이면 수량 업데이트, 없으면 새 상품 추가
         cartItem.setQuantity(cartItem.getQuantity() + request.getQuantity());
         Cart savedCart = cartRepository.save(cartItem);
 
-        return CartConverter.toCartUpdateDto(savedCart);  // 컨버터에서 변환
+        return CartConverter.toCartUpdateDto(savedCart);
     }
 
-    // ✅ 장바구니에서 상품 수량 `1` 감소
     @Transactional
     public void decreaseCartItem(UUID userId, CartRequest.CartUpdateDTO request) {
         Cart cartItem = cartRepository.findByUserIdAndProductId(userId, request.getProductId())
                 .orElseThrow(() -> new CartException(ErrorStatus.CART_ITEM_NOT_FOUND));
 
-        // ✅ **수량이 0이면 삭제, 음수면 예외 발생**
         int updatedQuantity = cartItem.getQuantity() - request.getQuantity();
         if (updatedQuantity < 0) {
             throw new CartException(ErrorStatus.INVALID_QUANTITY);
-        } if (updatedQuantity <= 0) {
+        } else if (updatedQuantity == 0) {
             cartRepository.delete(cartItem);
         } else {
             cartItem.updateQuantity(updatedQuantity);
@@ -88,12 +83,11 @@ public class CartService {
         }
     }
 
-    // ✅ 장바구니에서 특정 상품 전체 삭제
     @Transactional
     public void removeCartItem(UUID userId, CartRequest.CartDeleteDTO request) {
         Cart cartItem = cartRepository.findByUserIdAndProductId(userId, request.getProductId())
                 .orElseThrow(() -> new CartException(ErrorStatus.CART_ITEM_NOT_FOUND));
 
-        cartRepository.deleteByUserIdAndProductId(userId, request.getProductId()); // ✅ 레포지토리 활용
+        cartRepository.deleteByUserIdAndProductId(userId, request.getProductId());
     }
 }
