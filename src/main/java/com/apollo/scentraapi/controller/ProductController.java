@@ -1,8 +1,6 @@
 package com.apollo.scentraapi.controller;
 
 import com.apollo.scentraapi.apiPayload.ApiResponse;
-import com.apollo.scentraapi.apiPayload.code.status.ErrorStatus;
-import com.apollo.scentraapi.apiPayload.exception.handler.ProductException;
 import com.apollo.scentraapi.converter.ProductConverter;
 import com.apollo.scentraapi.domain.Product;
 import com.apollo.scentraapi.domain.User;
@@ -114,9 +112,6 @@ public class ProductController {
     @Operation(summary = "상품 좋아요 여부 확인")
     public ApiResponse<ProductResponse.ProductLikeDTO> isLike(@AuthenticationPrincipal User user,
                                                               @PathVariable("product-id") Long id) {
-        if (user == null) {
-            throw new ProductException(ErrorStatus.PRODUCT_NOT_LIKED);
-        }
         ProductResponse.ProductLikeDTO response = productService.isLike(user, id);
         return ApiResponse.onSuccess(response);
     }
