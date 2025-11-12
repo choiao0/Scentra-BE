@@ -29,9 +29,4 @@ public class ApiResponse<T> {
     public static <T> ApiResponse<T> onFailure(String code, String message, T data){
         return new ApiResponse<>(false, code, message, data);
     }
-
-    // ✅ 에러 응답 (result를 null로 설정)
-    public static <T> ApiResponse<T> error(String code, String message) {
-        return new ApiResponse<>(false, code, message, null);
-    }
 }
