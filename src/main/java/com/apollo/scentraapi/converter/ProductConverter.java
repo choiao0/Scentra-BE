@@ -7,9 +7,7 @@ import com.apollo.scentraapi.domain.enums.Gender;
 import com.apollo.scentraapi.dto.request.ProductRequest;
 import com.apollo.scentraapi.dto.response.ProductResponse;
 
-
 public class ProductConverter {
-
     public static ProductResponse.ProductListDto toProductListDto(Product product, String brandNameKr, String brandNameEn) {
         return ProductResponse.ProductListDto.builder()
                 .productId(product.getId())
@@ -22,6 +20,7 @@ public class ProductConverter {
                 .targetGender(String.valueOf(product.getTargetGender()))
                 .build();
     }
+
     public static Product toProduct(String productImage, String detailImage, ProductRequest.ProductUploadDto productUploadDto) {
         return Product.builder()
                 .productNameKr(productUploadDto.getProductNameKr())
@@ -32,6 +31,7 @@ public class ProductConverter {
                 .targetGender(Gender.valueOf(productUploadDto.getTargetGender()))
                 .build();
     }
+
     public static ProductResponse.ProductDto toProductResponse(Product product) {
         return ProductResponse.ProductDto.builder()
                 .productId(product.getId())

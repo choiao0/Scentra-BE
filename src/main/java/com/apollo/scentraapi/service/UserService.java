@@ -102,7 +102,7 @@ public class UserService {
                 throw new UserException(ErrorStatus.USER_ALREADY_EXIST);
         }
 
-        user.update(request.getName(), request.getPassword(), request.getEmail(), request.getGender());
+        user.update(request.getName(), request.getPassword(), request.getEmail(), request.getPhoneNum(), request.getGender());
 
         // TODO: 이메일 변경시 자동 로그아웃 구현
 

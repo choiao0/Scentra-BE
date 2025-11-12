@@ -12,17 +12,17 @@ public class CartResponse {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class CartItemDto {
-        private Long cartItemId;  // cart_id (bigint)
+        private Long cartItemId;
         private UUID userId;
-        private Long productId;   // 상품 ID
-        private int quantity;     // 담긴 개수
+        private Long productId;
+        private int quantity;
         private Double price;
         private String productNameKr;
         private String productNameEn;
         private String brandNameKr;
         private String brandNameEn;
         private String productImage;
-        private LocalDateTime addedDate; // 상품이 추가된 날짜
+        private LocalDateTime addedDate;
     }
 
     @Builder
@@ -30,11 +30,11 @@ public class CartResponse {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class CartUpdateDto {
-        private Long cartItemId;  // cart_id (bigint)
+        private Long cartItemId;
         private UUID userId;
-        private Long productId;   // 상품 ID
-        private int quantity;     // 담긴 개수
-        private LocalDateTime addedDate; // 상품이 추가된 날짜
+        private Long productId;
+        private int quantity;
+        private LocalDateTime addedDate;
     }
 
     @Builder

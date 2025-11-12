@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 @RequestMapping("api/categories")
 @RequiredArgsConstructor
 public class CategoryController {
+
     private final CategoryService categoryService;
 
     @PostMapping

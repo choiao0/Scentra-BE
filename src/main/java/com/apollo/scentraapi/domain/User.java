@@ -62,12 +62,22 @@ public class User extends BaseEntity implements UserDetails {
         return null;
     }
 
-    public void update(String name, String password, String email, String gender) {
-        if (name != null) this.name = name;
-        if (password != null) this.password = password;
-        if (email != null) this.email = email;
-        if (phoneNum != null) this.phoneNum = phoneNum;
-        if (gender != null) this.gender = Gender.valueOf(gender);
+    public void update(String name, String password, String email, String phoneNum, String gender) {
+        if (name != null) {
+            this.name = name;
+        }
+        if (password != null) {
+            this.password = password;
+        }
+        if (email != null) {
+            this.email = email;
+        }
+        if (phoneNum != null) {
+            this.phoneNum = phoneNum;
+        }
+        if (gender != null) {
+            this.gender = Gender.valueOf(gender);
+        }
     }
 
 }

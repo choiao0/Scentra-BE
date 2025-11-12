@@ -45,15 +45,26 @@ public class Product extends BaseEntity {
         this.brand = brand;
     }
 
-    // 상품 정보 업데이트 메서드
     public void update(String productNameKr, String productNameEn, String productImage,
                        String detailImage, Double price, String targetGender) {
-        if (productNameKr != null) this.productNameKr = productNameKr;
-        if (productNameEn != null) this.productNameEn = productNameEn;
-        if (productImage != null) this.productImage = productImage;
-        if (detailImage != null) this.detailImage = detailImage;
-        if (price != null) this.price = price;
-        if (targetGender != null) this.targetGender = Gender.valueOf(targetGender);
+        if (productNameKr != null) {
+            this.productNameKr = productNameKr;
+        }
+        if (productNameEn != null) {
+            this.productNameEn = productNameEn;
+        }
+        if (productImage != null) {
+            this.productImage = productImage;
+        }
+        if (detailImage != null) {
+            this.detailImage = detailImage;
+        }
+        if (price != null) {
+            this.price = price;
+        }
+        if (targetGender != null) {
+            this.targetGender = Gender.valueOf(targetGender);
+        }
     }
 
 }

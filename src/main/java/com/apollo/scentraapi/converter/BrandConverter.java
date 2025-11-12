@@ -6,7 +6,6 @@ import com.apollo.scentraapi.domain.BrandLikes;
 import com.apollo.scentraapi.domain.User;
 import com.apollo.scentraapi.dto.response.BrandResponse;
 
-
 public class BrandConverter {
     public static Brand toBrand(String brandImage, UserRequest.SellerSignUpDTO request) {
         return Brand.builder()

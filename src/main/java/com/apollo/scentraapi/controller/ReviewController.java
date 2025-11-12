@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 @RestController
 @RequestMapping("api/reviews")
 @RequiredArgsConstructor
@@ -28,9 +27,7 @@ public class ReviewController {
     public ApiResponse<ReviewResponse.ReviewResultDTO> createReview(@AuthenticationPrincipal User user,
                                                                     @RequestParam Long productId,
                                                                     @Valid @RequestBody ReviewRequest.ReviewCreateDTO request) {
-
         Review createdReview = reviewService.createReview(user, productId, request);
-
         return ApiResponse.onSuccess(ReviewConverter.toReviewResultDTO(createdReview));
     }
 
@@ -39,9 +36,7 @@ public class ReviewController {
     public ApiResponse<ReviewResponse.ReviewResultDTO> updateReview(@AuthenticationPrincipal User user,
                                                                     @PathVariable("review-id") Long reviewId,
                                                                     @RequestBody ReviewRequest.ReviewUpdateDTO request) {
-
         Review updatedReview = reviewService.updateReview(user, reviewId, request);
-
         return ApiResponse.onSuccess(ReviewConverter.toReviewResultDTO(updatedReview));
     }
 
@@ -49,18 +44,14 @@ public class ReviewController {
     @Operation(summary = "리뷰 삭제")
     public ApiResponse<ReviewResponse.ReviewDeleteResultDTO> deleteReview(@AuthenticationPrincipal User user,
                                                                           @PathVariable("review-id") Long reviewId) {
-
         reviewService.deleteReview(user, reviewId);
-
         return ApiResponse.onSuccess(ReviewConverter.toReviewDeleteResultDTO(reviewId));
     }
 
     @GetMapping("/{product-id}")
     @Operation(summary = "상품에 대한 리뷰 목록 조회")
     public ApiResponse<ReviewResponse.ReviewListDTO> getReviewList(@PathVariable("product-id") Long productId) {
-
         List<Review> reviewList = reviewService.getReviewList(productId);
-
         return ApiResponse.onSuccess(ReviewConverter.toReviewListDTO(reviewList));
     }
 }
