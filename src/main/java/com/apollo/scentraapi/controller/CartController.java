@@ -8,18 +8,17 @@ import com.apollo.scentraapi.service.CartService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
-
 @RestController
 @RequestMapping("api/cart")
 @RequiredArgsConstructor
 public class CartController {
+
     private final CartService cartService;
 
     @GetMapping
@@ -38,7 +37,6 @@ public class CartController {
         return ApiResponse.onSuccess(response);
     }
 
-    // ✅ 장바구니 상품 수량 `1` 감소
     @PatchMapping("/decrease")
     @Operation(summary = "장바구니 상품 수량 감소", description = "상품 수량을 1 감소, 0이면 자동 삭제됨")
     public ApiResponse<Void> decreaseCartItem(@AuthenticationPrincipal User user,
@@ -48,7 +46,6 @@ public class CartController {
         return ApiResponse.onSuccess(null);
     }
 
-    // ✅ 장바구니에서 특정 상품 삭제
     @DeleteMapping
     @Operation(summary = "장바구니 상품 삭제", description = "로그인된 사용자의 장바구니에서 특정 상품을 완전히 삭제합니다.")
     public ApiResponse<Void> removeCartItem(@AuthenticationPrincipal User user,

@@ -10,7 +10,6 @@ import com.apollo.scentraapi.dto.response.UserResponse;
 import java.util.ArrayList;
 
 public class UserConverter {
-
     public static User toUser(UserRequest.UserSignUpDTO request) {
         return User.builder()
                 .name(request.getName())
@@ -36,6 +35,7 @@ public class UserConverter {
                 .cartList(new ArrayList<>())
                 .build();
     }
+
     public static Seller toSeller(User user, Brand brand) {
         return Seller.builder()
                 .user(user)

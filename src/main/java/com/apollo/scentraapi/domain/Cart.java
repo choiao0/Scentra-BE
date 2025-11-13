@@ -1,8 +1,7 @@
 package com.apollo.scentraapi.domain;
 
 import com.apollo.scentraapi.apiPayload.code.status.ErrorStatus;
-import com.apollo.scentraapi.apiPayload.exception.handler.CartHandler;
-import com.apollo.scentraapi.apiPayload.exception.handler.ProductHandler;
+import com.apollo.scentraapi.apiPayload.exception.handler.CartException;
 import com.apollo.scentraapi.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -30,8 +29,8 @@ public class Cart extends BaseEntity {
     private Product product;
 
     public void updateQuantity(int newQuantity) {
-        if(newQuantity < 0) {
-            throw new CartHandler(ErrorStatus.INVALID_QUANTITY);
+        if (newQuantity < 0) {
+            throw new CartException(ErrorStatus.INVALID_QUANTITY);
         }
         this.quantity = newQuantity;
     }

@@ -1,7 +1,7 @@
 package com.apollo.scentraapi.service;
 
 import com.apollo.scentraapi.apiPayload.code.status.ErrorStatus;
-import com.apollo.scentraapi.apiPayload.exception.handler.S3Handler;
+import com.apollo.scentraapi.apiPayload.exception.handler.S3Exception;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,7 +46,7 @@ public class S3Service {
                     .build();
             s3Client.putObject(putObjectRequest, RequestBody.fromBytes(file.getBytes()));
         } catch (IOException e) {
-            throw new S3Handler(ErrorStatus.FILE_NOT_UPLOADED);
+            throw new S3Exception(ErrorStatus.FILE_NOT_UPLOADED);
         }
 
         // 업로드된 파일의 URL 반환
@@ -61,7 +61,7 @@ public class S3Service {
 
     private void validateFile(MultipartFile file) {
         if (file == null || file.isEmpty()) {
-            throw new S3Handler(ErrorStatus.FILE_IS_EMPTY);
+            throw new S3Exception(ErrorStatus.FILE_IS_EMPTY);
         }
 //        String contentType = file.getContentType();
 //        if (contentType == null || !contentType.startsWith("image/")) {
@@ -71,8 +71,7 @@ public class S3Service {
 
     private String generateUniqueFileName(String originalFilename) {
 //        String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
-        String uniqueId = UUID.randomUUID().toString().replace("-", "");
-        return uniqueId;
+        return UUID.randomUUID().toString().replace("-", "");
     }
 
     public void deleteImage(String imageAddress) {
@@ -84,7 +83,7 @@ public class S3Service {
                     .build();
             s3Client.deleteObject(deleteObjectRequest);
         } catch (Exception e) {
-            throw new S3Handler(ErrorStatus.IO_EXCEPTION_ON_IMAGE_DELETE);
+            throw new S3Exception(ErrorStatus.IO_EXCEPTION_ON_IMAGE_DELETE);
         }
     }
 
@@ -94,7 +93,7 @@ public class S3Service {
             String decodingKey = URLDecoder.decode(url.getPath(), "UTF-8");
             return decodingKey.substring(1);
         } catch (MalformedURLException | UnsupportedEncodingException e) {
-            throw new S3Handler(ErrorStatus.IO_EXCEPTION_ON_IMAGE_DELETE);
+            throw new S3Exception(ErrorStatus.IO_EXCEPTION_ON_IMAGE_DELETE);
         }
     }
 }

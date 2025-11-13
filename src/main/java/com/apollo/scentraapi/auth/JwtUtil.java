@@ -20,7 +20,6 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
-
 @Slf4j
 @Component
 public class JwtUtil {
@@ -33,7 +32,9 @@ public class JwtUtil {
         this.userDetailService = userDetailService;
     }
 
-    // 토큰 생성
+    /**
+     * Access Token을 생성한다.
+     */
     public String createAccessToken(String userEmail) {
         return Jwts.builder()
                 .claim("userEmail", userEmail)
@@ -42,7 +43,9 @@ public class JwtUtil {
                 .compact();
     }
 
-    // 헤더에서 토큰 추출
+    /**
+     * 요청 헤더에서 토큰을 추출한다.
+     */
     public String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
@@ -51,7 +54,9 @@ public class JwtUtil {
         return null;
     }
 
-    // 토큰 유효성 검증
+    /**
+     * 토큰의 유효성을 검증한다.
+     */
     public boolean validateToken(String token) {
         try {
             Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token);

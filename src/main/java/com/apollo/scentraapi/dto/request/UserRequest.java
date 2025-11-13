@@ -9,7 +9,6 @@ public class UserRequest {
 
     @Getter
     public static class UserSignUpDTO {
-
         String name;
         String password;
         @NotNull
@@ -21,7 +20,6 @@ public class UserRequest {
 
     @Getter
     public static class SellerSignUpDTO {
-
         String name;
         String password;
         @NotNull
@@ -35,7 +33,6 @@ public class UserRequest {
 
     @Getter
     public static class UserUpdateDTO {
-
         String name;
         String password;
         String email;

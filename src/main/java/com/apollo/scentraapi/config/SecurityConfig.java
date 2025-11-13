@@ -65,12 +65,13 @@ public class SecurityConfig {
                         .accessDeniedHandler(jwtAccessDeniedHandler))
 
                 .authorizeHttpRequests((auth) -> auth
+                        .requestMatchers(HttpMethod.GET, "/api/brands/sellers").denyAll()
                         .requestMatchers("/api/users/sign-up", "/api/users/sign-up/sellers").permitAll()
                         .requestMatchers("/api/users/login").permitAll()
                         .requestMatchers(HttpMethod.GET,
                                 "/api/products", "/api/products/*", "/api/products/category/*",
-                                "/api/brands", "/api/brands/*", "/api/reviews/*", "/api/categories", "/api/categories/*",
-                                "/api/products/likes/*", "/api/brands/likes/*").permitAll()
+                                "/api/brands", "/api/brands/*", "/api/reviews/*",
+                                "/api/categories", "/api/categories/*").permitAll()
                         .requestMatchers("/api/products/test/*").permitAll()
                         .requestMatchers(AUTH_WHITELIST).permitAll()
                         .anyRequest().authenticated())

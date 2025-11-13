@@ -1,8 +1,6 @@
 package com.apollo.scentraapi.controller;
 
 import com.apollo.scentraapi.apiPayload.ApiResponse;
-import com.apollo.scentraapi.apiPayload.code.status.ErrorStatus;
-import com.apollo.scentraapi.apiPayload.exception.handler.ProductHandler;
 import com.apollo.scentraapi.converter.ProductConverter;
 import com.apollo.scentraapi.domain.Product;
 import com.apollo.scentraapi.domain.User;
@@ -54,8 +52,8 @@ public class ProductController {
 
     @PutMapping("/{id}")
     @Operation(summary="상품 정보 수정")
-    public ApiResponse<ProductResponse.ProductUpdateResponseDTO> updateProduct(@PathVariable Long id, @RequestBody ProductRequest.ProductUpdateRequestDTO request) {
-
+    public ApiResponse<ProductResponse.ProductUpdateResponseDTO> updateProduct(@PathVariable Long id,
+                                                                               @RequestBody ProductRequest.ProductUpdateRequestDTO request) {
         ProductResponse.ProductUpdateResponseDTO response = productService.updateProduct(id, request);
         return ApiResponse.onSuccess(response);
     }
@@ -82,14 +80,16 @@ public class ProductController {
 
     @PostMapping("/likes/{product-id}")
     @Operation(summary="상품 좋아요 추가")
-    public ApiResponse<ProductResponse.ProductLikeDTO> addLike(@AuthenticationPrincipal User user, @PathVariable("product-id")Long id) {
+    public ApiResponse<ProductResponse.ProductLikeDTO> addLike(@AuthenticationPrincipal User user,
+                                                               @PathVariable("product-id")Long id) {
         ProductResponse.ProductLikeDTO response = productService.addLike(user, id);
         return ApiResponse.onSuccess(response);
     }
 
     @DeleteMapping("/likes/{product-id}")
     @Operation(summary="상품 좋아요 삭제")
-    public ApiResponse<ProductResponse.ProductLikeDTO> removeLike(@AuthenticationPrincipal User user, @PathVariable("product-id") Long id) {
+    public ApiResponse<ProductResponse.ProductLikeDTO> removeLike(@AuthenticationPrincipal User user,
+                                                                  @PathVariable("product-id") Long id) {
         ProductResponse.ProductLikeDTO response = productService.removeLike(user, id);
         return ApiResponse.onSuccess(response);
     }
@@ -110,8 +110,8 @@ public class ProductController {
 
     @GetMapping("/likes/{product-id}")
     @Operation(summary = "상품 좋아요 여부 확인")
-    public ApiResponse<ProductResponse.ProductLikeDTO> isLike(@AuthenticationPrincipal User user, @PathVariable("product-id") Long id) {
-        if (user == null) throw new ProductHandler(ErrorStatus.PRODUCT_NOT_LIKED);
+    public ApiResponse<ProductResponse.ProductLikeDTO> isLike(@AuthenticationPrincipal User user,
+                                                              @PathVariable("product-id") Long id) {
         ProductResponse.ProductLikeDTO response = productService.isLike(user, id);
         return ApiResponse.onSuccess(response);
     }

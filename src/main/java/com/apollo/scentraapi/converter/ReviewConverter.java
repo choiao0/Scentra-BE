@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ReviewConverter {
-
     public static Review toReview(Product product, ReviewRequest.ReviewCreateDTO request) {
         return Review.builder()
                 .content(request.getContent())

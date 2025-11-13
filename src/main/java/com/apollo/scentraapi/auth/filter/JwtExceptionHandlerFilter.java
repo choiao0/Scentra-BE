@@ -20,7 +20,6 @@ public class JwtExceptionHandlerFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-
         try {
             filterChain.doFilter(request, response);
         } catch (JwtExceptionHandler | UsernameNotFoundException ex) {
