@@ -65,3 +65,4 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
         format_sql: false
+        globally_quoted_identifiers: true
