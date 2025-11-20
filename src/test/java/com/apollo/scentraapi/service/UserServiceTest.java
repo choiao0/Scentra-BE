@@ -2,14 +2,21 @@ package com.apollo.scentraapi.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.groups.Tuple.tuple;
 
+import com.apollo.scentraapi.apiPayload.exception.handler.BrandException;
+import com.apollo.scentraapi.apiPayload.exception.handler.ProductException;
 import com.apollo.scentraapi.apiPayload.exception.handler.UserException;
 import com.apollo.scentraapi.domain.Brand;
+import com.apollo.scentraapi.domain.BrandLikes;
 import com.apollo.scentraapi.domain.Product;
+import com.apollo.scentraapi.domain.ProductLikes;
 import com.apollo.scentraapi.domain.Seller;
 import com.apollo.scentraapi.domain.User;
 import com.apollo.scentraapi.domain.enums.Gender;
 import com.apollo.scentraapi.dto.request.UserRequest;
+import com.apollo.scentraapi.dto.response.BrandResponse;
+import com.apollo.scentraapi.dto.response.ProductResponse;
 import com.apollo.scentraapi.dto.response.UserResponse;
 import com.apollo.scentraapi.repository.BrandLikesRepository;
 import com.apollo.scentraapi.repository.BrandRepository;
@@ -75,6 +82,14 @@ class UserServiceTest {
         Seller sellerA = createSeller(sellerUserA, brandA);
         Seller sellerB = createSeller(sellerUserB, brandB);
         sellerRepository.saveAll(List.of(sellerA, sellerB));
+
+        BrandLikes brandLikesA = createBrandLikes(user, brandA);
+        BrandLikes brandLikesB = createBrandLikes(user, brandB);
+        brandLikesRepository.saveAll(List.of(brandLikesA, brandLikesB));
+
+        ProductLikes productLikesA1 = createProductLikes(user, productA1);
+        ProductLikes productLikesB1 = createProductLikes(user, productB1);
+        productLikesRepository.saveAll(List.of(productLikesA1, productLikesB1));
     }
 
     @DisplayName("새로운 유저가 회원가입하면 유저가 저장되고 토큰이 생성된다.")
@@ -249,31 +264,63 @@ class UserServiceTest {
     @DisplayName("유저가 좋아요한 상품 목록을 브랜드 정보와 함께 반환한다.")
     @Test
     void should_ReturnLikedProductsWithBrandInfo_When_UserHasLikedProducts() {
+        // given
+        User user = userRepository.findByEmail("user@example.com")
+                .orElseThrow(() -> new AssertionError("유저가 DB에 존재해야 합니다."));
 
+        // when
+        List<ProductResponse.ProductListDto> response = userService.getLikesProducts(user);
+
+        // then
+        assertThat(response).hasSize(2);
+        assertThat(response).extracting("productId", "productNameEn", "brandNameEn")
+                .containsExactlyInAnyOrder(
+                        tuple(1L, "productA1", "brandA"),
+                        tuple(3L, "productB1", "brandB")
+                );
     }
 
     @DisplayName("유저가 좋아요한 상품이 없으면 예외가 발생한다.")
     @Test
     void should_ThrowException_When_UserHasNoLikedProducts() {
+        // given
+        User user = userRepository.findByEmail("sellerA@example.com")
+                .orElseThrow(() -> new AssertionError("유저가 DB에 존재해야 합니다."));
 
-    }
-
-    @DisplayName("유저가 좋아요한 상품에 브랜드 정보가 없으면 예외가 발생한다.")
-    @Test
-    void should_ThrowException_When_LikedProductHasNoBrand() {
-
+        // when, then
+        assertThatThrownBy(() -> userService.getLikesProducts(user))
+                .isInstanceOf(ProductException.class);
     }
 
     @DisplayName("유저가 좋아요한 브랜드 목록을 반환한다.")
     @Test
     void should_ReturnLikedBrands_When_UserHasLikedBrands() {
+        // given
+        User user = userRepository.findByEmail("user@example.com")
+                .orElseThrow(() -> new AssertionError("유저가 DB에 존재해야 합니다."));
 
+        // when
+        List<BrandResponse.BrandListDto> response = userService.getLikesBrand(user);
+
+        // then
+        assertThat(response).hasSize(2);
+        assertThat(response).extracting("id", "brandNameEn")
+                .containsExactlyInAnyOrder(
+                        tuple(1L, "brandA"),
+                        tuple(2L, "brandB")
+                );
     }
 
     @DisplayName("유저가 좋아요한 브랜드가 없으면 예외가 발생한다.")
     @Test
     void should_ThrowException_When_UserHasNoLikedBrands() {
+        // given
+        User user = userRepository.findByEmail("sellerA@example.com")
+                .orElseThrow(() -> new AssertionError("유저가 DB에 존재해야 합니다."));
 
+        // when, then
+        assertThatThrownBy(() -> userService.getLikesBrand(user))
+                .isInstanceOf(BrandException.class);
     }
 
     private User createUser(String name, String email, Gender gender, String phoneNum){
@@ -303,6 +350,20 @@ class UserServiceTest {
 
     private Seller createSeller(User user, Brand brand) {
         return Seller.builder()
+                .user(user)
+                .brand(brand)
+                .build();
+    }
+
+    private ProductLikes createProductLikes(User user, Product product) {
+        return ProductLikes.builder()
+                .user(user)
+                .product(product)
+                .build();
+    }
+
+    private BrandLikes createBrandLikes(User user, Brand brand) {
+        return BrandLikes.builder()
                 .user(user)
                 .brand(brand)
                 .build();

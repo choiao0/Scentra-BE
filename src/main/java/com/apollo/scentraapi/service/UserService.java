@@ -112,6 +112,7 @@ public class UserService {
         userRepository.delete(user);
     }
 
+    @Transactional(readOnly = true)
     public List<ProductResponse.ProductListDto> getLikesProducts(User user) {
         List<ProductLikes> likes = productLikesRepository.findAllByUser(user);
         List<ProductResponse.ProductListDto> productList = new ArrayList<>();
@@ -132,6 +133,7 @@ public class UserService {
         return productList;
     }
 
+    @Transactional(readOnly = true)
     public List<BrandResponse.BrandListDto> getLikesBrand(User user) {
         List<BrandLikes> likes = brandLikesRepository.findAllByUser(user);
         List<BrandResponse.BrandListDto> brandList = new ArrayList<>();
