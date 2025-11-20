@@ -76,6 +76,7 @@ public class UserService {
         return UserConverter.toSellerSignUpResult(savedSeller, accessToken);
     }
 
+    @Transactional(readOnly = true)
     public UserResponse.LoginResultDTO login(String email) {
         User findUser = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
