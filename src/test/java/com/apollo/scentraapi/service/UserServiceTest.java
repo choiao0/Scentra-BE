@@ -59,9 +59,6 @@ class UserServiceTest {
     @Autowired
     private BrandLikesRepository brandLikesRepository;
 
-    @MockBean
-    private S3Service s3Service;
-
     @BeforeAll
     void setUp() {
         User user = createUser("user", "user@example.com", Gender.MALE, "010-0000-0000");
