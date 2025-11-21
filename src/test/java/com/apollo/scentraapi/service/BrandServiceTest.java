@@ -202,7 +202,8 @@ class BrandServiceTest {
         brandLikesRepository.save(brandLikes);
 
         // when, then
-        assertThatThrownBy(() -> brandService.addLike(user, savedBrand.getId()))
+        Long brandId = savedBrand.getId();
+        assertThatThrownBy(() -> brandService.addLike(user, brandId))
                 .isInstanceOf(BrandException.class);
     }
 
@@ -235,7 +236,8 @@ class BrandServiceTest {
         Brand savedBrand = brandRepository.save(brand);
 
         // when, then
-        assertThatThrownBy(() -> brandService.removeLike(user, savedBrand.getId()))
+        Long brandId = savedBrand.getId();
+        assertThatThrownBy(() -> brandService.removeLike(user, brandId))
                 .isInstanceOf(BrandException.class);
     }
 
@@ -255,8 +257,9 @@ class BrandServiceTest {
         BrandResponse.BrandLikeDTO likedResponse = brandService.isLike(user, likedBrand.getId());
 
         // then
+        Long notLikedBrandId = notLikedBrand.getId();
         assertThat(likedResponse.getBrandId()).isEqualTo(likedBrand.getId());
-        assertThatThrownBy(() -> brandService.removeLike(user, notLikedBrand.getId()))
+        assertThatThrownBy(() -> brandService.removeLike(user, notLikedBrandId))
                 .isInstanceOf(BrandException.class);
     }
 
