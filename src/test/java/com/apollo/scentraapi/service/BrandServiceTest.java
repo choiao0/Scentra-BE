@@ -46,7 +46,7 @@ class BrandServiceTest {
     private UserRepository userRepository;
 
     @BeforeEach
-    void cleanDb() {
+    void cleanDatabase() {
         sellerRepository.deleteAll();
         userRepository.deleteAll();
         brandRepository.deleteAll();
