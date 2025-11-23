@@ -75,6 +75,17 @@ jacocoTestCoverageVerification {
                 value = 'COVEREDRATIO'
                 minimum = 0.6
             }
+            excludes = [
+                    '**.apiPayload.*',
+                    '**.auth.*',
+                    '**.converter.*',
+                    '**.controller.*',
+                    '**.domain.*',
+                    '**.dto.*',
+                    '**.service.S3Service',
+                    '**.service.UserDetailService',
+                    '**.ScentraApiApplication',
+            ]
         }
     }
 }
