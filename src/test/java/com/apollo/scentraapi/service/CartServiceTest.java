@@ -28,9 +28,11 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @ActiveProfiles("test")
+@Transactional
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CartServiceTest {
@@ -53,8 +55,6 @@ class CartServiceTest {
 
     @BeforeEach
     void setUp() {
-        cartRepository.deleteAll();
-
         testUser = createUser("user", "user@example.com", Gender.MALE, "010-0000-0000");
         userRepository.save(testUser);
 

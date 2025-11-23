@@ -15,6 +15,7 @@ import com.apollo.scentraapi.repository.BrandRepository;
 import com.apollo.scentraapi.repository.ProductRepository;
 import com.apollo.scentraapi.repository.ReviewRepository;
 import com.apollo.scentraapi.repository.UserRepository;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,9 +26,11 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @ActiveProfiles("test")
+@Transactional
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ReviewServiceTest {
@@ -48,11 +51,6 @@ class ReviewServiceTest {
 
     @BeforeEach
     void setUp() {
-        reviewRepository.deleteAll();
-        productRepository.deleteAll();
-        brandRepository.deleteAll();
-        userRepository.deleteAll();
-
         testUser = createUser("user", "user@example.com", Gender.MALE, "010-0000-0000");
         userRepository.save(testUser);
 
@@ -229,6 +227,7 @@ class ReviewServiceTest {
                 .email(email)
                 .gender(gender)
                 .phoneNum(phoneNum)
+                .reviewList(new ArrayList<>())
                 .build();
     }
 

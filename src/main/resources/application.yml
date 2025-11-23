@@ -23,14 +23,14 @@ spring:
       stack:
         auto: false
       s3:
-        bucket: ${S3_BUCKET_NAME}
+        bucket: ${S3_BUCKET_NAME:test-bucket}
       region:
-        static: ${S3_REGION}
+        static: ${S3_REGION:us-east-1}
       credentials:
-        accessKey: ${S3_ACCESS_KEY}
-        secretKey: ${S3_SECRET_KEY}
+        accessKey: ${S3_ACCESS_KEY:dummy-access-key}
+        secretKey: ${S3_SECRET_KEY:dummy-secret-key}
   cors:
-    allowed-origins: ${FRONTEND_HOST}
+    allowed-origins: ${FRONTEND_HOST:http://localhost:5173/}
   servlet:
     multipart:
       max-file-size: 10MB
@@ -57,6 +57,8 @@ spring:
     url: jdbc:h2:mem:testdb;MODE=MySQL
     username: sa
     password:
+  jwt:
+    secret: this-is-a-long-dummy-jwt-secret-for-testing-only
   jpa:
     show-sql: false
     hibernate:

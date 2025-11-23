@@ -27,9 +27,11 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @ActiveProfiles("test")
+@Transactional
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class BrandServiceTest {
@@ -44,14 +46,6 @@ class BrandServiceTest {
     private SellerRepository sellerRepository;
     @Autowired
     private UserRepository userRepository;
-
-    @BeforeEach
-    void cleanDatabase() {
-        sellerRepository.deleteAll();
-        userRepository.deleteAll();
-        brandRepository.deleteAll();
-        brandLikesRepository.deleteAll();
-    }
 
     @DisplayName("존재하는 ID로 브랜드 정보를 정상 조회한다.")
     @Test

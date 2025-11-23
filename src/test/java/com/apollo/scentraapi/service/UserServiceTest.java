@@ -3,6 +3,8 @@ package com.apollo.scentraapi.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.groups.Tuple.tuple;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 
 import com.apollo.scentraapi.apiPayload.exception.handler.BrandException;
 import com.apollo.scentraapi.apiPayload.exception.handler.ProductException;
@@ -33,12 +35,16 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @SpringBootTest
 @ActiveProfiles("test")
+@Transactional
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UserServiceTest {
@@ -57,6 +63,9 @@ class UserServiceTest {
     private BrandRepository brandRepository;
     @Autowired
     private BrandLikesRepository brandLikesRepository;
+
+    @MockBean
+    private S3Service s3Service;
 
     @BeforeAll
     void setUp() {
@@ -130,6 +139,9 @@ class UserServiceTest {
     @Test
     void should_CreateSellerAndGenerateToken_When_RequestIsValid() {
         // given
+        given(s3Service.uploadFile(any(MultipartFile.class)))
+                .willReturn("http://dummy-s3-url/logo.png");
+
         UserRequest.SellerSignUpDTO request = new UserRequest.SellerSignUpDTO();
         ReflectionTestUtils.setField(request, "name", "newSeller");
         ReflectionTestUtils.setField(request, "email", "newSeller@example.com");
