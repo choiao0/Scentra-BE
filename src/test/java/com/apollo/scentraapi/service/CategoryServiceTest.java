@@ -25,7 +25,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class CategoryServiceTest {
+class CategoryServiceTest {
 
     @Autowired
     private CategoryService categoryService;
