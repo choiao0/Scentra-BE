@@ -56,6 +56,7 @@ public class ProductService {
     @Transactional
     public Product uploadProduct(MultipartFile productImage, MultipartFile detailImage, ProductRequest.ProductUploadDto productUploadDto) {
         String productImageUrl = s3Service.uploadFile(productImage);
+
         String detailImageUrl = null;
         if (detailImage != null) {
             detailImageUrl = s3Service.uploadFile(detailImage);
@@ -115,6 +116,7 @@ public class ProductService {
 
     public ProductResponse.ProductLikeDTO addLike(User user, Long productId) {
         Product product = getProductOrThrow(productId);
+
         if (existProductLike(user, product)) {
             throw new ProductException(ErrorStatus.PRODUCT_ALREADY_LIKED);
         }
@@ -140,6 +142,7 @@ public class ProductService {
         if (mappings.isEmpty()) {
             throw new ProductException(ErrorStatus.PRODUCT_NOT_FOUND);
         }
+
         return mappings.stream()
                 .map(mapping -> {
                     Product product = mapping.getProduct();
@@ -157,12 +160,7 @@ public class ProductService {
 
         // 검색 실행
         List<Product> filteredProducts = productRepository.findAll().stream()
-                .filter(product ->
-                        (product.getProductNameKr() != null && product.getProductNameKr().contains(keyword)) ||  // (1) 키워드가 상품명에 포함됨
-                        (product.getProductNameEn() != null && product.getProductNameEn().toLowerCase().contains(keyword.toLowerCase())) ||
-                        (product.getBrand().getBrandNameKr() != null && product.getBrand().getBrandNameKr().contains(keyword)) ||  // (2) 키워드가 브랜드명에 포함됨
-                        (product.getBrand().getBrandNameEn() != null && product.getBrand().getBrandNameEn().toLowerCase().contains(keyword.toLowerCase())
-                        ))
+                .filter(product -> product.matchesKeyword(keyword))
                 .toList();
 
 
