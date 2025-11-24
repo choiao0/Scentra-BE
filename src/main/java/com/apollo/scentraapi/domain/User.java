@@ -24,9 +24,9 @@ public class User extends BaseEntity implements UserDetails {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(nullable = false)
     private String name;
     private String password;
+    @Column(nullable = false)
     private String email;
 
     @Enumerated(EnumType.STRING)
