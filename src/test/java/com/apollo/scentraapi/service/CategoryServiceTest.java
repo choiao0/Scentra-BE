@@ -60,27 +60,6 @@ class CategoryServiceTest {
         assertThat(categoryA.getCategoryType()).isEqualTo(CategoryType.NOTE);
     }
 
-    @DisplayName("이미 존재하는 카테고리를 추가하면 예외가 발생한다.")
-    @Test
-    void should_ThrowException_When_CategoryAlreadyExists () {
-        // given
-        String nameKr = "카테고리A";
-        String nameEn = "categoryA";
-        String type = "NOTE";
-
-        Category categoryA = createCategory(nameKr, nameEn, CategoryType.NOTE);
-        categoryRepository.save(categoryA);
-
-        CategoryRequest.CategoryNameDto request = new CategoryRequest.CategoryNameDto();
-        ReflectionTestUtils.setField(request, "categoryNameKr", nameKr);
-        ReflectionTestUtils.setField(request, "categoryNameEn", nameEn);
-        ReflectionTestUtils.setField(request, "categoryType", type);
-
-        // when, then
-//        assertThatThrownBy(() -> categoryService.createCategory(request))
-//                .isInstanceOf(ProductException.class);
-    }
-
     @DisplayName("모든 카테고리 정보를 조회한다.")
     @Test
     void should_GetAllCategories_When_RequestIsValid() {
