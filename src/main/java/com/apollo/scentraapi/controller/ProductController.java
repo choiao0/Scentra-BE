@@ -45,8 +45,7 @@ public class ProductController {
     public ApiResponse<ProductResponse.ProductDto> uploadProduct(@RequestPart MultipartFile productImage,
                                                                  @RequestPart(required = false) MultipartFile detailImage,
                                                                  @RequestPart("request") @Valid ProductRequest.ProductUploadDto request) {
-        Product new_product = productService.uploadProduct(productImage, detailImage, request);
-        ProductResponse.ProductDto response = ProductConverter.toProductResponse(new_product);
+        ProductResponse.ProductDto response = productService.uploadProduct(productImage, detailImage, request);
         return ApiResponse.onSuccess(response);
     }
 

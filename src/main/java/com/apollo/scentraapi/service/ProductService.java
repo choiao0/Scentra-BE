@@ -54,7 +54,7 @@ public class ProductService {
     }
 
     @Transactional
-    public Product uploadProduct(MultipartFile productImage, MultipartFile detailImage, ProductRequest.ProductUploadDto productUploadDto) {
+    public ProductResponse.ProductDto uploadProduct(MultipartFile productImage, MultipartFile detailImage, ProductRequest.ProductUploadDto productUploadDto) {
         String productImageUrl = s3Service.uploadFile(productImage);
 
         String detailImageUrl = null;
@@ -76,7 +76,7 @@ public class ProductService {
             categoryMappingRepository.save(mapping);
         }
 
-        return newProduct;
+        return ProductConverter.toProductResponse(newProduct);
     }
 
     @Transactional
