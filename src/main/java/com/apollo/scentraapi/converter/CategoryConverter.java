@@ -4,6 +4,7 @@ import com.apollo.scentraapi.domain.Category;
 import com.apollo.scentraapi.domain.CategoryMapping;
 import com.apollo.scentraapi.domain.Product;
 import com.apollo.scentraapi.domain.enums.CategoryType;
+import com.apollo.scentraapi.dto.request.CategoryRequest;
 import com.apollo.scentraapi.dto.response.CategoryResponse;
 
 public class CategoryConverter {
@@ -14,11 +15,11 @@ public class CategoryConverter {
                 .build();
     }
 
-    public static Category toCategory(String nameKr, String nameEn, String type) {
+    public static Category toCategory(CategoryRequest.CategoryNameDto categoryDto) {
         return Category.builder()
-                .categoryNameKr(nameKr)
-                .categoryNameEn(nameEn)
-                .categoryType(CategoryType.valueOf(type))
+                .categoryNameKr(categoryDto.getCategoryNameKr())
+                .categoryNameEn(categoryDto.getCategoryNameEn())
+                .categoryType(CategoryType.valueOf(categoryDto.getCategoryType()))
                 .build();
     }
 

@@ -10,7 +10,6 @@ import com.apollo.scentraapi.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,33 +18,33 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
 
-    public CategoryResponse.CategoryDto createCategory(CategoryRequest.CategoryNameDto category) {
-        Category newCategory = CategoryConverter.toCategory(
-                category.getCategoryNameKr(), category.getCategoryNameEn(), category.getCategoryType());
+    public CategoryResponse.CategoryDto createCategory(CategoryRequest.CategoryNameDto categoryDto) {
+        Category newCategory = CategoryConverter.toCategory(categoryDto);
         categoryRepository.save(newCategory);
         return CategoryConverter.toCategoryResponse(newCategory);
     }
 
     public List<CategoryResponse.CategoryDto> getAllCategories() {
         List<Category> categories = categoryRepository.findAll();
-        List<CategoryResponse.CategoryDto> categoryDtos = new ArrayList<>();
-        for (Category category : categories) {
-            CategoryResponse.CategoryDto categoryDto = CategoryConverter.toCategoryResponse(category);
-            categoryDtos.add(categoryDto);
-        }
-        return categoryDtos;
+
+        return categories.stream()
+                .map(CategoryConverter::toCategoryResponse)
+                .toList();
     }
 
     public CategoryResponse.CategoryNameDto getCategoryById(Long categoryId) {
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(()-> new ProductException(ErrorStatus.CATEGORY_NOT_FOUND));
+        Category category = getCategoryOrThrow(categoryId);
         return CategoryConverter.toCategoryNameResponse(category);
     }
 
     public CategoryResponse.CategoryDto deleteCategoryById(Long categoryId) {
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(()-> new ProductException(ErrorStatus.CATEGORY_NOT_FOUND));
+        Category category = getCategoryOrThrow(categoryId);
         categoryRepository.delete(category);
         return CategoryConverter.toCategoryResponse(category);
+    }
+
+    private Category getCategoryOrThrow(Long categoryId) {
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(()-> new ProductException(ErrorStatus.CATEGORY_NOT_FOUND));
     }
 }
