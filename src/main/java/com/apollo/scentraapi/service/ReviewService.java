@@ -8,6 +8,7 @@ import com.apollo.scentraapi.domain.Product;
 import com.apollo.scentraapi.domain.Review;
 import com.apollo.scentraapi.domain.User;
 import com.apollo.scentraapi.dto.request.ReviewRequest;
+import com.apollo.scentraapi.dto.response.ReviewResponse;
 import com.apollo.scentraapi.repository.ProductRepository;
 import com.apollo.scentraapi.repository.ReviewRepository;
 import com.apollo.scentraapi.repository.UserRepository;
@@ -27,18 +28,19 @@ public class ReviewService {
     private final UserRepository userRepository;
 
     @Transactional
-    public Review createReview(User user, Long productId, ReviewRequest.ReviewCreateDTO request) {
+    public ReviewResponse.ReviewResultDTO createReview(User user, Long productId, ReviewRequest.ReviewCreateDTO request) {
         User findUser = getUserOrThrow(user.getId());
         Product findProduct = getProductOrThrow(productId);
 
         Review newReview = ReviewConverter.toReview(findProduct, request);
         newReview.setUser(findUser);
 
-        return reviewRepository.save(newReview);
+        Review createdReview = reviewRepository.save(newReview);
+        return ReviewConverter.toReviewResultDTO(createdReview);
     }
 
     @Transactional
-    public Review updateReview(User user, Long reviewId, ReviewRequest.ReviewUpdateDTO request) {
+    public ReviewResponse.ReviewResultDTO updateReview(User user, Long reviewId, ReviewRequest.ReviewUpdateDTO request) {
         Review findReview = getReviewOrThrow(reviewId);
 
         if (!findReview.getUser().equals(user)) {
@@ -47,7 +49,8 @@ public class ReviewService {
 
         findReview.update(request.getContent(), request.getRating(), request.getImageUrl());
 
-        return reviewRepository.save(findReview);
+        Review updatedReview = reviewRepository.save(findReview);
+        return ReviewConverter.toReviewResultDTO(updatedReview);
     }
 
     @Transactional
