@@ -65,19 +65,6 @@ public class ProductController {
         return ApiResponse.onSuccess(response);
     }
 
-    @PostMapping("background-image")
-    @Operation(summary="배경 이미지 생성")
-    public ApiResponse<ProductResponse.ImageDTO> createBackgroundImage(@RequestBody @Valid ProductRequest.CreateBgImgDTO request) {
-        ProductResponse.ImageDTO response = productService.createBackgroundImage(request);
-        return ApiResponse.onSuccess(response);
-    }
-    @PostMapping("composite-image")
-    @Operation(summary="합성 이미지 생성")
-    public ApiResponse<ProductResponse.ImageDTO> createCompositeImage(@RequestBody @Valid ProductRequest.CreateCompositeImgDTO request) {
-        ProductResponse.ImageDTO response = productService.createCompositeImage(request);
-        return ApiResponse.onSuccess(response);
-    }
-
     @PostMapping("/likes/{product-id}")
     @Operation(summary="상품 좋아요 추가")
     public ApiResponse<ProductResponse.ProductLikeDTO> addLike(@AuthenticationPrincipal User user,

@@ -17,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,9 +31,7 @@ public class ProductService {
 
     @Transactional
     public ProductResponse.ProductDto getProduct(Long id) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ProductException(ErrorStatus.PRODUCT_NOT_FOUND));
-
+        Product product = getProductOrThrow(id);
         return ProductConverter.toProductResponse(product);
     }
 
@@ -47,9 +44,7 @@ public class ProductService {
         }
 
         for (Product product : products) {
-            Long brandId = product.getBrand().getId();
-            Brand brand = brandRepository.findById(brandId)
-                    .orElseThrow(() -> new BrandException(ErrorStatus.BRAND_NOT_FOUND));
+            Brand brand = product.getBrand();
             String brandNameKr = brand.getBrandNameKr();
             String brandNameEn = brand.getBrandNameEn();
             ProductResponse.ProductListDto productDto = ProductConverter.toProductListDto(product, brandNameKr, brandNameEn);
@@ -68,8 +63,8 @@ public class ProductService {
 
         Product newProduct = ProductConverter.toProduct(productImageUrl, detailImageUrl, productUploadDto);
         Brand brand = brandRepository.findByBrandNameEn(productUploadDto.getBrandNameEn())
-                .orElseGet(() -> brandRepository.findByBrandNameKr(productUploadDto.getBrandNameKr())
-                .orElseThrow(() -> new ProductException(ErrorStatus.BRAND_NOT_FOUND)));
+                .or(() -> brandRepository.findByBrandNameKr(productUploadDto.getBrandNameKr()))
+                .orElseThrow(() -> new ProductException(ErrorStatus.BRAND_NOT_FOUND));
         newProduct.setBrand(brand);
         newProduct = productRepository.save(newProduct);
 
@@ -85,12 +80,11 @@ public class ProductService {
 
     @Transactional
     public ProductResponse.ProductUpdateResponseDTO updateProduct(Long id, ProductRequest.ProductUpdateRequestDTO request) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ProductException(ErrorStatus.PRODUCT_NOT_FOUND));
+        Product product = getProductOrThrow(id);
+        Long updateBrandId = request.getBrandId();
 
-        if (request.getBrandId() != null) {
-            Brand brand = brandRepository.findById(request.getBrandId())
-                    .orElseThrow(() -> new BrandException(ErrorStatus.BRAND_NOT_FOUND));
+        if (updateBrandId != null) {
+            Brand brand = getBrandOrThrow(updateBrandId);
             product.setBrand(brand);
         }
 
@@ -108,8 +102,7 @@ public class ProductService {
 
     @Transactional
     public ProductResponse.ProductDeleteResponseDTO deleteProduct(Long id) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ProductException(ErrorStatus.PRODUCT_NOT_FOUND));
+        Product product = getProductOrThrow(id);
 
         s3Service.deleteImage(product.getProductImage());
         if (product.getDetailImage() != null) {
@@ -120,39 +113,9 @@ public class ProductService {
         return ProductConverter.toProductDeleteResponseDTO(product);
     }
 
-    public ProductResponse.ImageDTO createBackgroundImage(ProductRequest.CreateBgImgDTO request) {
-
-        String prompt = request.getPrompt();
-
-        /*
-            AI 서버로 프롬프트 넘겨주고, 생성된 배경 이미지 수신
-         */
-
-        String imageUrl = "http://"+prompt;
-
-        return ProductConverter.toImageDTO(imageUrl);
-    }
-
-    public ProductResponse.ImageDTO createCompositeImage(ProductRequest.CreateCompositeImgDTO request) {
-
-        String backgroundImageUrl = request.getBackgroundImageUrl();
-        String productImageUrl = request.getProductImageUrl();
-
-        /*
-            배경 및 상품 이미지 넘겨주고, 생성된 합성 이미지 수신
-         */
-
-        String imageUrl = "http://"+backgroundImageUrl+"/"+productImageUrl;
-
-        return ProductConverter.toImageDTO(imageUrl);
-    }
-
     public ProductResponse.ProductLikeDTO addLike(User user, Long productId) {
-        Optional<Product> optionalProduct = productRepository.findById(productId);
-        Product product = optionalProduct.orElseThrow(() -> new ProductException(ErrorStatus.PRODUCT_NOT_FOUND));
-
-        Optional<ProductLikes> findProductLikes = productLikeRepository.findByUserAndProduct(user, product);
-        if (findProductLikes.isPresent()) {
+        Product product = getProductOrThrow(productId);
+        if (existProductLike(user, product)) {
             throw new ProductException(ErrorStatus.PRODUCT_ALREADY_LIKED);
         }
 
@@ -163,13 +126,13 @@ public class ProductService {
     }
 
     public ProductResponse.ProductLikeDTO removeLike(User user, Long productId) {
-        Optional<ProductLikes> optionalProductLike = productLikeRepository.findByUserIdAndProductId(user.getId(), productId);
-        ProductLikes productLike = optionalProductLike
-                .orElseThrow(() -> new ProductException(ErrorStatus.PRODUCT_NOT_LIKED));
+        Product product = getProductOrThrow(productId);
+        ProductLikes productLike = getProductLikeOrThrow(user, product);
 
         productLikeRepository.delete(productLike);
         return ProductConverter.toProductLikeDTO(productLike);
     }
+
     @Transactional(readOnly = true)
     public List<ProductResponse.ProductListDto> getProductsByCategory(Long categoryId) {
         List<CategoryMapping> mappings = categoryMappingRepository.findByCategoryId(categoryId);
@@ -217,8 +180,27 @@ public class ProductService {
     }
 
     public ProductResponse.ProductLikeDTO isLike(User user, Long productId) {
-        Optional<ProductLikes> optionalProductLike = productLikeRepository.findByUserIdAndProductId(user.getId(), productId);
-        ProductLikes productLike = optionalProductLike.orElseThrow(() -> new ProductException(ErrorStatus.PRODUCT_NOT_LIKED));
+        Product product = getProductOrThrow(productId);
+        ProductLikes productLike = getProductLikeOrThrow(user, product);
         return ProductConverter.toProductLikeDTO(productLike);
+    }
+
+    private Product getProductOrThrow(Long id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new ProductException(ErrorStatus.PRODUCT_NOT_FOUND));
+    }
+
+    private Brand getBrandOrThrow(Long id) {
+        return brandRepository.findById(id)
+                .orElseThrow(() -> new BrandException(ErrorStatus.BRAND_NOT_FOUND));
+    }
+
+    private ProductLikes getProductLikeOrThrow(User user, Product product) {
+        return productLikeRepository.findByUserAndProduct(user, product)
+                .orElseThrow(() -> new ProductException(ErrorStatus.PRODUCT_NOT_LIKED));
+    }
+
+    private boolean existProductLike(User user, Product product) {
+        return productLikeRepository.findByUserAndProduct(user, product).isPresent();
     }
 }
