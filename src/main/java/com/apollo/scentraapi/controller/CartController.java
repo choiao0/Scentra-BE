@@ -25,7 +25,8 @@ public class CartController {
     @Operation(summary = "유저의 장바구니 목록 조회")
     public ApiResponse<List<CartResponse.CartItemDto>> getCartItems(@AuthenticationPrincipal User user){
         UUID userId = user.getId();
-        return ApiResponse.onSuccess(cartService.getCartItems(userId));
+        List<CartResponse.CartItemDto> response = cartService.getCartItems(userId);
+        return ApiResponse.onSuccess(response);
     }
 
     @PostMapping

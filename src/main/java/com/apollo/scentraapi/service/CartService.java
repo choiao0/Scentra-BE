@@ -19,7 +19,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -33,29 +32,20 @@ public class CartService {
     @Transactional(readOnly = true)
     public List<CartResponse.CartItemDto> getCartItems(UUID userId) {
         List<Cart> cartItems = cartRepository.findByUserId(userId);
+
         if (cartItems.isEmpty()) {
             throw new CartException(ErrorStatus.CART_NOT_FOUND);
         }
 
         return cartItems.stream()
-                .map(cart -> {
-                    Optional<Product> optionalProduct = productRepository.findById(cart.getProduct().getId());
-
-                    if (optionalProduct.isEmpty()) {
-                        throw new ProductException(ErrorStatus.PRODUCT_NOT_FOUND);
-                    }
-
-                    return CartConverter.toCartItemDto(cart);
-                }).toList();
+                .map(CartConverter::toCartItemDto)
+                .toList();
     }
 
     @Transactional
     public CartResponse.CartUpdateDto addCartItem(UUID userId, CartRequest.CartUpdateDTO request) {
-        Product product = productRepository.findById(request.getProductId())
-                .orElseThrow(() -> new ProductException(ErrorStatus.PRODUCT_NOT_FOUND));
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
+        Product product = getProductOrThrow(request.getProductId());
+        User user = getUserOrThrow(userId);
 
         Cart cartItem = cartRepository.findByUserIdAndProductId(userId, product.getId())
                 .orElseGet(() -> CartConverter.toCart(user, product));
@@ -68,25 +58,40 @@ public class CartService {
 
     @Transactional
     public void decreaseCartItem(UUID userId, CartRequest.CartUpdateDTO request) {
-        Cart cartItem = cartRepository.findByUserIdAndProductId(userId, request.getProductId())
-                .orElseThrow(() -> new CartException(ErrorStatus.CART_ITEM_NOT_FOUND));
+        Cart cartItem = getCartItemOrThrow(userId, request.getProductId());
 
         int updatedQuantity = cartItem.getQuantity() - request.getQuantity();
+
         if (updatedQuantity < 0) {
             throw new CartException(ErrorStatus.INVALID_QUANTITY);
-        } else if (updatedQuantity == 0) {
-            cartRepository.delete(cartItem);
-        } else {
+        }
+
+        if (updatedQuantity > 0) {
             cartItem.updateQuantity(updatedQuantity);
             cartRepository.save(cartItem);
+        } else {
+            cartRepository.delete(cartItem);
         }
     }
 
     @Transactional
     public void removeCartItem(UUID userId, CartRequest.CartDeleteDTO request) {
-        Cart cartItem = cartRepository.findByUserIdAndProductId(userId, request.getProductId())
-                .orElseThrow(() -> new CartException(ErrorStatus.CART_ITEM_NOT_FOUND));
+        Cart cartItem = getCartItemOrThrow(userId, request.getProductId());
+        cartRepository.delete(cartItem);
+    }
 
-        cartRepository.deleteByUserIdAndProductId(userId, request.getProductId());
+    private User getUserOrThrow(UUID userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
+    }
+
+    private Product getProductOrThrow(Long productId) {
+        return productRepository.findById(productId)
+                .orElseThrow(() -> new ProductException(ErrorStatus.PRODUCT_NOT_FOUND));
+    }
+
+    private Cart getCartItemOrThrow(UUID userId, Long productId) {
+        return cartRepository.findByUserIdAndProductId(userId, productId)
+                .orElseThrow(() -> new CartException(ErrorStatus.CART_ITEM_NOT_FOUND));
     }
 }

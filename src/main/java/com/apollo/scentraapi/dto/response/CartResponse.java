@@ -41,17 +41,6 @@ public class CartResponse {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class CartUpdateResponseDTO {
-        private UUID userId;
-        private Long cartItemId;
-        private int quantity;
-        private LocalDateTime updatedAt;
-    }
-
-    @Builder
-    @Getter
-    @AllArgsConstructor
-    @NoArgsConstructor
     public static class CartDeleteResponseDTO {
         private UUID userId;
         private Long cartItemId;
