@@ -253,7 +253,7 @@ class BrandServiceTest {
         // then
         Long notLikedBrandId = notLikedBrand.getId();
         assertThat(likedResponse.getBrandId()).isEqualTo(likedBrand.getId());
-        assertThatThrownBy(() -> brandService.removeLike(user, notLikedBrandId))
+        assertThatThrownBy(() -> brandService.isLike(user, notLikedBrandId))
                 .isInstanceOf(BrandException.class);
     }
 

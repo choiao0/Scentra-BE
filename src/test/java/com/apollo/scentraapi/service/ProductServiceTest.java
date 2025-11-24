@@ -227,6 +227,19 @@ class ProductServiceTest {
         assertThat(like.getProduct()).isEqualTo(productA1);
     }
 
+    @DisplayName("이미 좋아요한 상품에 좋아요를 추가하면 예외가 발생한다.")
+    @Test
+    void should_ThrowException_When_ProductAlreadyLiked() {
+        // given
+        ProductLikes productLikes = createProductLikes(testUser, productA1);
+        productLikesRepository.save(productLikes);
+
+        // when, then
+        Long likedProductId = productA1.getId();
+        assertThatThrownBy(() -> productService.addLike(testUser, likedProductId))
+                .isInstanceOf(ProductException.class);
+    }
+
     @DisplayName("좋아요한 상품의 좋아요를 삭제한다.")
     @Test
     void should_DeleteProductLike_When_LikeExists() {
@@ -241,6 +254,39 @@ class ProductServiceTest {
         // then
         List<ProductLikes> findProductLikes = productLikesRepository.findAll();
         assertThat(findProductLikes).isEmpty();
+    }
+
+    @DisplayName("좋아요하지 않은 상품의 좋아요를 삭제하면 예외가 발생한다")
+    @Test
+    void should_ThrowException_When_ProductNotLiked() {
+        // given
+        Long notLikedProductId = productA2.getId();
+
+        // when, then
+        assertThatThrownBy(() -> productService.removeLike(testUser, notLikedProductId))
+                .isInstanceOf(ProductException.class);
+    }
+
+    @DisplayName("카테고리에 해당하는 상품 정보를 조회한다.")
+    @Test
+    void should_ReturnProductByCategory_When_CategoryMappingExists() {
+        // given
+        CategoryMapping categoryA1 = createCategoryMapping(productA1, floral);
+        CategoryMapping categoryB1 = createCategoryMapping(productB1, floral);
+        categoryMappingRepository.saveAll(List.of(categoryA1, categoryB1));
+
+        // when
+        Long categoryId = floral.getId();
+        List<ProductResponse.ProductListDto> response = productService.getProductsByCategory(categoryId);
+
+        // then
+        assertThat(response).hasSize(2);
+        assertThat(response)
+                .extracting("productNameEn", "brandNameEn")
+                .containsExactlyInAnyOrder(
+                        tuple("productA1", "brandA"),
+                        tuple("productB1", "brandB")
+                );
     }
 
     @DisplayName("키워드로 상품/브랜드명을 매칭하여 반환한다.")
@@ -269,6 +315,24 @@ class ProductServiceTest {
                 .containsExactlyInAnyOrder(
                         tuple("brandB", "productB1", 160000d)
                 );
+    }
+
+    @DisplayName("상품 좋아요 여부가 정상적으로 반환된다.")
+    @Test
+    void should_ReturnLikeStatus_When_BrandIsLiked() {
+        // given
+        ProductLikes productLikes = createProductLikes(testUser, productA1);
+        productLikesRepository.save(productLikes);
+
+        // when
+        Long likedProductId = productA1.getId();
+        Long notLikedBrandId = productA2.getId();
+        ProductResponse.ProductLikeDTO likedResponse = productService.isLike(testUser, likedProductId);
+
+        // then
+        assertThat(likedResponse.getProductId()).isEqualTo(productA1.getId());
+        assertThatThrownBy(() -> productService.isLike(testUser, notLikedBrandId))
+                .isInstanceOf(ProductException.class);
     }
 
     private User createUser(String name, String email, Gender gender, String phoneNum){
@@ -301,6 +365,13 @@ class ProductServiceTest {
                 .categoryNameKr(nameKr)
                 .categoryNameEn(nameEn)
                 .categoryType(type)
+                .build();
+    }
+
+    private CategoryMapping createCategoryMapping(Product product, Category category) {
+        return CategoryMapping.builder()
+                .product(product)
+                .category(category)
                 .build();
     }
 
