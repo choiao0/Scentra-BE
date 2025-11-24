@@ -27,8 +27,8 @@ public class ReviewController {
     public ApiResponse<ReviewResponse.ReviewResultDTO> createReview(@AuthenticationPrincipal User user,
                                                                     @RequestParam Long productId,
                                                                     @Valid @RequestBody ReviewRequest.ReviewCreateDTO request) {
-        Review createdReview = reviewService.createReview(user, productId, request);
-        return ApiResponse.onSuccess(ReviewConverter.toReviewResultDTO(createdReview));
+        ReviewResponse.ReviewResultDTO response = reviewService.createReview(user, productId, request);
+        return ApiResponse.onSuccess(response);
     }
 
     @PatchMapping("/{review-id}")
@@ -36,8 +36,8 @@ public class ReviewController {
     public ApiResponse<ReviewResponse.ReviewResultDTO> updateReview(@AuthenticationPrincipal User user,
                                                                     @PathVariable("review-id") Long reviewId,
                                                                     @RequestBody ReviewRequest.ReviewUpdateDTO request) {
-        Review updatedReview = reviewService.updateReview(user, reviewId, request);
-        return ApiResponse.onSuccess(ReviewConverter.toReviewResultDTO(updatedReview));
+        ReviewResponse.ReviewResultDTO response = reviewService.updateReview(user, reviewId, request);
+        return ApiResponse.onSuccess(response);
     }
 
     @DeleteMapping("/{review-id}")

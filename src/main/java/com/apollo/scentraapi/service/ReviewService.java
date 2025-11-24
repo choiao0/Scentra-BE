@@ -8,9 +8,11 @@ import com.apollo.scentraapi.domain.Product;
 import com.apollo.scentraapi.domain.Review;
 import com.apollo.scentraapi.domain.User;
 import com.apollo.scentraapi.dto.request.ReviewRequest;
+import com.apollo.scentraapi.dto.response.ReviewResponse;
 import com.apollo.scentraapi.repository.ProductRepository;
 import com.apollo.scentraapi.repository.ReviewRepository;
 import com.apollo.scentraapi.repository.UserRepository;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,40 +28,37 @@ public class ReviewService {
     private final UserRepository userRepository;
 
     @Transactional
-    public Review createReview(User user, Long productId, ReviewRequest.ReviewCreateDTO request) {
-        User findUser = userRepository.findById(user.getId())
-                .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
-        Product findProduct = productRepository.findById(productId)
-                .orElseThrow(() -> new ProductException(ErrorStatus.PRODUCT_NOT_FOUND));
+    public ReviewResponse.ReviewResultDTO createReview(User user, Long productId, ReviewRequest.ReviewCreateDTO request) {
+        User findUser = getUserOrThrow(user.getId());
+        Product findProduct = getProductOrThrow(productId);
 
         Review newReview = ReviewConverter.toReview(findProduct, request);
         newReview.setUser(findUser);
 
-        return reviewRepository.save(newReview);
+        Review createdReview = reviewRepository.save(newReview);
+        return ReviewConverter.toReviewResultDTO(createdReview);
     }
 
     @Transactional
-    public Review updateReview(User user, Long reviewId, ReviewRequest.ReviewUpdateDTO request) {
-        Review findReview = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new ProductException(ErrorStatus.REVIEW_NOT_FOUND));
+    public ReviewResponse.ReviewResultDTO updateReview(User user, Long reviewId, ReviewRequest.ReviewUpdateDTO request) {
+        Review findReview = getReviewOrThrow(reviewId);
 
-        if (!findReview.getUser().getId().equals(user.getId())) {
+        if (!findReview.getUser().equals(user)) {
             throw new ProductException(ErrorStatus.REVIEW_OWNER_MISMATCH);
         }
 
         findReview.update(request.getContent(), request.getRating(), request.getImageUrl());
 
-        return reviewRepository.save(findReview);
+        Review updatedReview = reviewRepository.save(findReview);
+        return ReviewConverter.toReviewResultDTO(updatedReview);
     }
 
     @Transactional
     public void deleteReview(User user, Long reviewId) {
-        Review findReview = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new ProductException(ErrorStatus.REVIEW_NOT_FOUND));
-        User findUser = userRepository.findById(user.getId())
-                .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
+        Review findReview = getReviewOrThrow(reviewId);
+        User findUser = getUserOrThrow(user.getId());
 
-        if (!findReview.getUser().getId().equals(user.getId())) {
+        if (!findReview.getUser().equals(user)) {
             throw new ProductException(ErrorStatus.REVIEW_OWNER_MISMATCH);
         }
 
@@ -68,9 +67,22 @@ public class ReviewService {
     }
 
     public List<Review> getReviewList(Long productId) {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ProductException(ErrorStatus.PRODUCT_NOT_FOUND));
-
+        Product product = getProductOrThrow(productId);
         return reviewRepository.findAllByProduct(product);
+    }
+
+    private Review getReviewOrThrow(Long reviewId) {
+        return reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new ProductException(ErrorStatus.REVIEW_NOT_FOUND));
+    }
+
+    private User getUserOrThrow(UUID userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
+    }
+
+    private Product getProductOrThrow(Long productId) {
+        return productRepository.findById(productId)
+                .orElseThrow(() -> new ProductException(ErrorStatus.PRODUCT_NOT_FOUND));
     }
 }

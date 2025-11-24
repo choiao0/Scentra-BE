@@ -67,4 +67,12 @@ public class Product extends BaseEntity {
         }
     }
 
+    public boolean matchesKeyword(String keyword) {
+        String lowerKeyword = keyword.toLowerCase();
+
+        return (this.productNameKr != null && this.productNameKr.contains(keyword)) ||  // (1) 키워드가 상품명에 포함됨
+                (this.productNameEn != null && this.productNameEn.toLowerCase().contains(lowerKeyword)) ||
+                (this.brand != null && (this.brand.getBrandNameKr() != null && this.brand.getBrandNameKr().contains(keyword))) ||  // (2) 키워드가 브랜드명에 포함됨
+                (this.brand != null && (this.brand.getBrandNameEn() != null && this.brand.getBrandNameEn().toLowerCase().contains(lowerKeyword)));
+    }
 }

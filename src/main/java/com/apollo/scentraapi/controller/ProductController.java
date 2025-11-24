@@ -45,8 +45,7 @@ public class ProductController {
     public ApiResponse<ProductResponse.ProductDto> uploadProduct(@RequestPart MultipartFile productImage,
                                                                  @RequestPart(required = false) MultipartFile detailImage,
                                                                  @RequestPart("request") @Valid ProductRequest.ProductUploadDto request) {
-        Product new_product = productService.uploadProduct(productImage, detailImage, request);
-        ProductResponse.ProductDto response = ProductConverter.toProductResponse(new_product);
+        ProductResponse.ProductDto response = productService.uploadProduct(productImage, detailImage, request);
         return ApiResponse.onSuccess(response);
     }
 
@@ -62,19 +61,6 @@ public class ProductController {
     @Operation(summary="상품 삭제")
     public ApiResponse<ProductResponse.ProductDeleteResponseDTO> deleteProduct(@PathVariable Long id) {
         ProductResponse.ProductDeleteResponseDTO response = productService.deleteProduct(id);
-        return ApiResponse.onSuccess(response);
-    }
-
-    @PostMapping("background-image")
-    @Operation(summary="배경 이미지 생성")
-    public ApiResponse<ProductResponse.ImageDTO> createBackgroundImage(@RequestBody @Valid ProductRequest.CreateBgImgDTO request) {
-        ProductResponse.ImageDTO response = productService.createBackgroundImage(request);
-        return ApiResponse.onSuccess(response);
-    }
-    @PostMapping("composite-image")
-    @Operation(summary="합성 이미지 생성")
-    public ApiResponse<ProductResponse.ImageDTO> createCompositeImage(@RequestBody @Valid ProductRequest.CreateCompositeImgDTO request) {
-        ProductResponse.ImageDTO response = productService.createCompositeImage(request);
         return ApiResponse.onSuccess(response);
     }
 
