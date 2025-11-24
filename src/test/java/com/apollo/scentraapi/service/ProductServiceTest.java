@@ -247,13 +247,28 @@ class ProductServiceTest {
     @Test
     void should_ReturnMatchingProductsAndBrands_When_KeywordMatches() {
         // given
-        String keyword = "A";
+        String keywordA = "brandA";
+        String keywordB = "productB";
 
         // when
-        List<ProductResponse.ProductListDto> response = productService.searchProducts(keyword);
+        List<ProductResponse.ProductListDto> responseA = productService.searchProducts(keywordA);
+        List<ProductResponse.ProductListDto> responseB = productService.searchProducts(keywordB);
 
         // then
-        assertThat(response).hasSize(3);
+        assertThat(responseA).hasSize(2);
+        assertThat(responseA)
+                .extracting("brandNameEn", "productNameEn", "price")
+                .containsExactlyInAnyOrder(
+                        tuple("brandA", "productA1", 150000d),
+                        tuple("brandA", "productA2", 270000d)
+                );
+
+        assertThat(responseB).hasSize(1);
+        assertThat(responseB)
+                .extracting("brandNameEn", "productNameEn", "price")
+                .containsExactlyInAnyOrder(
+                        tuple("brandB", "productB1", 160000d)
+                );
     }
 
     private User createUser(String name, String email, Gender gender, String phoneNum){
