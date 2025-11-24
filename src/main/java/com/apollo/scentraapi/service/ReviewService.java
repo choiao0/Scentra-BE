@@ -11,6 +11,7 @@ import com.apollo.scentraapi.dto.request.ReviewRequest;
 import com.apollo.scentraapi.repository.ProductRepository;
 import com.apollo.scentraapi.repository.ReviewRepository;
 import com.apollo.scentraapi.repository.UserRepository;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,10 +28,8 @@ public class ReviewService {
 
     @Transactional
     public Review createReview(User user, Long productId, ReviewRequest.ReviewCreateDTO request) {
-        User findUser = userRepository.findById(user.getId())
-                .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
-        Product findProduct = productRepository.findById(productId)
-                .orElseThrow(() -> new ProductException(ErrorStatus.PRODUCT_NOT_FOUND));
+        User findUser = getUserOrThrow(user.getId());
+        Product findProduct = getProductOrThrow(productId);
 
         Review newReview = ReviewConverter.toReview(findProduct, request);
         newReview.setUser(findUser);
@@ -40,10 +39,9 @@ public class ReviewService {
 
     @Transactional
     public Review updateReview(User user, Long reviewId, ReviewRequest.ReviewUpdateDTO request) {
-        Review findReview = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new ProductException(ErrorStatus.REVIEW_NOT_FOUND));
+        Review findReview = getReviewOrThrow(reviewId);
 
-        if (!findReview.getUser().getId().equals(user.getId())) {
+        if (!findReview.getUser().equals(user)) {
             throw new ProductException(ErrorStatus.REVIEW_OWNER_MISMATCH);
         }
 
@@ -54,12 +52,10 @@ public class ReviewService {
 
     @Transactional
     public void deleteReview(User user, Long reviewId) {
-        Review findReview = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new ProductException(ErrorStatus.REVIEW_NOT_FOUND));
-        User findUser = userRepository.findById(user.getId())
-                .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
+        Review findReview = getReviewOrThrow(reviewId);
+        User findUser = getUserOrThrow(user.getId());
 
-        if (!findReview.getUser().getId().equals(user.getId())) {
+        if (!findReview.getUser().equals(user)) {
             throw new ProductException(ErrorStatus.REVIEW_OWNER_MISMATCH);
         }
 
@@ -68,9 +64,22 @@ public class ReviewService {
     }
 
     public List<Review> getReviewList(Long productId) {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ProductException(ErrorStatus.PRODUCT_NOT_FOUND));
-
+        Product product = getProductOrThrow(productId);
         return reviewRepository.findAllByProduct(product);
+    }
+
+    private Review getReviewOrThrow(Long reviewId) {
+        return reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new ProductException(ErrorStatus.REVIEW_NOT_FOUND));
+    }
+
+    private User getUserOrThrow(UUID userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
+    }
+
+    private Product getProductOrThrow(Long productId) {
+        return productRepository.findById(productId)
+                .orElseThrow(() -> new ProductException(ErrorStatus.PRODUCT_NOT_FOUND));
     }
 }
