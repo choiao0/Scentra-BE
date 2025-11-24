@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.apollo.scentraapi.apiPayload.exception.handler.BrandException;
-import com.apollo.scentraapi.apiPayload.exception.handler.ProductException;
 import com.apollo.scentraapi.domain.Brand;
 import com.apollo.scentraapi.domain.BrandLikes;
 import com.apollo.scentraapi.domain.Seller;
@@ -18,7 +17,6 @@ import com.apollo.scentraapi.repository.SellerRepository;
 import com.apollo.scentraapi.repository.UserRepository;
 import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -164,7 +162,7 @@ class BrandServiceTest {
 
         // when, then
         assertThatThrownBy(() -> brandService.getAllBrands())
-                .isInstanceOf(ProductException.class);
+                .isInstanceOf(BrandException.class);
     }
 
     @DisplayName("브랜드 ID가 유효하면 좋아요 추가가 정상 처리된다")
