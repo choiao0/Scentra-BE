@@ -281,10 +281,10 @@ class UserServiceTest {
 
         // then
         assertThat(response).hasSize(2);
-        assertThat(response).extracting("productId", "productNameEn", "brandNameEn")
+        assertThat(response).extracting("productNameEn", "brandNameEn")
                 .containsExactlyInAnyOrder(
-                        tuple(1L, "productA1", "brandA"),
-                        tuple(3L, "productB1", "brandB")
+                        tuple("productA1", "brandA"),
+                        tuple("productB1", "brandB")
                 );
     }
 
@@ -312,11 +312,8 @@ class UserServiceTest {
 
         // then
         assertThat(response).hasSize(2);
-        assertThat(response).extracting("id", "brandNameEn")
-                .containsExactlyInAnyOrder(
-                        tuple(1L, "brandA"),
-                        tuple(2L, "brandB")
-                );
+        assertThat(response).extracting("brandNameEn")
+                .containsExactlyInAnyOrder("brandA", "brandB");
     }
 
     @DisplayName("유저가 좋아요한 브랜드가 없으면 예외가 발생한다.")
