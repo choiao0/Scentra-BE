@@ -21,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -38,9 +37,7 @@ public class UserService {
 
     @Transactional
     public UserResponse.UserSignUpResultDTO createUser(UserRequest.UserSignUpDTO request) {
-        Optional<User> findUser = userRepository.findByEmail(request.getEmail());
-
-        if (findUser.isPresent()) {
+        if (existUser(request.getEmail())) {
             throw new UserException(ErrorStatus.USER_ALREADY_EXIST);
         }
 
@@ -54,9 +51,7 @@ public class UserService {
 
     @Transactional
     public UserResponse.SellerSignUpResultDTO createSeller(MultipartFile brandImage, UserRequest.SellerSignUpDTO request) {
-        Optional<User> findUser = userRepository.findByEmail(request.getEmail());
-
-        if (findUser.isPresent()) {
+        if (existUser(request.getEmail())) {
             throw new UserException(ErrorStatus.USER_ALREADY_EXIST);
         }
 
@@ -78,10 +73,9 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public UserResponse.LoginResultDTO login(String email) {
-        User findUser = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
-
+        User findUser = getUserOrThrow(email);
         Seller findSeller = sellerRepository.findByUser(findUser).orElse(null);
+
         Long totalProducts = null;
         if (findSeller != null) {
             totalProducts = productRepository.countByBrand(findSeller.getBrand());
@@ -92,20 +86,17 @@ public class UserService {
         return UserConverter.toLoginResult(findUser, findSeller, totalProducts, accessToken);
     }
 
-    public User updateUser(User user, UserRequest.UserUpdateDTO request) {
-        if (request.getEmail() != null) {
-            Optional<User> findUser = userRepository.findByEmail(request.getEmail());
+    public UserResponse.UserInfoResultDTO updateUser(User user, UserRequest.UserUpdateDTO request) {
+        String email = request.getEmail();
 
-            if (findUser.isPresent()) {
-                throw new UserException(ErrorStatus.USER_ALREADY_EXIST);
-            }
+        if (email != null && existUser(email)) {
+            throw new UserException(ErrorStatus.USER_ALREADY_EXIST);
         }
 
         user.update(request.getName(), request.getPassword(), request.getEmail(), request.getPhoneNum(), request.getGender());
+        User updatedUser = userRepository.save(user);
 
-        // TODO: 이메일 변경시 자동 로그아웃 구현
-
-        return userRepository.save(user);
+        return UserConverter.toUserInfoResult(updatedUser);
     }
 
     public void deleteUser(User user) {
@@ -115,16 +106,16 @@ public class UserService {
     @Transactional(readOnly = true)
     public List<ProductResponse.ProductListDto> getLikesProducts(User user) {
         List<ProductLikes> likes = productLikesRepository.findAllByUser(user);
-        List<ProductResponse.ProductListDto> productList = new ArrayList<>();
 
         if (likes.isEmpty()) {
             throw new ProductException(ErrorStatus.NO_LIKED_PRODUCTS);
         }
 
+        List<ProductResponse.ProductListDto> productList = new ArrayList<>();
+
         for (ProductLikes like : likes) {
             Product product = like.getProduct();
-            Brand brand = brandRepository.findById(product.getBrand().getId())
-                    .orElseThrow(() -> new BrandException(ErrorStatus.BRAND_NOT_FOUND));
+            Brand brand = product.getBrand();
             String brandNameKr = brand.getBrandNameKr();
             String brandNameEn = brand.getBrandNameEn();
             ProductResponse.ProductListDto productDto = ProductConverter.toProductListDto(product, brandNameKr, brandNameEn);
@@ -136,11 +127,12 @@ public class UserService {
     @Transactional(readOnly = true)
     public List<BrandResponse.BrandListDto> getLikesBrand(User user) {
         List<BrandLikes> likes = brandLikesRepository.findAllByUser(user);
-        List<BrandResponse.BrandListDto> brandList = new ArrayList<>();
 
         if (likes.isEmpty()) {
             throw new BrandException(ErrorStatus.NO_LIKED_BRANDS);
         }
+
+        List<BrandResponse.BrandListDto> brandList = new ArrayList<>();
 
         for (BrandLikes like : likes) {
             Brand brand = like.getBrand();
@@ -148,5 +140,14 @@ public class UserService {
             brandList.add(brandDto);
         }
         return brandList;
+    }
+
+    private User getUserOrThrow(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
+    }
+
+    private boolean existUser(String email) {
+        return userRepository.findByEmail(email).isPresent();
     }
 }
