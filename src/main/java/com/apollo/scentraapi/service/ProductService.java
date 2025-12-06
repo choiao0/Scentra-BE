@@ -34,9 +34,8 @@ public class ProductService {
         Product product = getProductOrThrow(id);
         return ProductConverter.toProductResponse(product);
     }
-
     public List<ProductResponse.ProductListDto> getAllProducts() {
-        List<Product> products = productRepository.findAll();
+        List<Product> products = productRepository.findAllWithBrand();
         List<ProductResponse.ProductListDto> productList = new ArrayList<>();
 
         if (products.isEmpty()) {
