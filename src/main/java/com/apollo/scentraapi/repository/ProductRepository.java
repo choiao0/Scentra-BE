@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findAll();
-    @Query("SELECT p FROM Product p JOIN FETCH p.brand")
+    @Query("select p from Product p join fetch p.brand")
     List<Product> findAllWithBrand();
     Long countByBrand(Brand brand);
 }
