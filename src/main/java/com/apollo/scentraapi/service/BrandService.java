@@ -31,7 +31,7 @@ public class BrandService {
 
     @Transactional(readOnly = true)
     public BrandResponse.RetrieveBrandResponseDTO retrieveBrand(User user) {
-        Seller seller = sellerRepository.findByUser(user)
+        Seller seller = sellerRepository.findByUserWithBrand(user)
                 .orElseThrow(() -> new BrandException(ErrorStatus.BRAND_NOT_FOUND));
         Brand brand = seller.getBrand();
         return BrandConverter.toRetrieveBrandResponse(brand);

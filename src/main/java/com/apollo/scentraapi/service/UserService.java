@@ -74,7 +74,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserResponse.LoginResultDTO login(String email) {
         User findUser = getUserOrThrow(email);
-        Seller findSeller = sellerRepository.findByUser(findUser).orElse(null);
+        Seller findSeller = sellerRepository.findByUserWithBrand(findUser).orElse(null);
 
         Long totalProducts = null;
         if (findSeller != null) {
