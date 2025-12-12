@@ -10,7 +10,6 @@ import java.util.List;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    List<Product> findAll();
     @Query("select p from Product p join fetch p.brand")
     List<Product> findAllWithBrand();
     Long countByBrand(Brand brand);

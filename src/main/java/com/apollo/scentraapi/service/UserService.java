@@ -105,12 +105,11 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public List<ProductResponse.ProductListDto> getLikesProducts(User user) {
-        List<ProductLikes> likes = productLikesRepository.findAllByUser(user);
+        List<ProductLikes> likes = productLikesRepository.findAllByUserWithProductAndBrand(user);
 
         if (likes.isEmpty()) {
             throw new ProductException(ErrorStatus.NO_LIKED_PRODUCTS);
         }
-
         List<ProductResponse.ProductListDto> productList = new ArrayList<>();
 
         for (ProductLikes like : likes) {
@@ -126,7 +125,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public List<BrandResponse.BrandListDto> getLikesBrand(User user) {
-        List<BrandLikes> likes = brandLikesRepository.findAllByUser(user);
+        List<BrandLikes> likes = brandLikesRepository.findAllByUserWithBrand(user);
 
         if (likes.isEmpty()) {
             throw new BrandException(ErrorStatus.NO_LIKED_BRANDS);

@@ -12,7 +12,6 @@ import java.util.UUID;
 @Repository
 public interface SellerRepository extends JpaRepository<Seller, UUID> {
     Optional<Seller> findByUser(User user);
-
     @Query("select s from Seller s join fetch s.brand")
     Optional<Seller> findByUserWithBrand(User user);
 }
