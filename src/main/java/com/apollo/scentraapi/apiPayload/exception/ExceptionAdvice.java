@@ -1,7 +1,7 @@
 package com.apollo.scentraapi.apiPayload.exception;
 
 import com.apollo.scentraapi.apiPayload.ApiResponse;
-import com.apollo.scentraapi.apiPayload.code.ErrorReasonDTO;
+import com.apollo.scentraapi.apiPayload.code.ReasonDTO;
 import com.apollo.scentraapi.apiPayload.code.status.ErrorStatus;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
@@ -59,12 +59,12 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = GeneralException.class)
     public ResponseEntity onThrowException(GeneralException generalException, HttpServletRequest request) {
-        ErrorReasonDTO errorReasonHttpStatus = generalException.getErrorReasonHttpStatus();
+        ReasonDTO errorReasonHttpStatus = generalException.getErrorReasonHttpStatus();
         return handleExceptionInternal(generalException,errorReasonHttpStatus,null,request);
     }
 
 
-    private ResponseEntity<Object> handleExceptionInternal(Exception e, ErrorReasonDTO reason,
+    private ResponseEntity<Object> handleExceptionInternal(Exception e, ReasonDTO reason,
                                                            HttpHeaders headers, HttpServletRequest request) {
         ApiResponse<Object> body = ApiResponse.onFailure(reason.getCode(),reason.getMessage(),null);
         WebRequest webRequest = new ServletWebRequest(request);

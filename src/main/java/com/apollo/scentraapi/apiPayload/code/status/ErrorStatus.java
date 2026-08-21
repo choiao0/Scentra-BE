@@ -1,6 +1,6 @@
 package com.apollo.scentraapi.apiPayload.code.status;
 
-import com.apollo.scentraapi.apiPayload.code.ErrorReasonDTO;
+import com.apollo.scentraapi.apiPayload.code.ReasonDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -66,8 +66,8 @@ public enum ErrorStatus {
     private final String code;
     private final String message;
 
-    public ErrorReasonDTO getReasonHttpStatus() {
-        return ErrorReasonDTO.builder()
+    public ReasonDTO getReasonHttpStatus() {
+        return ReasonDTO.builder()
                 .message(message)
                 .code(code)
                 .isSuccess(false)
