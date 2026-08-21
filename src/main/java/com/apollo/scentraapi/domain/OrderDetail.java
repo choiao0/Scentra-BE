@@ -21,7 +21,7 @@ public class OrderDetail extends BaseEntity {
     @JoinColumn(name = "order_id")
     private Orders orders;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
 }
