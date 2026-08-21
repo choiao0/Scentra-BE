@@ -36,7 +36,7 @@ public class ProductService {
     }
 
     public List<ProductResponse.ProductListDto> getAllProducts() {
-        List<Product> products = productRepository.findAll();
+        List<Product> products = productRepository.findAllWithBrand();
         List<ProductResponse.ProductListDto> productList = new ArrayList<>();
 
         if (products.isEmpty()) {
@@ -137,7 +137,7 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public List<ProductResponse.ProductListDto> getProductsByCategory(Long categoryId) {
-        List<CategoryMapping> mappings = categoryMappingRepository.findByCategoryId(categoryId);
+        List<CategoryMapping> mappings = categoryMappingRepository.findByCategoryIdWithProductAndBrand(categoryId);
 
         if (mappings.isEmpty()) {
             throw new ProductException(ErrorStatus.PRODUCT_NOT_FOUND);
@@ -159,7 +159,7 @@ public class ProductService {
         }
 
         // 검색 실행
-        List<Product> filteredProducts = productRepository.findAll().stream()
+        List<Product> filteredProducts = productRepository.findAllWithBrand().stream()
                 .filter(product -> product.matchesKeyword(keyword))
                 .toList();
 
