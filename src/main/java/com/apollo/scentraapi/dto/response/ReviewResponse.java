@@ -25,7 +25,6 @@ public class ReviewResponse {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class ReviewListDTO {
-        Integer total;
         List<ReviewResultDTO> reviewList;
     }
 

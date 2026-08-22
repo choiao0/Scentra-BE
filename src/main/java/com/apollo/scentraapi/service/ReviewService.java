@@ -36,6 +36,7 @@ public class ReviewService {
         newReview.setUser(findUser);
 
         Review createdReview = reviewRepository.save(newReview);
+        refreshProductRatingStats(findProduct);
         return ReviewConverter.toReviewResultDTO(createdReview);
     }
 
@@ -50,6 +51,7 @@ public class ReviewService {
         findReview.update(request.getContent(), request.getRating(), request.getImageUrl());
 
         Review updatedReview = reviewRepository.save(findReview);
+        refreshProductRatingStats(findReview.getProduct());
         return ReviewConverter.toReviewResultDTO(updatedReview);
     }
 
@@ -62,8 +64,10 @@ public class ReviewService {
             throw new ProductException(ErrorStatus.REVIEW_OWNER_MISMATCH);
         }
 
+        Product product = findReview.getProduct();
         findUser.getReviewList().remove(findReview);
         reviewRepository.delete(findReview);
+        refreshProductRatingStats(product);
     }
 
     public List<Review> getReviewList(Long productId) {
@@ -84,5 +88,11 @@ public class ReviewService {
     private Product getProductOrThrow(Long productId) {
         return productRepository.findById(productId)
                 .orElseThrow(() -> new ProductException(ErrorStatus.PRODUCT_NOT_FOUND));
+    }
+
+    private void refreshProductRatingStats(Product product) {
+        Double avgRating = reviewRepository.findAverageRatingByProduct(product);
+        long reviewCount = reviewRepository.countByProduct(product);
+        product.updateRatingStats(avgRating, (int) reviewCount);
     }
 }
