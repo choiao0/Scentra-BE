@@ -44,7 +44,7 @@ batch fetching 방식에서 join fetch 방식으로 변경하여 N+1 문제를 �
 | 항목 | 내용 |
 |------|------|
 | SonarQube 플러그인 추가 | 코드 품질 분석 도입 |
-|  | 기술부채지수: 87 → 62, **약 29% 감소** |
+|  | → 기술부채지수: **약 29% 감소** (87 → 62) |
 | 불필요한 코드 및 주석 제거 | 사용되지 않는 코드 정리 |
 | 코드 스타일 통일 | Google Java Style Guide 적용 |
 | 클래스명 정리 | `Handler` → `Exception` 으로 일관성 부여 |
@@ -56,8 +56,6 @@ batch fetching 방식에서 join fetch 방식으로 변경하여 N+1 문제를 �
 | 중복 DTO 통합 | 필드 구성이 동일했던 `ReasonDTO`/`ErrorReasonDTO`를 `ReasonDTO`로 통합 |
 
 ---
-
-</br>
 
 ## 3. 테스트 코드 작성
 
