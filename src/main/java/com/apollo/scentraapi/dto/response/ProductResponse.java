@@ -29,6 +29,8 @@ public class ProductResponse {
         String detailImage;
         Double price;
         String targetGender;
+        Double avgRating;
+        Integer reviewCount;
         Long brandId;
         String brandNameKr;
         String brandNameEn;

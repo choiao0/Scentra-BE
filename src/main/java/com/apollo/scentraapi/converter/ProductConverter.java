@@ -41,6 +41,8 @@ public class ProductConverter {
                 .detailImage(product.getDetailImage())
                 .price(product.getPrice())
                 .targetGender(String.valueOf(product.getTargetGender()))
+                .avgRating(product.getAvgRating())
+                .reviewCount(product.getReviewCount())
                 .brandId(product.getBrand().getId())
                 .brandNameKr(product.getBrand().getBrandNameKr())
                 .brandNameEn(product.getBrand().getBrandNameEn())

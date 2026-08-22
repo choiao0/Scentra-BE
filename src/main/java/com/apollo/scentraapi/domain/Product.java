@@ -28,6 +28,9 @@ public class Product extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Gender targetGender;
 
+    private Double avgRating;
+    private Integer reviewCount;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "brand_id")
     private Brand brand;
@@ -65,6 +68,11 @@ public class Product extends BaseEntity {
         if (targetGender != null) {
             this.targetGender = Gender.valueOf(targetGender);
         }
+    }
+
+    public void updateRatingStats(Double avgRating, Integer reviewCount) {
+        this.avgRating = avgRating;
+        this.reviewCount = reviewCount;
     }
 
     public boolean matchesKeyword(String keyword) {

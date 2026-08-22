@@ -35,7 +35,6 @@ public class ReviewConverter {
                 .map(ReviewConverter::toReviewResultDTO).collect(Collectors.toList());
 
         return ReviewResponse.ReviewListDTO.builder()
-                .total(reviewList.size())
                 .reviewList(reviewResultDTOList)
                 .build();
     }
